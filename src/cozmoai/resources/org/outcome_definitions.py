@@ -31,7 +31,7 @@ class OutcomeDefinitionsResource(SyncAPIResource):
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/stainless-sdks/cozmoai-python#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/CozmoXAI/python-sdk#accessing-raw-response-data-eg-headers
         """
         return OutcomeDefinitionsResourceWithRawResponse(self)
 
@@ -40,7 +40,7 @@ class OutcomeDefinitionsResource(SyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/stainless-sdks/cozmoai-python#with_streaming_response
+        For more information, see https://www.github.com/CozmoXAI/python-sdk#with_streaming_response
         """
         return OutcomeDefinitionsResourceWithStreamingResponse(self)
 
@@ -217,7 +217,7 @@ class AsyncOutcomeDefinitionsResource(AsyncAPIResource):
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/stainless-sdks/cozmoai-python#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/CozmoXAI/python-sdk#accessing-raw-response-data-eg-headers
         """
         return AsyncOutcomeDefinitionsResourceWithRawResponse(self)
 
@@ -226,7 +226,7 @@ class AsyncOutcomeDefinitionsResource(AsyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/stainless-sdks/cozmoai-python#with_streaming_response
+        For more information, see https://www.github.com/CozmoXAI/python-sdk#with_streaming_response
         """
         return AsyncOutcomeDefinitionsResourceWithStreamingResponse(self)
 
