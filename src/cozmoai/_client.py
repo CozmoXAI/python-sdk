@@ -31,10 +31,9 @@ from ._base_client import (
 )
 
 if TYPE_CHECKING:
-    from .resources import me, org, organizations
+    from .resources import me, org
     from .resources.me import MeResource, AsyncMeResource
     from .resources.org.org import OrgResource, AsyncOrgResource
-    from .resources.organizations.organizations import OrganizationsResource, AsyncOrganizationsResource
 
 __all__ = ["Timeout", "Transport", "ProxiesTypes", "RequestOptions", "Cozmoai", "AsyncCozmoai", "Client", "AsyncClient"]
 
@@ -107,12 +106,6 @@ class Cozmoai(SyncAPIClient):
         return OrgResource(self)
 
     @cached_property
-    def organizations(self) -> OrganizationsResource:
-        from .resources.organizations import OrganizationsResource
-
-        return OrganizationsResource(self)
-
-    @cached_property
     def with_raw_response(self) -> CozmoaiWithRawResponse:
         return CozmoaiWithRawResponse(self)
 
@@ -124,12 +117,6 @@ class Cozmoai(SyncAPIClient):
     @override
     def qs(self) -> Querystring:
         return Querystring(array_format="comma")
-
-    @property
-    @override
-    def auth_headers(self) -> dict[str, str]:
-        api_key = self.api_key
-        return {"Authorization": f"Bearer {api_key}"}
 
     @property
     @override
@@ -293,12 +280,6 @@ class AsyncCozmoai(AsyncAPIClient):
         return AsyncOrgResource(self)
 
     @cached_property
-    def organizations(self) -> AsyncOrganizationsResource:
-        from .resources.organizations import AsyncOrganizationsResource
-
-        return AsyncOrganizationsResource(self)
-
-    @cached_property
     def with_raw_response(self) -> AsyncCozmoaiWithRawResponse:
         return AsyncCozmoaiWithRawResponse(self)
 
@@ -310,12 +291,6 @@ class AsyncCozmoai(AsyncAPIClient):
     @override
     def qs(self) -> Querystring:
         return Querystring(array_format="comma")
-
-    @property
-    @override
-    def auth_headers(self) -> dict[str, str]:
-        api_key = self.api_key
-        return {"Authorization": f"Bearer {api_key}"}
 
     @property
     @override
@@ -429,12 +404,6 @@ class CozmoaiWithRawResponse:
 
         return OrgResourceWithRawResponse(self._client.org)
 
-    @cached_property
-    def organizations(self) -> organizations.OrganizationsResourceWithRawResponse:
-        from .resources.organizations import OrganizationsResourceWithRawResponse
-
-        return OrganizationsResourceWithRawResponse(self._client.organizations)
-
 
 class AsyncCozmoaiWithRawResponse:
     _client: AsyncCozmoai
@@ -453,12 +422,6 @@ class AsyncCozmoaiWithRawResponse:
         from .resources.org import AsyncOrgResourceWithRawResponse
 
         return AsyncOrgResourceWithRawResponse(self._client.org)
-
-    @cached_property
-    def organizations(self) -> organizations.AsyncOrganizationsResourceWithRawResponse:
-        from .resources.organizations import AsyncOrganizationsResourceWithRawResponse
-
-        return AsyncOrganizationsResourceWithRawResponse(self._client.organizations)
 
 
 class CozmoaiWithStreamedResponse:
@@ -479,12 +442,6 @@ class CozmoaiWithStreamedResponse:
 
         return OrgResourceWithStreamingResponse(self._client.org)
 
-    @cached_property
-    def organizations(self) -> organizations.OrganizationsResourceWithStreamingResponse:
-        from .resources.organizations import OrganizationsResourceWithStreamingResponse
-
-        return OrganizationsResourceWithStreamingResponse(self._client.organizations)
-
 
 class AsyncCozmoaiWithStreamedResponse:
     _client: AsyncCozmoai
@@ -503,12 +460,6 @@ class AsyncCozmoaiWithStreamedResponse:
         from .resources.org import AsyncOrgResourceWithStreamingResponse
 
         return AsyncOrgResourceWithStreamingResponse(self._client.org)
-
-    @cached_property
-    def organizations(self) -> organizations.AsyncOrganizationsResourceWithStreamingResponse:
-        from .resources.organizations import AsyncOrganizationsResourceWithStreamingResponse
-
-        return AsyncOrganizationsResourceWithStreamingResponse(self._client.organizations)
 
 
 Client = Cozmoai

@@ -13,7 +13,6 @@ from cozmoai.types.org import (
     PhoneNumberResponse,
     PhoneNumberListResponse,
     PhoneNumberDeleteResponse,
-    PhoneNumberCreateBulkResponse,
 )
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
@@ -307,56 +306,6 @@ class TestPhoneNumbers:
                 org_id="org_id",
             )
 
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_method_create_bulk(self, client: Cozmoai) -> None:
-        phone_number = client.org.phone_numbers.create_bulk(
-            org_id="org_id",
-            numbers=[{"number": "number"}],
-            sip_trunk_id="sip_trunk_id",
-        )
-        assert_matches_type(PhoneNumberCreateBulkResponse, phone_number, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_raw_response_create_bulk(self, client: Cozmoai) -> None:
-        response = client.org.phone_numbers.with_raw_response.create_bulk(
-            org_id="org_id",
-            numbers=[{"number": "number"}],
-            sip_trunk_id="sip_trunk_id",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        phone_number = response.parse()
-        assert_matches_type(PhoneNumberCreateBulkResponse, phone_number, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_streaming_response_create_bulk(self, client: Cozmoai) -> None:
-        with client.org.phone_numbers.with_streaming_response.create_bulk(
-            org_id="org_id",
-            numbers=[{"number": "number"}],
-            sip_trunk_id="sip_trunk_id",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            phone_number = response.parse()
-            assert_matches_type(PhoneNumberCreateBulkResponse, phone_number, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_path_params_create_bulk(self, client: Cozmoai) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `org_id` but received ''"):
-            client.org.phone_numbers.with_raw_response.create_bulk(
-                org_id="",
-                numbers=[{"number": "number"}],
-                sip_trunk_id="sip_trunk_id",
-            )
-
 
 class TestAsyncPhoneNumbers:
     parametrize = pytest.mark.parametrize(
@@ -646,54 +595,4 @@ class TestAsyncPhoneNumbers:
             await async_client.org.phone_numbers.with_raw_response.delete(
                 number_id="",
                 org_id="org_id",
-            )
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_method_create_bulk(self, async_client: AsyncCozmoai) -> None:
-        phone_number = await async_client.org.phone_numbers.create_bulk(
-            org_id="org_id",
-            numbers=[{"number": "number"}],
-            sip_trunk_id="sip_trunk_id",
-        )
-        assert_matches_type(PhoneNumberCreateBulkResponse, phone_number, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_raw_response_create_bulk(self, async_client: AsyncCozmoai) -> None:
-        response = await async_client.org.phone_numbers.with_raw_response.create_bulk(
-            org_id="org_id",
-            numbers=[{"number": "number"}],
-            sip_trunk_id="sip_trunk_id",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        phone_number = await response.parse()
-        assert_matches_type(PhoneNumberCreateBulkResponse, phone_number, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_streaming_response_create_bulk(self, async_client: AsyncCozmoai) -> None:
-        async with async_client.org.phone_numbers.with_streaming_response.create_bulk(
-            org_id="org_id",
-            numbers=[{"number": "number"}],
-            sip_trunk_id="sip_trunk_id",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            phone_number = await response.parse()
-            assert_matches_type(PhoneNumberCreateBulkResponse, phone_number, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_path_params_create_bulk(self, async_client: AsyncCozmoai) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `org_id` but received ''"):
-            await async_client.org.phone_numbers.with_raw_response.create_bulk(
-                org_id="",
-                numbers=[{"number": "number"}],
-                sip_trunk_id="sip_trunk_id",
             )

@@ -340,42 +340,6 @@ class ProspectsResource(SyncAPIResource):
             cast_to=ResponseError,
         )
 
-    def hard_delete(
-        self,
-        prospect_id: str,
-        *,
-        org_id: str,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ResponseError:
-        """
-        Permanently delete a prospect for GDPR compliance
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
-        if not prospect_id:
-            raise ValueError(f"Expected a non-empty value for `prospect_id` but received {prospect_id!r}")
-        return self._delete(
-            f"/org/{org_id}/prospects/{prospect_id}/gdpr",
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=ResponseError,
-        )
-
     def list_calls(
         self,
         prospect_id: str,
@@ -722,42 +686,6 @@ class AsyncProspectsResource(AsyncAPIResource):
             cast_to=ResponseError,
         )
 
-    async def hard_delete(
-        self,
-        prospect_id: str,
-        *,
-        org_id: str,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ResponseError:
-        """
-        Permanently delete a prospect for GDPR compliance
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
-        if not prospect_id:
-            raise ValueError(f"Expected a non-empty value for `prospect_id` but received {prospect_id!r}")
-        return await self._delete(
-            f"/org/{org_id}/prospects/{prospect_id}/gdpr",
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=ResponseError,
-        )
-
     async def list_calls(
         self,
         prospect_id: str,
@@ -830,9 +758,6 @@ class ProspectsResourceWithRawResponse:
         self.delete = to_raw_response_wrapper(
             prospects.delete,
         )
-        self.hard_delete = to_raw_response_wrapper(
-            prospects.hard_delete,
-        )
         self.list_calls = to_raw_response_wrapper(
             prospects.list_calls,
         )
@@ -864,9 +789,6 @@ class AsyncProspectsResourceWithRawResponse:
         )
         self.delete = async_to_raw_response_wrapper(
             prospects.delete,
-        )
-        self.hard_delete = async_to_raw_response_wrapper(
-            prospects.hard_delete,
         )
         self.list_calls = async_to_raw_response_wrapper(
             prospects.list_calls,
@@ -900,9 +822,6 @@ class ProspectsResourceWithStreamingResponse:
         self.delete = to_streamed_response_wrapper(
             prospects.delete,
         )
-        self.hard_delete = to_streamed_response_wrapper(
-            prospects.hard_delete,
-        )
         self.list_calls = to_streamed_response_wrapper(
             prospects.list_calls,
         )
@@ -934,9 +853,6 @@ class AsyncProspectsResourceWithStreamingResponse:
         )
         self.delete = async_to_streamed_response_wrapper(
             prospects.delete,
-        )
-        self.hard_delete = async_to_streamed_response_wrapper(
-            prospects.hard_delete,
         )
         self.list_calls = async_to_streamed_response_wrapper(
             prospects.list_calls,

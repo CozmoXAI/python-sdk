@@ -320,58 +320,6 @@ class TestProspects:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_hard_delete(self, client: Cozmoai) -> None:
-        prospect = client.org.prospects.hard_delete(
-            prospect_id="prospect_id",
-            org_id="org_id",
-        )
-        assert_matches_type(ResponseError, prospect, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_raw_response_hard_delete(self, client: Cozmoai) -> None:
-        response = client.org.prospects.with_raw_response.hard_delete(
-            prospect_id="prospect_id",
-            org_id="org_id",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        prospect = response.parse()
-        assert_matches_type(ResponseError, prospect, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_streaming_response_hard_delete(self, client: Cozmoai) -> None:
-        with client.org.prospects.with_streaming_response.hard_delete(
-            prospect_id="prospect_id",
-            org_id="org_id",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            prospect = response.parse()
-            assert_matches_type(ResponseError, prospect, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_path_params_hard_delete(self, client: Cozmoai) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `org_id` but received ''"):
-            client.org.prospects.with_raw_response.hard_delete(
-                prospect_id="prospect_id",
-                org_id="",
-            )
-
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `prospect_id` but received ''"):
-            client.org.prospects.with_raw_response.hard_delete(
-                prospect_id="",
-                org_id="org_id",
-            )
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
     def test_method_list_calls(self, client: Cozmoai) -> None:
         prospect = client.org.prospects.list_calls(
             prospect_id="prospect_id",
@@ -731,58 +679,6 @@ class TestAsyncProspects:
 
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `prospect_id` but received ''"):
             await async_client.org.prospects.with_raw_response.delete(
-                prospect_id="",
-                org_id="org_id",
-            )
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_method_hard_delete(self, async_client: AsyncCozmoai) -> None:
-        prospect = await async_client.org.prospects.hard_delete(
-            prospect_id="prospect_id",
-            org_id="org_id",
-        )
-        assert_matches_type(ResponseError, prospect, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_raw_response_hard_delete(self, async_client: AsyncCozmoai) -> None:
-        response = await async_client.org.prospects.with_raw_response.hard_delete(
-            prospect_id="prospect_id",
-            org_id="org_id",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        prospect = await response.parse()
-        assert_matches_type(ResponseError, prospect, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_streaming_response_hard_delete(self, async_client: AsyncCozmoai) -> None:
-        async with async_client.org.prospects.with_streaming_response.hard_delete(
-            prospect_id="prospect_id",
-            org_id="org_id",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            prospect = await response.parse()
-            assert_matches_type(ResponseError, prospect, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_path_params_hard_delete(self, async_client: AsyncCozmoai) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `org_id` but received ''"):
-            await async_client.org.prospects.with_raw_response.hard_delete(
-                prospect_id="prospect_id",
-                org_id="",
-            )
-
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `prospect_id` but received ''"):
-            await async_client.org.prospects.with_raw_response.hard_delete(
                 prospect_id="",
                 org_id="org_id",
             )

@@ -16,14 +16,6 @@ from .org import (
     OrgResourceWithStreamingResponse,
     AsyncOrgResourceWithStreamingResponse,
 )
-from .organizations import (
-    OrganizationsResource,
-    AsyncOrganizationsResource,
-    OrganizationsResourceWithRawResponse,
-    AsyncOrganizationsResourceWithRawResponse,
-    OrganizationsResourceWithStreamingResponse,
-    AsyncOrganizationsResourceWithStreamingResponse,
-)
 
 __all__ = [
     "MeResource",
@@ -38,10 +30,4 @@ __all__ = [
     "AsyncOrgResourceWithRawResponse",
     "OrgResourceWithStreamingResponse",
     "AsyncOrgResourceWithStreamingResponse",
-    "OrganizationsResource",
-    "AsyncOrganizationsResource",
-    "OrganizationsResourceWithRawResponse",
-    "AsyncOrganizationsResourceWithRawResponse",
-    "OrganizationsResourceWithStreamingResponse",
-    "AsyncOrganizationsResourceWithStreamingResponse",
 ]

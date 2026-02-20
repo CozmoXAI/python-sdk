@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from typing import Iterable
 from typing_extensions import Literal
 
 import httpx
@@ -17,17 +16,11 @@ from ..._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ...types.org import (
-    phone_number_list_params,
-    phone_number_create_params,
-    phone_number_update_params,
-    phone_number_create_bulk_params,
-)
+from ...types.org import phone_number_list_params, phone_number_create_params, phone_number_update_params
 from ..._base_client import make_request_options
 from ...types.org.phone_number_response import PhoneNumberResponse
 from ...types.org.phone_number_list_response import PhoneNumberListResponse
 from ...types.org.phone_number_delete_response import PhoneNumberDeleteResponse
-from ...types.org.phone_number_create_bulk_response import PhoneNumberCreateBulkResponse
 
 __all__ = ["PhoneNumbersResource", "AsyncPhoneNumbersResource"]
 
@@ -280,48 +273,6 @@ class PhoneNumbersResource(SyncAPIResource):
             cast_to=PhoneNumberDeleteResponse,
         )
 
-    def create_bulk(
-        self,
-        org_id: str,
-        *,
-        numbers: Iterable[phone_number_create_bulk_params.Number],
-        sip_trunk_id: str,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> PhoneNumberCreateBulkResponse:
-        """
-        Creates multiple phone numbers and associates them with a SIP trunk
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
-        return self._post(
-            f"/org/{org_id}/phone-numbers/bulk",
-            body=maybe_transform(
-                {
-                    "numbers": numbers,
-                    "sip_trunk_id": sip_trunk_id,
-                },
-                phone_number_create_bulk_params.PhoneNumberCreateBulkParams,
-            ),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=PhoneNumberCreateBulkResponse,
-        )
-
 
 class AsyncPhoneNumbersResource(AsyncAPIResource):
     @cached_property
@@ -571,48 +522,6 @@ class AsyncPhoneNumbersResource(AsyncAPIResource):
             cast_to=PhoneNumberDeleteResponse,
         )
 
-    async def create_bulk(
-        self,
-        org_id: str,
-        *,
-        numbers: Iterable[phone_number_create_bulk_params.Number],
-        sip_trunk_id: str,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> PhoneNumberCreateBulkResponse:
-        """
-        Creates multiple phone numbers and associates them with a SIP trunk
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
-        return await self._post(
-            f"/org/{org_id}/phone-numbers/bulk",
-            body=await async_maybe_transform(
-                {
-                    "numbers": numbers,
-                    "sip_trunk_id": sip_trunk_id,
-                },
-                phone_number_create_bulk_params.PhoneNumberCreateBulkParams,
-            ),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=PhoneNumberCreateBulkResponse,
-        )
-
 
 class PhoneNumbersResourceWithRawResponse:
     def __init__(self, phone_numbers: PhoneNumbersResource) -> None:
@@ -632,9 +541,6 @@ class PhoneNumbersResourceWithRawResponse:
         )
         self.delete = to_raw_response_wrapper(
             phone_numbers.delete,
-        )
-        self.create_bulk = to_raw_response_wrapper(
-            phone_numbers.create_bulk,
         )
 
 
@@ -657,9 +563,6 @@ class AsyncPhoneNumbersResourceWithRawResponse:
         self.delete = async_to_raw_response_wrapper(
             phone_numbers.delete,
         )
-        self.create_bulk = async_to_raw_response_wrapper(
-            phone_numbers.create_bulk,
-        )
 
 
 class PhoneNumbersResourceWithStreamingResponse:
@@ -681,9 +584,6 @@ class PhoneNumbersResourceWithStreamingResponse:
         self.delete = to_streamed_response_wrapper(
             phone_numbers.delete,
         )
-        self.create_bulk = to_streamed_response_wrapper(
-            phone_numbers.create_bulk,
-        )
 
 
 class AsyncPhoneNumbersResourceWithStreamingResponse:
@@ -704,7 +604,4 @@ class AsyncPhoneNumbersResourceWithStreamingResponse:
         )
         self.delete = async_to_streamed_response_wrapper(
             phone_numbers.delete,
-        )
-        self.create_bulk = async_to_streamed_response_wrapper(
-            phone_numbers.create_bulk,
         )

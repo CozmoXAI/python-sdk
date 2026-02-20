@@ -8,14 +8,6 @@ from .batches import (
     BatchesResourceWithStreamingResponse,
     AsyncBatchesResourceWithStreamingResponse,
 )
-from .versions import (
-    VersionsResource,
-    AsyncVersionsResource,
-    VersionsResourceWithRawResponse,
-    AsyncVersionsResourceWithRawResponse,
-    VersionsResourceWithStreamingResponse,
-    AsyncVersionsResourceWithStreamingResponse,
-)
 from .workflows import (
     WorkflowsResource,
     AsyncWorkflowsResource,
@@ -32,12 +24,6 @@ __all__ = [
     "AsyncBatchesResourceWithRawResponse",
     "BatchesResourceWithStreamingResponse",
     "AsyncBatchesResourceWithStreamingResponse",
-    "VersionsResource",
-    "AsyncVersionsResource",
-    "VersionsResourceWithRawResponse",
-    "AsyncVersionsResourceWithRawResponse",
-    "VersionsResourceWithStreamingResponse",
-    "AsyncVersionsResourceWithStreamingResponse",
     "WorkflowsResource",
     "AsyncWorkflowsResource",
     "WorkflowsResourceWithRawResponse",

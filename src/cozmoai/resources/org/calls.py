@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import httpx
 
-from ..._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
+from ..._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
 from ..._utils import maybe_transform, async_maybe_transform
 from ..._compat import cached_property
 from ..._resource import SyncAPIResource, AsyncAPIResource
@@ -14,94 +14,88 @@ from ..._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ...types.org import api_key_create_api_key_params, api_key_update_api_key_scopes_params
+from ...types.org import call_list_params
 from ..._base_client import make_request_options
-from ...types.org.response import Response
-from ...types.org.api_key_list_api_keys_response import APIKeyListAPIKeysResponse
-from ...types.org.api_key_create_api_key_response import APIKeyCreateAPIKeyResponse
+from ...types.org.call_list_response import CallListResponse
+from ...types.org.call_get_details_response import CallGetDetailsResponse
+from ...types.org.call_get_recording_response import CallGetRecordingResponse
+from ...types.org.call_get_transcript_response import CallGetTranscriptResponse
 
-__all__ = ["APIKeysResource", "AsyncAPIKeysResource"]
+__all__ = ["CallsResource", "AsyncCallsResource"]
 
 
-class APIKeysResource(SyncAPIResource):
+class CallsResource(SyncAPIResource):
     @cached_property
-    def with_raw_response(self) -> APIKeysResourceWithRawResponse:
+    def with_raw_response(self) -> CallsResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/CozmoXAI/python-sdk#accessing-raw-response-data-eg-headers
         """
-        return APIKeysResourceWithRawResponse(self)
+        return CallsResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> APIKeysResourceWithStreamingResponse:
+    def with_streaming_response(self) -> CallsResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
         For more information, see https://www.github.com/CozmoXAI/python-sdk#with_streaming_response
         """
-        return APIKeysResourceWithStreamingResponse(self)
+        return CallsResourceWithStreamingResponse(self)
 
-    def create_api_key(
+    def list(
         self,
         org_id: str,
         *,
-        name: str,
-        scopes: SequenceNotStr[str],
-        expires_at: str | Omit = omit,
+        agent_id: str | Omit = omit,
+        direction: str | Omit = omit,
+        end_date: str | Omit = omit,
+        min_duration: int | Omit = omit,
+        page: int | Omit = omit,
+        phone: str | Omit = omit,
+        prospect_external_id: str | Omit = omit,
+        prospect_id: str | Omit = omit,
+        size: int | Omit = omit,
+        start_date: str | Omit = omit,
+        status: str | Omit = omit,
+        workflow_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIKeyCreateAPIKeyResponse:
+    ) -> CallListResponse:
         """
-        Create a new API key for the organization
+        Returns a paginated list of calls for the organization with optional filters
 
         Args:
-          extra_headers: Send extra headers
+          agent_id: Filter by agent ID
 
-          extra_query: Add additional query parameters to the request
+          direction: Filter by direction (INBOUND, OUTBOUND)
 
-          extra_body: Add additional JSON properties to the request
+          end_date: Filter by end date (ISO 8601)
 
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
-        return self._post(
-            f"/org/{org_id}/api-keys",
-            body=maybe_transform(
-                {
-                    "name": name,
-                    "scopes": scopes,
-                    "expires_at": expires_at,
-                },
-                api_key_create_api_key_params.APIKeyCreateAPIKeyParams,
-            ),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=APIKeyCreateAPIKeyResponse,
-        )
+          min_duration: Filter by minimum duration in seconds
 
-    def list_api_keys(
-        self,
-        org_id: str,
-        *,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIKeyListAPIKeysResponse:
-        """
-        List all API keys for the organization (keys are masked)
+          page: Page number
 
-        Args:
+          phone: Search by phone number
+
+          prospect_external_id: Filter by prospect external ID
+
+          prospect_id: Filter by prospect ID
+
+          size: Page size
+
+          start_date: Filter by start date (ISO 8601)
+
+          status: Filter by status (SCHEDULED, RINGING, IN_PROGRESS, completed, no-answer, failed,
+              busy)
+
+          workflow_id: Filter by workflow ID
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -113,26 +107,47 @@ class APIKeysResource(SyncAPIResource):
         if not org_id:
             raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
         return self._get(
-            f"/org/{org_id}/api-keys",
+            f"/org/{org_id}/calls",
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform(
+                    {
+                        "agent_id": agent_id,
+                        "direction": direction,
+                        "end_date": end_date,
+                        "min_duration": min_duration,
+                        "page": page,
+                        "phone": phone,
+                        "prospect_external_id": prospect_external_id,
+                        "prospect_id": prospect_id,
+                        "size": size,
+                        "start_date": start_date,
+                        "status": status,
+                        "workflow_id": workflow_id,
+                    },
+                    call_list_params.CallListParams,
+                ),
             ),
-            cast_to=APIKeyListAPIKeysResponse,
+            cast_to=CallListResponse,
         )
 
-    def revoke_all_api_keys(
+    def get_details(
         self,
-        org_id: str,
+        call_id: str,
         *,
+        org_id: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> Response:
+    ) -> CallGetDetailsResponse:
         """
-        Revokes all organization API keys (soft delete)
+        Returns full details for a specific call including prospect and agent info
 
         Args:
           extra_headers: Send extra headers
@@ -145,17 +160,19 @@ class APIKeysResource(SyncAPIResource):
         """
         if not org_id:
             raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
-        return self._delete(
-            f"/org/{org_id}/api-keys",
+        if not call_id:
+            raise ValueError(f"Expected a non-empty value for `call_id` but received {call_id!r}")
+        return self._get(
+            f"/org/{org_id}/calls/{call_id}",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=Response,
+            cast_to=CallGetDetailsResponse,
         )
 
-    def revoke_api_key(
+    def get_recording(
         self,
-        key_id: str,
+        call_id: str,
         *,
         org_id: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -164,9 +181,9 @@ class APIKeysResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> Response:
+    ) -> CallGetRecordingResponse:
         """
-        Revoke an API key (soft delete)
+        Returns the recording URL for a call
 
         Args:
           extra_headers: Send extra headers
@@ -179,31 +196,30 @@ class APIKeysResource(SyncAPIResource):
         """
         if not org_id:
             raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
-        if not key_id:
-            raise ValueError(f"Expected a non-empty value for `key_id` but received {key_id!r}")
-        return self._delete(
-            f"/org/{org_id}/api-keys/{key_id}",
+        if not call_id:
+            raise ValueError(f"Expected a non-empty value for `call_id` but received {call_id!r}")
+        return self._get(
+            f"/org/{org_id}/calls/{call_id}/recording",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=Response,
+            cast_to=CallGetRecordingResponse,
         )
 
-    def update_api_key_scopes(
+    def get_transcript(
         self,
-        key_id: str,
+        call_id: str,
         *,
         org_id: str,
-        scopes: SequenceNotStr[str],
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> Response:
+    ) -> CallGetTranscriptResponse:
         """
-        Update the scopes of an existing API key
+        Returns the transcript and conversation messages for a call
 
         Args:
           extra_headers: Send extra headers
@@ -216,99 +232,89 @@ class APIKeysResource(SyncAPIResource):
         """
         if not org_id:
             raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
-        if not key_id:
-            raise ValueError(f"Expected a non-empty value for `key_id` but received {key_id!r}")
-        return self._patch(
-            f"/org/{org_id}/api-keys/{key_id}/scopes",
-            body=maybe_transform(
-                {"scopes": scopes}, api_key_update_api_key_scopes_params.APIKeyUpdateAPIKeyScopesParams
-            ),
+        if not call_id:
+            raise ValueError(f"Expected a non-empty value for `call_id` but received {call_id!r}")
+        return self._get(
+            f"/org/{org_id}/calls/{call_id}/transcript",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=Response,
+            cast_to=CallGetTranscriptResponse,
         )
 
 
-class AsyncAPIKeysResource(AsyncAPIResource):
+class AsyncCallsResource(AsyncAPIResource):
     @cached_property
-    def with_raw_response(self) -> AsyncAPIKeysResourceWithRawResponse:
+    def with_raw_response(self) -> AsyncCallsResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/CozmoXAI/python-sdk#accessing-raw-response-data-eg-headers
         """
-        return AsyncAPIKeysResourceWithRawResponse(self)
+        return AsyncCallsResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> AsyncAPIKeysResourceWithStreamingResponse:
+    def with_streaming_response(self) -> AsyncCallsResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
         For more information, see https://www.github.com/CozmoXAI/python-sdk#with_streaming_response
         """
-        return AsyncAPIKeysResourceWithStreamingResponse(self)
+        return AsyncCallsResourceWithStreamingResponse(self)
 
-    async def create_api_key(
+    async def list(
         self,
         org_id: str,
         *,
-        name: str,
-        scopes: SequenceNotStr[str],
-        expires_at: str | Omit = omit,
+        agent_id: str | Omit = omit,
+        direction: str | Omit = omit,
+        end_date: str | Omit = omit,
+        min_duration: int | Omit = omit,
+        page: int | Omit = omit,
+        phone: str | Omit = omit,
+        prospect_external_id: str | Omit = omit,
+        prospect_id: str | Omit = omit,
+        size: int | Omit = omit,
+        start_date: str | Omit = omit,
+        status: str | Omit = omit,
+        workflow_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIKeyCreateAPIKeyResponse:
+    ) -> CallListResponse:
         """
-        Create a new API key for the organization
+        Returns a paginated list of calls for the organization with optional filters
 
         Args:
-          extra_headers: Send extra headers
+          agent_id: Filter by agent ID
 
-          extra_query: Add additional query parameters to the request
+          direction: Filter by direction (INBOUND, OUTBOUND)
 
-          extra_body: Add additional JSON properties to the request
+          end_date: Filter by end date (ISO 8601)
 
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
-        return await self._post(
-            f"/org/{org_id}/api-keys",
-            body=await async_maybe_transform(
-                {
-                    "name": name,
-                    "scopes": scopes,
-                    "expires_at": expires_at,
-                },
-                api_key_create_api_key_params.APIKeyCreateAPIKeyParams,
-            ),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=APIKeyCreateAPIKeyResponse,
-        )
+          min_duration: Filter by minimum duration in seconds
 
-    async def list_api_keys(
-        self,
-        org_id: str,
-        *,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> APIKeyListAPIKeysResponse:
-        """
-        List all API keys for the organization (keys are masked)
+          page: Page number
 
-        Args:
+          phone: Search by phone number
+
+          prospect_external_id: Filter by prospect external ID
+
+          prospect_id: Filter by prospect ID
+
+          size: Page size
+
+          start_date: Filter by start date (ISO 8601)
+
+          status: Filter by status (SCHEDULED, RINGING, IN_PROGRESS, completed, no-answer, failed,
+              busy)
+
+          workflow_id: Filter by workflow ID
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -320,26 +326,47 @@ class AsyncAPIKeysResource(AsyncAPIResource):
         if not org_id:
             raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
         return await self._get(
-            f"/org/{org_id}/api-keys",
+            f"/org/{org_id}/calls",
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform(
+                    {
+                        "agent_id": agent_id,
+                        "direction": direction,
+                        "end_date": end_date,
+                        "min_duration": min_duration,
+                        "page": page,
+                        "phone": phone,
+                        "prospect_external_id": prospect_external_id,
+                        "prospect_id": prospect_id,
+                        "size": size,
+                        "start_date": start_date,
+                        "status": status,
+                        "workflow_id": workflow_id,
+                    },
+                    call_list_params.CallListParams,
+                ),
             ),
-            cast_to=APIKeyListAPIKeysResponse,
+            cast_to=CallListResponse,
         )
 
-    async def revoke_all_api_keys(
+    async def get_details(
         self,
-        org_id: str,
+        call_id: str,
         *,
+        org_id: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> Response:
+    ) -> CallGetDetailsResponse:
         """
-        Revokes all organization API keys (soft delete)
+        Returns full details for a specific call including prospect and agent info
 
         Args:
           extra_headers: Send extra headers
@@ -352,17 +379,19 @@ class AsyncAPIKeysResource(AsyncAPIResource):
         """
         if not org_id:
             raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
-        return await self._delete(
-            f"/org/{org_id}/api-keys",
+        if not call_id:
+            raise ValueError(f"Expected a non-empty value for `call_id` but received {call_id!r}")
+        return await self._get(
+            f"/org/{org_id}/calls/{call_id}",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=Response,
+            cast_to=CallGetDetailsResponse,
         )
 
-    async def revoke_api_key(
+    async def get_recording(
         self,
-        key_id: str,
+        call_id: str,
         *,
         org_id: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -371,9 +400,9 @@ class AsyncAPIKeysResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> Response:
+    ) -> CallGetRecordingResponse:
         """
-        Revoke an API key (soft delete)
+        Returns the recording URL for a call
 
         Args:
           extra_headers: Send extra headers
@@ -386,31 +415,30 @@ class AsyncAPIKeysResource(AsyncAPIResource):
         """
         if not org_id:
             raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
-        if not key_id:
-            raise ValueError(f"Expected a non-empty value for `key_id` but received {key_id!r}")
-        return await self._delete(
-            f"/org/{org_id}/api-keys/{key_id}",
+        if not call_id:
+            raise ValueError(f"Expected a non-empty value for `call_id` but received {call_id!r}")
+        return await self._get(
+            f"/org/{org_id}/calls/{call_id}/recording",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=Response,
+            cast_to=CallGetRecordingResponse,
         )
 
-    async def update_api_key_scopes(
+    async def get_transcript(
         self,
-        key_id: str,
+        call_id: str,
         *,
         org_id: str,
-        scopes: SequenceNotStr[str],
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> Response:
+    ) -> CallGetTranscriptResponse:
         """
-        Update the scopes of an existing API key
+        Returns the transcript and conversation messages for a call
 
         Args:
           extra_headers: Send extra headers
@@ -423,99 +451,84 @@ class AsyncAPIKeysResource(AsyncAPIResource):
         """
         if not org_id:
             raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
-        if not key_id:
-            raise ValueError(f"Expected a non-empty value for `key_id` but received {key_id!r}")
-        return await self._patch(
-            f"/org/{org_id}/api-keys/{key_id}/scopes",
-            body=await async_maybe_transform(
-                {"scopes": scopes}, api_key_update_api_key_scopes_params.APIKeyUpdateAPIKeyScopesParams
-            ),
+        if not call_id:
+            raise ValueError(f"Expected a non-empty value for `call_id` but received {call_id!r}")
+        return await self._get(
+            f"/org/{org_id}/calls/{call_id}/transcript",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=Response,
+            cast_to=CallGetTranscriptResponse,
         )
 
 
-class APIKeysResourceWithRawResponse:
-    def __init__(self, api_keys: APIKeysResource) -> None:
-        self._api_keys = api_keys
+class CallsResourceWithRawResponse:
+    def __init__(self, calls: CallsResource) -> None:
+        self._calls = calls
 
-        self.create_api_key = to_raw_response_wrapper(
-            api_keys.create_api_key,
+        self.list = to_raw_response_wrapper(
+            calls.list,
         )
-        self.list_api_keys = to_raw_response_wrapper(
-            api_keys.list_api_keys,
+        self.get_details = to_raw_response_wrapper(
+            calls.get_details,
         )
-        self.revoke_all_api_keys = to_raw_response_wrapper(
-            api_keys.revoke_all_api_keys,
+        self.get_recording = to_raw_response_wrapper(
+            calls.get_recording,
         )
-        self.revoke_api_key = to_raw_response_wrapper(
-            api_keys.revoke_api_key,
-        )
-        self.update_api_key_scopes = to_raw_response_wrapper(
-            api_keys.update_api_key_scopes,
+        self.get_transcript = to_raw_response_wrapper(
+            calls.get_transcript,
         )
 
 
-class AsyncAPIKeysResourceWithRawResponse:
-    def __init__(self, api_keys: AsyncAPIKeysResource) -> None:
-        self._api_keys = api_keys
+class AsyncCallsResourceWithRawResponse:
+    def __init__(self, calls: AsyncCallsResource) -> None:
+        self._calls = calls
 
-        self.create_api_key = async_to_raw_response_wrapper(
-            api_keys.create_api_key,
+        self.list = async_to_raw_response_wrapper(
+            calls.list,
         )
-        self.list_api_keys = async_to_raw_response_wrapper(
-            api_keys.list_api_keys,
+        self.get_details = async_to_raw_response_wrapper(
+            calls.get_details,
         )
-        self.revoke_all_api_keys = async_to_raw_response_wrapper(
-            api_keys.revoke_all_api_keys,
+        self.get_recording = async_to_raw_response_wrapper(
+            calls.get_recording,
         )
-        self.revoke_api_key = async_to_raw_response_wrapper(
-            api_keys.revoke_api_key,
-        )
-        self.update_api_key_scopes = async_to_raw_response_wrapper(
-            api_keys.update_api_key_scopes,
+        self.get_transcript = async_to_raw_response_wrapper(
+            calls.get_transcript,
         )
 
 
-class APIKeysResourceWithStreamingResponse:
-    def __init__(self, api_keys: APIKeysResource) -> None:
-        self._api_keys = api_keys
+class CallsResourceWithStreamingResponse:
+    def __init__(self, calls: CallsResource) -> None:
+        self._calls = calls
 
-        self.create_api_key = to_streamed_response_wrapper(
-            api_keys.create_api_key,
+        self.list = to_streamed_response_wrapper(
+            calls.list,
         )
-        self.list_api_keys = to_streamed_response_wrapper(
-            api_keys.list_api_keys,
+        self.get_details = to_streamed_response_wrapper(
+            calls.get_details,
         )
-        self.revoke_all_api_keys = to_streamed_response_wrapper(
-            api_keys.revoke_all_api_keys,
+        self.get_recording = to_streamed_response_wrapper(
+            calls.get_recording,
         )
-        self.revoke_api_key = to_streamed_response_wrapper(
-            api_keys.revoke_api_key,
-        )
-        self.update_api_key_scopes = to_streamed_response_wrapper(
-            api_keys.update_api_key_scopes,
+        self.get_transcript = to_streamed_response_wrapper(
+            calls.get_transcript,
         )
 
 
-class AsyncAPIKeysResourceWithStreamingResponse:
-    def __init__(self, api_keys: AsyncAPIKeysResource) -> None:
-        self._api_keys = api_keys
+class AsyncCallsResourceWithStreamingResponse:
+    def __init__(self, calls: AsyncCallsResource) -> None:
+        self._calls = calls
 
-        self.create_api_key = async_to_streamed_response_wrapper(
-            api_keys.create_api_key,
+        self.list = async_to_streamed_response_wrapper(
+            calls.list,
         )
-        self.list_api_keys = async_to_streamed_response_wrapper(
-            api_keys.list_api_keys,
+        self.get_details = async_to_streamed_response_wrapper(
+            calls.get_details,
         )
-        self.revoke_all_api_keys = async_to_streamed_response_wrapper(
-            api_keys.revoke_all_api_keys,
+        self.get_recording = async_to_streamed_response_wrapper(
+            calls.get_recording,
         )
-        self.revoke_api_key = async_to_streamed_response_wrapper(
-            api_keys.revoke_api_key,
-        )
-        self.update_api_key_scopes = async_to_streamed_response_wrapper(
-            api_keys.update_api_key_scopes,
+        self.get_transcript = async_to_streamed_response_wrapper(
+            calls.get_transcript,
         )

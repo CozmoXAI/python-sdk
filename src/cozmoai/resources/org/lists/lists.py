@@ -270,42 +270,6 @@ class ListsResource(SyncAPIResource):
             cast_to=DeleteListResponse,
         )
 
-    def delete_gdpr(
-        self,
-        list_id: str,
-        *,
-        org_id: str,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> DeleteListResponse:
-        """
-        Permanently delete a prospect list and all its prospects for GDPR compliance
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
-        if not list_id:
-            raise ValueError(f"Expected a non-empty value for `list_id` but received {list_id!r}")
-        return self._delete(
-            f"/org/{org_id}/lists/{list_id}/gdpr",
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=DeleteListResponse,
-        )
-
 
 class AsyncListsResource(AsyncAPIResource):
     @cached_property
@@ -544,42 +508,6 @@ class AsyncListsResource(AsyncAPIResource):
             cast_to=DeleteListResponse,
         )
 
-    async def delete_gdpr(
-        self,
-        list_id: str,
-        *,
-        org_id: str,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> DeleteListResponse:
-        """
-        Permanently delete a prospect list and all its prospects for GDPR compliance
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
-        if not list_id:
-            raise ValueError(f"Expected a non-empty value for `list_id` but received {list_id!r}")
-        return await self._delete(
-            f"/org/{org_id}/lists/{list_id}/gdpr",
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=DeleteListResponse,
-        )
-
 
 class ListsResourceWithRawResponse:
     def __init__(self, lists: ListsResource) -> None:
@@ -599,9 +527,6 @@ class ListsResourceWithRawResponse:
         )
         self.delete = to_raw_response_wrapper(
             lists.delete,
-        )
-        self.delete_gdpr = to_raw_response_wrapper(
-            lists.delete_gdpr,
         )
 
     @cached_property
@@ -628,9 +553,6 @@ class AsyncListsResourceWithRawResponse:
         self.delete = async_to_raw_response_wrapper(
             lists.delete,
         )
-        self.delete_gdpr = async_to_raw_response_wrapper(
-            lists.delete_gdpr,
-        )
 
     @cached_property
     def prospects(self) -> AsyncProspectsResourceWithRawResponse:
@@ -656,9 +578,6 @@ class ListsResourceWithStreamingResponse:
         self.delete = to_streamed_response_wrapper(
             lists.delete,
         )
-        self.delete_gdpr = to_streamed_response_wrapper(
-            lists.delete_gdpr,
-        )
 
     @cached_property
     def prospects(self) -> ProspectsResourceWithStreamingResponse:
@@ -683,9 +602,6 @@ class AsyncListsResourceWithStreamingResponse:
         )
         self.delete = async_to_streamed_response_wrapper(
             lists.delete,
-        )
-        self.delete_gdpr = async_to_streamed_response_wrapper(
-            lists.delete_gdpr,
         )
 
     @cached_property

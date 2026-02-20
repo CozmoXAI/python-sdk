@@ -14,14 +14,6 @@ from .batches import (
     BatchesResourceWithStreamingResponse,
     AsyncBatchesResourceWithStreamingResponse,
 )
-from .versions import (
-    VersionsResource,
-    AsyncVersionsResource,
-    VersionsResourceWithRawResponse,
-    AsyncVersionsResourceWithRawResponse,
-    VersionsResourceWithStreamingResponse,
-    AsyncVersionsResourceWithStreamingResponse,
-)
 from ...._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
 from ...._utils import maybe_transform, async_maybe_transform
 from ...._compat import cached_property
@@ -43,7 +35,6 @@ from ....types.org.workflow_response import WorkflowResponse
 from ....types.org.workflow_list_response import WorkflowListResponse
 from ....types.org.workflow_delete_response import WorkflowDeleteResponse
 from ....types.org.paginated_runs_extended_response import PaginatedRunsExtendedResponse
-from ....types.org.workflow_retrieve_calls_response import WorkflowRetrieveCallsResponse
 
 __all__ = ["WorkflowsResource", "AsyncWorkflowsResource"]
 
@@ -52,10 +43,6 @@ class WorkflowsResource(SyncAPIResource):
     @cached_property
     def batches(self) -> BatchesResource:
         return BatchesResource(self._client)
-
-    @cached_property
-    def versions(self) -> VersionsResource:
-        return VersionsResource(self._client)
 
     @cached_property
     def with_raw_response(self) -> WorkflowsResourceWithRawResponse:
@@ -161,43 +148,6 @@ class WorkflowsResource(SyncAPIResource):
             cast_to=WorkflowResponse,
         )
 
-    def update(
-        self,
-        version: int,
-        *,
-        org_id: str,
-        workflow_id: str,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> WorkflowResponse:
-        """
-        Restore a previous version by creating a new version with the old definition
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
-        if not workflow_id:
-            raise ValueError(f"Expected a non-empty value for `workflow_id` but received {workflow_id!r}")
-        return self._post(
-            f"/org/{org_id}/workflows/{workflow_id}/restore/{version}",
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=WorkflowResponse,
-        )
-
     def list(
         self,
         org_id: str,
@@ -293,78 +243,6 @@ class WorkflowsResource(SyncAPIResource):
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=WorkflowDeleteResponse,
-        )
-
-    def duplicate(
-        self,
-        workflow_id: str,
-        *,
-        org_id: str,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> WorkflowResponse:
-        """
-        Create a copy of a workflow with " (Copy)" suffix
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
-        if not workflow_id:
-            raise ValueError(f"Expected a non-empty value for `workflow_id` but received {workflow_id!r}")
-        return self._post(
-            f"/org/{org_id}/workflows/{workflow_id}/duplicate",
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=WorkflowResponse,
-        )
-
-    def retrieve_calls(
-        self,
-        node_id: str,
-        *,
-        org_id: str,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> WorkflowRetrieveCallsResponse:
-        """
-        Returns all calls associated with a specific workflow node across all prospects
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
-        if not node_id:
-            raise ValueError(f"Expected a non-empty value for `node_id` but received {node_id!r}")
-        return self._get(
-            f"/org/{org_id}/workflow/{node_id}/calls",
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=WorkflowRetrieveCallsResponse,
         )
 
     def retrieve_runs(
@@ -494,10 +372,6 @@ class AsyncWorkflowsResource(AsyncAPIResource):
         return AsyncBatchesResource(self._client)
 
     @cached_property
-    def versions(self) -> AsyncVersionsResource:
-        return AsyncVersionsResource(self._client)
-
-    @cached_property
     def with_raw_response(self) -> AsyncWorkflowsResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
@@ -601,43 +475,6 @@ class AsyncWorkflowsResource(AsyncAPIResource):
             cast_to=WorkflowResponse,
         )
 
-    async def update(
-        self,
-        version: int,
-        *,
-        org_id: str,
-        workflow_id: str,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> WorkflowResponse:
-        """
-        Restore a previous version by creating a new version with the old definition
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
-        if not workflow_id:
-            raise ValueError(f"Expected a non-empty value for `workflow_id` but received {workflow_id!r}")
-        return await self._post(
-            f"/org/{org_id}/workflows/{workflow_id}/restore/{version}",
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=WorkflowResponse,
-        )
-
     async def list(
         self,
         org_id: str,
@@ -733,78 +570,6 @@ class AsyncWorkflowsResource(AsyncAPIResource):
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=WorkflowDeleteResponse,
-        )
-
-    async def duplicate(
-        self,
-        workflow_id: str,
-        *,
-        org_id: str,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> WorkflowResponse:
-        """
-        Create a copy of a workflow with " (Copy)" suffix
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
-        if not workflow_id:
-            raise ValueError(f"Expected a non-empty value for `workflow_id` but received {workflow_id!r}")
-        return await self._post(
-            f"/org/{org_id}/workflows/{workflow_id}/duplicate",
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=WorkflowResponse,
-        )
-
-    async def retrieve_calls(
-        self,
-        node_id: str,
-        *,
-        org_id: str,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> WorkflowRetrieveCallsResponse:
-        """
-        Returns all calls associated with a specific workflow node across all prospects
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
-        if not node_id:
-            raise ValueError(f"Expected a non-empty value for `node_id` but received {node_id!r}")
-        return await self._get(
-            f"/org/{org_id}/workflow/{node_id}/calls",
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=WorkflowRetrieveCallsResponse,
         )
 
     async def retrieve_runs(
@@ -938,20 +703,11 @@ class WorkflowsResourceWithRawResponse:
         self.retrieve = to_raw_response_wrapper(
             workflows.retrieve,
         )
-        self.update = to_raw_response_wrapper(
-            workflows.update,
-        )
         self.list = to_raw_response_wrapper(
             workflows.list,
         )
         self.delete = to_raw_response_wrapper(
             workflows.delete,
-        )
-        self.duplicate = to_raw_response_wrapper(
-            workflows.duplicate,
-        )
-        self.retrieve_calls = to_raw_response_wrapper(
-            workflows.retrieve_calls,
         )
         self.retrieve_runs = to_raw_response_wrapper(
             workflows.retrieve_runs,
@@ -964,10 +720,6 @@ class WorkflowsResourceWithRawResponse:
     def batches(self) -> BatchesResourceWithRawResponse:
         return BatchesResourceWithRawResponse(self._workflows.batches)
 
-    @cached_property
-    def versions(self) -> VersionsResourceWithRawResponse:
-        return VersionsResourceWithRawResponse(self._workflows.versions)
-
 
 class AsyncWorkflowsResourceWithRawResponse:
     def __init__(self, workflows: AsyncWorkflowsResource) -> None:
@@ -979,20 +731,11 @@ class AsyncWorkflowsResourceWithRawResponse:
         self.retrieve = async_to_raw_response_wrapper(
             workflows.retrieve,
         )
-        self.update = async_to_raw_response_wrapper(
-            workflows.update,
-        )
         self.list = async_to_raw_response_wrapper(
             workflows.list,
         )
         self.delete = async_to_raw_response_wrapper(
             workflows.delete,
-        )
-        self.duplicate = async_to_raw_response_wrapper(
-            workflows.duplicate,
-        )
-        self.retrieve_calls = async_to_raw_response_wrapper(
-            workflows.retrieve_calls,
         )
         self.retrieve_runs = async_to_raw_response_wrapper(
             workflows.retrieve_runs,
@@ -1005,10 +748,6 @@ class AsyncWorkflowsResourceWithRawResponse:
     def batches(self) -> AsyncBatchesResourceWithRawResponse:
         return AsyncBatchesResourceWithRawResponse(self._workflows.batches)
 
-    @cached_property
-    def versions(self) -> AsyncVersionsResourceWithRawResponse:
-        return AsyncVersionsResourceWithRawResponse(self._workflows.versions)
-
 
 class WorkflowsResourceWithStreamingResponse:
     def __init__(self, workflows: WorkflowsResource) -> None:
@@ -1020,20 +759,11 @@ class WorkflowsResourceWithStreamingResponse:
         self.retrieve = to_streamed_response_wrapper(
             workflows.retrieve,
         )
-        self.update = to_streamed_response_wrapper(
-            workflows.update,
-        )
         self.list = to_streamed_response_wrapper(
             workflows.list,
         )
         self.delete = to_streamed_response_wrapper(
             workflows.delete,
-        )
-        self.duplicate = to_streamed_response_wrapper(
-            workflows.duplicate,
-        )
-        self.retrieve_calls = to_streamed_response_wrapper(
-            workflows.retrieve_calls,
         )
         self.retrieve_runs = to_streamed_response_wrapper(
             workflows.retrieve_runs,
@@ -1046,10 +776,6 @@ class WorkflowsResourceWithStreamingResponse:
     def batches(self) -> BatchesResourceWithStreamingResponse:
         return BatchesResourceWithStreamingResponse(self._workflows.batches)
 
-    @cached_property
-    def versions(self) -> VersionsResourceWithStreamingResponse:
-        return VersionsResourceWithStreamingResponse(self._workflows.versions)
-
 
 class AsyncWorkflowsResourceWithStreamingResponse:
     def __init__(self, workflows: AsyncWorkflowsResource) -> None:
@@ -1061,20 +787,11 @@ class AsyncWorkflowsResourceWithStreamingResponse:
         self.retrieve = async_to_streamed_response_wrapper(
             workflows.retrieve,
         )
-        self.update = async_to_streamed_response_wrapper(
-            workflows.update,
-        )
         self.list = async_to_streamed_response_wrapper(
             workflows.list,
         )
         self.delete = async_to_streamed_response_wrapper(
             workflows.delete,
-        )
-        self.duplicate = async_to_streamed_response_wrapper(
-            workflows.duplicate,
-        )
-        self.retrieve_calls = async_to_streamed_response_wrapper(
-            workflows.retrieve_calls,
         )
         self.retrieve_runs = async_to_streamed_response_wrapper(
             workflows.retrieve_runs,
@@ -1086,7 +803,3 @@ class AsyncWorkflowsResourceWithStreamingResponse:
     @cached_property
     def batches(self) -> AsyncBatchesResourceWithStreamingResponse:
         return AsyncBatchesResourceWithStreamingResponse(self._workflows.batches)
-
-    @cached_property
-    def versions(self) -> AsyncVersionsResourceWithStreamingResponse:
-        return AsyncVersionsResourceWithStreamingResponse(self._workflows.versions)
