@@ -1,15 +1,3 @@
-# Billing
-
-Types:
-
-```python
-from cozmoai.types import BillingHandleWebhookResponse
-```
-
-Methods:
-
-- <code title="post /billing/webhook">client.billing.<a href="./src/cozmoai/resources/billing.py">handle_webhook</a>() -> <a href="./src/cozmoai/types/billing_handle_webhook_response.py">BillingHandleWebhookResponse</a></code>
-
 # Me
 
 Types:

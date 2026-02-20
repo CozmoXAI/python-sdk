@@ -31,9 +31,8 @@ from ._base_client import (
 )
 
 if TYPE_CHECKING:
-    from .resources import me, org, billing, organizations
+    from .resources import me, org, organizations
     from .resources.me import MeResource, AsyncMeResource
-    from .resources.billing import BillingResource, AsyncBillingResource
     from .resources.org.org import OrgResource, AsyncOrgResource
     from .resources.organizations.organizations import OrganizationsResource, AsyncOrganizationsResource
 
@@ -94,12 +93,6 @@ class Cozmoai(SyncAPIClient):
             custom_query=default_query,
             _strict_response_validation=_strict_response_validation,
         )
-
-    @cached_property
-    def billing(self) -> BillingResource:
-        from .resources.billing import BillingResource
-
-        return BillingResource(self)
 
     @cached_property
     def me(self) -> MeResource:
@@ -288,12 +281,6 @@ class AsyncCozmoai(AsyncAPIClient):
         )
 
     @cached_property
-    def billing(self) -> AsyncBillingResource:
-        from .resources.billing import AsyncBillingResource
-
-        return AsyncBillingResource(self)
-
-    @cached_property
     def me(self) -> AsyncMeResource:
         from .resources.me import AsyncMeResource
 
@@ -431,12 +418,6 @@ class CozmoaiWithRawResponse:
         self._client = client
 
     @cached_property
-    def billing(self) -> billing.BillingResourceWithRawResponse:
-        from .resources.billing import BillingResourceWithRawResponse
-
-        return BillingResourceWithRawResponse(self._client.billing)
-
-    @cached_property
     def me(self) -> me.MeResourceWithRawResponse:
         from .resources.me import MeResourceWithRawResponse
 
@@ -460,12 +441,6 @@ class AsyncCozmoaiWithRawResponse:
 
     def __init__(self, client: AsyncCozmoai) -> None:
         self._client = client
-
-    @cached_property
-    def billing(self) -> billing.AsyncBillingResourceWithRawResponse:
-        from .resources.billing import AsyncBillingResourceWithRawResponse
-
-        return AsyncBillingResourceWithRawResponse(self._client.billing)
 
     @cached_property
     def me(self) -> me.AsyncMeResourceWithRawResponse:
@@ -493,12 +468,6 @@ class CozmoaiWithStreamedResponse:
         self._client = client
 
     @cached_property
-    def billing(self) -> billing.BillingResourceWithStreamingResponse:
-        from .resources.billing import BillingResourceWithStreamingResponse
-
-        return BillingResourceWithStreamingResponse(self._client.billing)
-
-    @cached_property
     def me(self) -> me.MeResourceWithStreamingResponse:
         from .resources.me import MeResourceWithStreamingResponse
 
@@ -522,12 +491,6 @@ class AsyncCozmoaiWithStreamedResponse:
 
     def __init__(self, client: AsyncCozmoai) -> None:
         self._client = client
-
-    @cached_property
-    def billing(self) -> billing.AsyncBillingResourceWithStreamingResponse:
-        from .resources.billing import AsyncBillingResourceWithStreamingResponse
-
-        return AsyncBillingResourceWithStreamingResponse(self._client.billing)
 
     @cached_property
     def me(self) -> me.AsyncMeResourceWithStreamingResponse:
