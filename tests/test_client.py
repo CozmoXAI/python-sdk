@@ -400,7 +400,7 @@ class TestCozmoai:
     def test_validate_headers(self) -> None:
         client = Cozmoai(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
-        assert request.headers.get("Authorization") == f"Bearer {api_key}"
+        assert request.headers.get("Authorization") == api_key
 
         with pytest.raises(CozmoaiError):
             with update_env(**{"COZMOAI_API_KEY": Omit()}):
@@ -849,24 +849,20 @@ class TestCozmoai:
     @mock.patch("cozmoai._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter, client: Cozmoai) -> None:
-        respx_mock.post("/billing/webhook").mock(side_effect=httpx.TimeoutException("Test timeout error"))
+        respx_mock.get("/org/org_id/agents").mock(side_effect=httpx.TimeoutException("Test timeout error"))
 
         with pytest.raises(APITimeoutError):
-            client.billing.with_streaming_response.handle_webhook(
-                svix_id="svix-id", svix_signature="svix-signature", svix_timestamp="svix-timestamp"
-            ).__enter__()
+            client.org.agents.with_streaming_response.list(org_id="org_id").__enter__()
 
         assert _get_open_connections(client) == 0
 
     @mock.patch("cozmoai._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter, client: Cozmoai) -> None:
-        respx_mock.post("/billing/webhook").mock(return_value=httpx.Response(500))
+        respx_mock.get("/org/org_id/agents").mock(return_value=httpx.Response(500))
 
         with pytest.raises(APIStatusError):
-            client.billing.with_streaming_response.handle_webhook(
-                svix_id="svix-id", svix_signature="svix-signature", svix_timestamp="svix-timestamp"
-            ).__enter__()
+            client.org.agents.with_streaming_response.list(org_id="org_id").__enter__()
         assert _get_open_connections(client) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
@@ -893,11 +889,9 @@ class TestCozmoai:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/billing/webhook").mock(side_effect=retry_handler)
+        respx_mock.get("/org/org_id/agents").mock(side_effect=retry_handler)
 
-        response = client.billing.with_raw_response.handle_webhook(
-            svix_id="svix-id", svix_signature="svix-signature", svix_timestamp="svix-timestamp"
-        )
+        response = client.org.agents.with_raw_response.list(org_id="org_id")
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -919,13 +913,10 @@ class TestCozmoai:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/billing/webhook").mock(side_effect=retry_handler)
+        respx_mock.get("/org/org_id/agents").mock(side_effect=retry_handler)
 
-        response = client.billing.with_raw_response.handle_webhook(
-            svix_id="svix-id",
-            svix_signature="svix-signature",
-            svix_timestamp="svix-timestamp",
-            extra_headers={"x-stainless-retry-count": Omit()},
+        response = client.org.agents.with_raw_response.list(
+            org_id="org_id", extra_headers={"x-stainless-retry-count": Omit()}
         )
 
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
@@ -947,13 +938,10 @@ class TestCozmoai:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/billing/webhook").mock(side_effect=retry_handler)
+        respx_mock.get("/org/org_id/agents").mock(side_effect=retry_handler)
 
-        response = client.billing.with_raw_response.handle_webhook(
-            svix_id="svix-id",
-            svix_signature="svix-signature",
-            svix_timestamp="svix-timestamp",
-            extra_headers={"x-stainless-retry-count": "42"},
+        response = client.org.agents.with_raw_response.list(
+            org_id="org_id", extra_headers={"x-stainless-retry-count": "42"}
         )
 
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"
@@ -1299,7 +1287,7 @@ class TestAsyncCozmoai:
     def test_validate_headers(self) -> None:
         client = AsyncCozmoai(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
-        assert request.headers.get("Authorization") == f"Bearer {api_key}"
+        assert request.headers.get("Authorization") == api_key
 
         with pytest.raises(CozmoaiError):
             with update_env(**{"COZMOAI_API_KEY": Omit()}):
@@ -1765,24 +1753,20 @@ class TestAsyncCozmoai:
     async def test_retrying_timeout_errors_doesnt_leak(
         self, respx_mock: MockRouter, async_client: AsyncCozmoai
     ) -> None:
-        respx_mock.post("/billing/webhook").mock(side_effect=httpx.TimeoutException("Test timeout error"))
+        respx_mock.get("/org/org_id/agents").mock(side_effect=httpx.TimeoutException("Test timeout error"))
 
         with pytest.raises(APITimeoutError):
-            await async_client.billing.with_streaming_response.handle_webhook(
-                svix_id="svix-id", svix_signature="svix-signature", svix_timestamp="svix-timestamp"
-            ).__aenter__()
+            await async_client.org.agents.with_streaming_response.list(org_id="org_id").__aenter__()
 
         assert _get_open_connections(async_client) == 0
 
     @mock.patch("cozmoai._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     async def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter, async_client: AsyncCozmoai) -> None:
-        respx_mock.post("/billing/webhook").mock(return_value=httpx.Response(500))
+        respx_mock.get("/org/org_id/agents").mock(return_value=httpx.Response(500))
 
         with pytest.raises(APIStatusError):
-            await async_client.billing.with_streaming_response.handle_webhook(
-                svix_id="svix-id", svix_signature="svix-signature", svix_timestamp="svix-timestamp"
-            ).__aenter__()
+            await async_client.org.agents.with_streaming_response.list(org_id="org_id").__aenter__()
         assert _get_open_connections(async_client) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
@@ -1809,11 +1793,9 @@ class TestAsyncCozmoai:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/billing/webhook").mock(side_effect=retry_handler)
+        respx_mock.get("/org/org_id/agents").mock(side_effect=retry_handler)
 
-        response = await client.billing.with_raw_response.handle_webhook(
-            svix_id="svix-id", svix_signature="svix-signature", svix_timestamp="svix-timestamp"
-        )
+        response = await client.org.agents.with_raw_response.list(org_id="org_id")
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -1835,13 +1817,10 @@ class TestAsyncCozmoai:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/billing/webhook").mock(side_effect=retry_handler)
+        respx_mock.get("/org/org_id/agents").mock(side_effect=retry_handler)
 
-        response = await client.billing.with_raw_response.handle_webhook(
-            svix_id="svix-id",
-            svix_signature="svix-signature",
-            svix_timestamp="svix-timestamp",
-            extra_headers={"x-stainless-retry-count": Omit()},
+        response = await client.org.agents.with_raw_response.list(
+            org_id="org_id", extra_headers={"x-stainless-retry-count": Omit()}
         )
 
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
@@ -1863,13 +1842,10 @@ class TestAsyncCozmoai:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/billing/webhook").mock(side_effect=retry_handler)
+        respx_mock.get("/org/org_id/agents").mock(side_effect=retry_handler)
 
-        response = await client.billing.with_raw_response.handle_webhook(
-            svix_id="svix-id",
-            svix_signature="svix-signature",
-            svix_timestamp="svix-timestamp",
-            extra_headers={"x-stainless-retry-count": "42"},
+        response = await client.org.agents.with_raw_response.list(
+            org_id="org_id", extra_headers={"x-stainless-retry-count": "42"}
         )
 
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"

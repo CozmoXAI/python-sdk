@@ -32,6 +32,9 @@ class CallListParams(TypedDict, total=False):
     prospect_id: str
     """Filter by prospect ID"""
 
+    prospect_name: str
+    """Filter by prospect name (first or last)"""
+
     size: int
     """Page size"""
 

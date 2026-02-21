@@ -16,12 +16,9 @@ The full API of this library can be found in [api.md](api.md).
 ## Installation
 
 ```sh
-# install from this staging repo
-pip install git+ssh://git@github.com/stainless-sdks/cozmoai-python.git
+# install from PyPI
+pip install cozmoai
 ```
-
-> [!NOTE]
-> Once this package is [published to PyPI](https://www.stainless.com/docs/guides/publish), this will become: `pip install cozmoai`
 
 ## Usage
 
@@ -35,11 +32,10 @@ client = Cozmoai(
     api_key=os.environ.get("COZMOAI_API_KEY"),  # This is the default and can be omitted
 )
 
-response = client.billing.handle_webhook(
-    svix_id="svix-id",
-    svix_signature="svix-signature",
-    svix_timestamp="svix-timestamp",
+agents = client.org.agents.list(
+    org_id="REPLACE_ME",
 )
+print(agents.data)
 ```
 
 While you can provide an `api_key` keyword argument,
@@ -62,11 +58,10 @@ client = AsyncCozmoai(
 
 
 async def main() -> None:
-    response = await client.billing.handle_webhook(
-        svix_id="svix-id",
-        svix_signature="svix-signature",
-        svix_timestamp="svix-timestamp",
+    agents = await client.org.agents.list(
+        org_id="REPLACE_ME",
     )
+    print(agents.data)
 
 
 asyncio.run(main())
@@ -81,8 +76,8 @@ By default, the async client uses `httpx` for HTTP requests. However, for improv
 You can enable this by installing `aiohttp`:
 
 ```sh
-# install from this staging repo
-pip install 'cozmoai[aiohttp] @ git+ssh://git@github.com/stainless-sdks/cozmoai-python.git'
+# install from PyPI
+pip install cozmoai[aiohttp]
 ```
 
 Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
@@ -99,11 +94,10 @@ async def main() -> None:
         api_key=os.environ.get("COZMOAI_API_KEY"),  # This is the default and can be omitted
         http_client=DefaultAioHttpClient(),
     ) as client:
-        response = await client.billing.handle_webhook(
-            svix_id="svix-id",
-            svix_signature="svix-signature",
-            svix_timestamp="svix-timestamp",
+        agents = await client.org.agents.list(
+            org_id="REPLACE_ME",
         )
+        print(agents.data)
 
 
 asyncio.run(main())
@@ -127,32 +121,15 @@ from cozmoai import Cozmoai
 
 client = Cozmoai()
 
-response = client.org.create_workflow_run(
+agent_response = client.org.agents.create(
     org_id="org_id",
-    prospect={"phone": "phone"},
-    workflow_id="workflow_id",
+    name="name",
+    prompt_template="prompt_template",
+    type="voice",
+    background_sound={"file": "file"},
 )
-print(response.prospect)
+print(agent_response.background_sound)
 ```
-
-## File uploads
-
-Request parameters that correspond to file uploads can be passed as `bytes`, or a [`PathLike`](https://docs.python.org/3/library/os.html#os.PathLike) instance or a tuple of `(filename, contents, media type)`.
-
-```python
-from pathlib import Path
-from cozmoai import Cozmoai
-
-client = Cozmoai()
-
-client.org.prospects.bulk.import_(
-    org_id="org_id",
-    file=Path("/path/to/file"),
-    list_name="list_name",
-)
-```
-
-The async client uses the exact same interface. If you pass a [`PathLike`](https://docs.python.org/3/library/os.html#os.PathLike) instance, the file contents will be read asynchronously automatically.
 
 ## Handling errors
 
@@ -170,10 +147,8 @@ from cozmoai import Cozmoai
 client = Cozmoai()
 
 try:
-    client.billing.handle_webhook(
-        svix_id="svix-id",
-        svix_signature="svix-signature",
-        svix_timestamp="svix-timestamp",
+    client.org.agents.list(
+        org_id="REPLACE_ME",
     )
 except cozmoai.APIConnectionError as e:
     print("The server could not be reached")
@@ -217,10 +192,8 @@ client = Cozmoai(
 )
 
 # Or, configure per-request:
-client.with_options(max_retries=5).billing.handle_webhook(
-    svix_id="svix-id",
-    svix_signature="svix-signature",
-    svix_timestamp="svix-timestamp",
+client.with_options(max_retries=5).org.agents.list(
+    org_id="REPLACE_ME",
 )
 ```
 
@@ -244,10 +217,8 @@ client = Cozmoai(
 )
 
 # Override per-request:
-client.with_options(timeout=5.0).billing.handle_webhook(
-    svix_id="svix-id",
-    svix_signature="svix-signature",
-    svix_timestamp="svix-timestamp",
+client.with_options(timeout=5.0).org.agents.list(
+    org_id="REPLACE_ME",
 )
 ```
 
@@ -289,20 +260,18 @@ The "raw" Response object can be accessed by prefixing `.with_raw_response.` to 
 from cozmoai import Cozmoai
 
 client = Cozmoai()
-response = client.billing.with_raw_response.handle_webhook(
-    svix_id="svix-id",
-    svix_signature="svix-signature",
-    svix_timestamp="svix-timestamp",
+response = client.org.agents.with_raw_response.list(
+    org_id="REPLACE_ME",
 )
 print(response.headers.get('X-My-Header'))
 
-billing = response.parse()  # get the object that `billing.handle_webhook()` would have returned
-print(billing)
+agent = response.parse()  # get the object that `org.agents.list()` would have returned
+print(agent.data)
 ```
 
-These methods return an [`APIResponse`](https://github.com/stainless-sdks/cozmoai-python/tree/main/src/cozmoai/_response.py) object.
+These methods return an [`APIResponse`](https://github.com/CozmoXAI/python-sdk/tree/main/src/cozmoai/_response.py) object.
 
-The async client returns an [`AsyncAPIResponse`](https://github.com/stainless-sdks/cozmoai-python/tree/main/src/cozmoai/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
+The async client returns an [`AsyncAPIResponse`](https://github.com/CozmoXAI/python-sdk/tree/main/src/cozmoai/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
 
 #### `.with_streaming_response`
 
@@ -311,10 +280,8 @@ The above interface eagerly reads the full response body when you make the reque
 To stream the response body, use `.with_streaming_response` instead, which requires a context manager and only reads the response body once you call `.read()`, `.text()`, `.json()`, `.iter_bytes()`, `.iter_text()`, `.iter_lines()` or `.parse()`. In the async client, these are async methods.
 
 ```python
-with client.billing.with_streaming_response.handle_webhook(
-    svix_id="svix-id",
-    svix_signature="svix-signature",
-    svix_timestamp="svix-timestamp",
+with client.org.agents.with_streaming_response.list(
+    org_id="REPLACE_ME",
 ) as response:
     print(response.headers.get("X-My-Header"))
 
@@ -410,7 +377,7 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/cozmoai-python/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/CozmoXAI/python-sdk/issues) with questions, bugs, or suggestions.
 
 ### Determining the installed version
 

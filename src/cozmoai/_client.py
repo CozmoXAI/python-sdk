@@ -31,11 +31,8 @@ from ._base_client import (
 )
 
 if TYPE_CHECKING:
-    from .resources import me, org, billing, organizations
-    from .resources.me import MeResource, AsyncMeResource
-    from .resources.billing import BillingResource, AsyncBillingResource
+    from .resources import org
     from .resources.org.org import OrgResource, AsyncOrgResource
-    from .resources.organizations.organizations import OrganizationsResource, AsyncOrganizationsResource
 
 __all__ = ["Timeout", "Transport", "ProxiesTypes", "RequestOptions", "Cozmoai", "AsyncCozmoai", "Client", "AsyncClient"]
 
@@ -82,7 +79,7 @@ class Cozmoai(SyncAPIClient):
         if base_url is None:
             base_url = os.environ.get("COZMOAI_BASE_URL")
         if base_url is None:
-            base_url = f"https://nova-api.uat.czmx.in/api"
+            base_url = f"https://nova.prod.czmx.in/api"
 
         super().__init__(
             version=__version__,
@@ -96,28 +93,10 @@ class Cozmoai(SyncAPIClient):
         )
 
     @cached_property
-    def billing(self) -> BillingResource:
-        from .resources.billing import BillingResource
-
-        return BillingResource(self)
-
-    @cached_property
-    def me(self) -> MeResource:
-        from .resources.me import MeResource
-
-        return MeResource(self)
-
-    @cached_property
     def org(self) -> OrgResource:
         from .resources.org import OrgResource
 
         return OrgResource(self)
-
-    @cached_property
-    def organizations(self) -> OrganizationsResource:
-        from .resources.organizations import OrganizationsResource
-
-        return OrganizationsResource(self)
 
     @cached_property
     def with_raw_response(self) -> CozmoaiWithRawResponse:
@@ -136,7 +115,7 @@ class Cozmoai(SyncAPIClient):
     @override
     def auth_headers(self) -> dict[str, str]:
         api_key = self.api_key
-        return {"Authorization": f"Bearer {api_key}"}
+        return {"Authorization": api_key}
 
     @property
     @override
@@ -274,7 +253,7 @@ class AsyncCozmoai(AsyncAPIClient):
         if base_url is None:
             base_url = os.environ.get("COZMOAI_BASE_URL")
         if base_url is None:
-            base_url = f"https://nova-api.uat.czmx.in/api"
+            base_url = f"https://nova.prod.czmx.in/api"
 
         super().__init__(
             version=__version__,
@@ -288,28 +267,10 @@ class AsyncCozmoai(AsyncAPIClient):
         )
 
     @cached_property
-    def billing(self) -> AsyncBillingResource:
-        from .resources.billing import AsyncBillingResource
-
-        return AsyncBillingResource(self)
-
-    @cached_property
-    def me(self) -> AsyncMeResource:
-        from .resources.me import AsyncMeResource
-
-        return AsyncMeResource(self)
-
-    @cached_property
     def org(self) -> AsyncOrgResource:
         from .resources.org import AsyncOrgResource
 
         return AsyncOrgResource(self)
-
-    @cached_property
-    def organizations(self) -> AsyncOrganizationsResource:
-        from .resources.organizations import AsyncOrganizationsResource
-
-        return AsyncOrganizationsResource(self)
 
     @cached_property
     def with_raw_response(self) -> AsyncCozmoaiWithRawResponse:
@@ -328,7 +289,7 @@ class AsyncCozmoai(AsyncAPIClient):
     @override
     def auth_headers(self) -> dict[str, str]:
         api_key = self.api_key
-        return {"Authorization": f"Bearer {api_key}"}
+        return {"Authorization": api_key}
 
     @property
     @override
@@ -431,28 +392,10 @@ class CozmoaiWithRawResponse:
         self._client = client
 
     @cached_property
-    def billing(self) -> billing.BillingResourceWithRawResponse:
-        from .resources.billing import BillingResourceWithRawResponse
-
-        return BillingResourceWithRawResponse(self._client.billing)
-
-    @cached_property
-    def me(self) -> me.MeResourceWithRawResponse:
-        from .resources.me import MeResourceWithRawResponse
-
-        return MeResourceWithRawResponse(self._client.me)
-
-    @cached_property
     def org(self) -> org.OrgResourceWithRawResponse:
         from .resources.org import OrgResourceWithRawResponse
 
         return OrgResourceWithRawResponse(self._client.org)
-
-    @cached_property
-    def organizations(self) -> organizations.OrganizationsResourceWithRawResponse:
-        from .resources.organizations import OrganizationsResourceWithRawResponse
-
-        return OrganizationsResourceWithRawResponse(self._client.organizations)
 
 
 class AsyncCozmoaiWithRawResponse:
@@ -462,28 +405,10 @@ class AsyncCozmoaiWithRawResponse:
         self._client = client
 
     @cached_property
-    def billing(self) -> billing.AsyncBillingResourceWithRawResponse:
-        from .resources.billing import AsyncBillingResourceWithRawResponse
-
-        return AsyncBillingResourceWithRawResponse(self._client.billing)
-
-    @cached_property
-    def me(self) -> me.AsyncMeResourceWithRawResponse:
-        from .resources.me import AsyncMeResourceWithRawResponse
-
-        return AsyncMeResourceWithRawResponse(self._client.me)
-
-    @cached_property
     def org(self) -> org.AsyncOrgResourceWithRawResponse:
         from .resources.org import AsyncOrgResourceWithRawResponse
 
         return AsyncOrgResourceWithRawResponse(self._client.org)
-
-    @cached_property
-    def organizations(self) -> organizations.AsyncOrganizationsResourceWithRawResponse:
-        from .resources.organizations import AsyncOrganizationsResourceWithRawResponse
-
-        return AsyncOrganizationsResourceWithRawResponse(self._client.organizations)
 
 
 class CozmoaiWithStreamedResponse:
@@ -493,28 +418,10 @@ class CozmoaiWithStreamedResponse:
         self._client = client
 
     @cached_property
-    def billing(self) -> billing.BillingResourceWithStreamingResponse:
-        from .resources.billing import BillingResourceWithStreamingResponse
-
-        return BillingResourceWithStreamingResponse(self._client.billing)
-
-    @cached_property
-    def me(self) -> me.MeResourceWithStreamingResponse:
-        from .resources.me import MeResourceWithStreamingResponse
-
-        return MeResourceWithStreamingResponse(self._client.me)
-
-    @cached_property
     def org(self) -> org.OrgResourceWithStreamingResponse:
         from .resources.org import OrgResourceWithStreamingResponse
 
         return OrgResourceWithStreamingResponse(self._client.org)
-
-    @cached_property
-    def organizations(self) -> organizations.OrganizationsResourceWithStreamingResponse:
-        from .resources.organizations import OrganizationsResourceWithStreamingResponse
-
-        return OrganizationsResourceWithStreamingResponse(self._client.organizations)
 
 
 class AsyncCozmoaiWithStreamedResponse:
@@ -524,28 +431,10 @@ class AsyncCozmoaiWithStreamedResponse:
         self._client = client
 
     @cached_property
-    def billing(self) -> billing.AsyncBillingResourceWithStreamingResponse:
-        from .resources.billing import AsyncBillingResourceWithStreamingResponse
-
-        return AsyncBillingResourceWithStreamingResponse(self._client.billing)
-
-    @cached_property
-    def me(self) -> me.AsyncMeResourceWithStreamingResponse:
-        from .resources.me import AsyncMeResourceWithStreamingResponse
-
-        return AsyncMeResourceWithStreamingResponse(self._client.me)
-
-    @cached_property
     def org(self) -> org.AsyncOrgResourceWithStreamingResponse:
         from .resources.org import AsyncOrgResourceWithStreamingResponse
 
         return AsyncOrgResourceWithStreamingResponse(self._client.org)
-
-    @cached_property
-    def organizations(self) -> organizations.AsyncOrganizationsResourceWithStreamingResponse:
-        from .resources.organizations import AsyncOrganizationsResourceWithStreamingResponse
-
-        return AsyncOrganizationsResourceWithStreamingResponse(self._client.organizations)
 
 
 Client = Cozmoai

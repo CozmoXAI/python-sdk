@@ -10,11 +10,9 @@ import pytest
 from cozmoai import Cozmoai, AsyncCozmoai
 from tests.utils import assert_matches_type
 from cozmoai.types.org import (
-    Agent,
-    RunTests,
+    AgentResponse,
     AgentListResponse,
     AgentDeleteResponse,
-    AgentListEvalRunsResponse,
 )
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
@@ -32,7 +30,7 @@ class TestAgents:
             prompt_template="prompt_template",
             type="voice",
         )
-        assert_matches_type(Agent, agent, path=["response"])
+        assert_matches_type(AgentResponse, agent, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -45,14 +43,48 @@ class TestAgents:
             allowed_sip_trunks=["string"],
             background_sound={
                 "file": "file",
+                "enabled": True,
+                "initial_volume": 0,
+                "thinking_sound": [
+                    {
+                        "sound": "sound",
+                        "probability": 0,
+                        "volume": 0,
+                    }
+                ],
                 "volume": 0,
+            },
+            extra_config={
+                "allow_interruptions": True,
+                "interruption_sensitivity": 0,
+                "min_words": 0,
+                "turn_detector_enabled": True,
+                "turn_detector_is_multilingual": True,
+                "turn_detector_model_type": "turn_detector_model_type",
             },
             goodbye_config={
                 "enabled": True,
                 "message": "message",
             },
-            greeting_config={"foo": "bar"},
-            llm_config={"foo": "bar"},
+            greeting_config={
+                "agent_speaks_first": True,
+                "greeting": "greeting",
+                "pause_before_first_message": 0,
+                "voice_mail_message": "voice_mail_message",
+                "welcome_message_is_generated": True,
+            },
+            llm_config={
+                "model": "model",
+                "provider": "openai",
+                "frequency_penalty": -2,
+                "max_tokens": 1,
+                "parallel_tool_calls": True,
+                "presence_penalty": -2,
+                "system_prompt": "system_prompt",
+                "temperature": 0,
+                "top_k": 1,
+                "top_p": 0,
+            },
             plugins=[{}],
             precall_webhook={
                 "method": "GET",
@@ -61,11 +93,67 @@ class TestAgents:
                 "headers": {"foo": "string"},
                 "timeout_seconds": 1,
             },
-            transcriber_config={"foo": "bar"},
-            vad_config={"foo": "bar"},
-            voice_config={"foo": "bar"},
+            room_duration_config={
+                "close_room_message": "close_room_message",
+                "duration_warning_message": "duration_warning_message",
+                "max_duration_min": 1,
+                "max_silence_sec": 0,
+                "silence_message": "silence_message",
+                "wait_for_message_sec": 0,
+            },
+            transcriber_config={
+                "provider": "deepgram",
+                "commit_strategy": "manual",
+                "detect_language": True,
+                "eager_eot_threshold": 0,
+                "enable_logging": True,
+                "endpointing": 0,
+                "endpointing_ms": 0,
+                "energy_filter": True,
+                "eot_threshold": 0,
+                "eot_timeout_ms": 0,
+                "filler_words": True,
+                "include_language_detection": True,
+                "include_timestamps": True,
+                "interim_results": True,
+                "keyterms": ["string"],
+                "keywords": ["string"],
+                "language": "language",
+                "language_code": "language_code",
+                "min_speech_duration_ms": 0,
+                "model": "model",
+                "no_delay": True,
+                "num_channels": 1,
+                "preemptive_generation": True,
+                "preemptive_min_confidence": 0,
+                "profanity_filter": True,
+                "punctuate": True,
+                "sample_rate": 8000,
+                "smart_format": True,
+                "vad_events": True,
+            },
+            vad_config={
+                "activation_threshold": 0,
+                "max_buffered_speech": 1,
+                "min_silence_duration": 0,
+                "min_speech_duration": 0,
+                "prefix_padding_duration": 0,
+                "sample_rate": 8000,
+            },
+            voice_config={
+                "model": "model",
+                "provider": "provider",
+                "language": "language",
+                "sample_rate": 8000,
+                "similarity_boost": 0,
+                "speed": 0.1,
+                "stability": 0,
+                "style": 0,
+                "use_speaker_boost": True,
+                "voice_id": "voice_id",
+            },
         )
-        assert_matches_type(Agent, agent, path=["response"])
+        assert_matches_type(AgentResponse, agent, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -80,7 +168,7 @@ class TestAgents:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         agent = response.parse()
-        assert_matches_type(Agent, agent, path=["response"])
+        assert_matches_type(AgentResponse, agent, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -95,7 +183,7 @@ class TestAgents:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             agent = response.parse()
-            assert_matches_type(Agent, agent, path=["response"])
+            assert_matches_type(AgentResponse, agent, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -117,7 +205,7 @@ class TestAgents:
             agent_id="agent_id",
             org_id="org_id",
         )
-        assert_matches_type(Agent, agent, path=["response"])
+        assert_matches_type(AgentResponse, agent, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -130,7 +218,7 @@ class TestAgents:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         agent = response.parse()
-        assert_matches_type(Agent, agent, path=["response"])
+        assert_matches_type(AgentResponse, agent, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -143,7 +231,7 @@ class TestAgents:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             agent = response.parse()
-            assert_matches_type(Agent, agent, path=["response"])
+            assert_matches_type(AgentResponse, agent, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -169,7 +257,7 @@ class TestAgents:
             agent_id="agent_id",
             org_id="org_id",
         )
-        assert_matches_type(Agent, agent, path=["response"])
+        assert_matches_type(AgentResponse, agent, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -180,14 +268,48 @@ class TestAgents:
             allowed_sip_trunks=["string"],
             background_sound={
                 "file": "file",
+                "enabled": True,
+                "initial_volume": 0,
+                "thinking_sound": [
+                    {
+                        "sound": "sound",
+                        "probability": 0,
+                        "volume": 0,
+                    }
+                ],
                 "volume": 0,
+            },
+            extra_config={
+                "allow_interruptions": True,
+                "interruption_sensitivity": 0,
+                "min_words": 0,
+                "turn_detector_enabled": True,
+                "turn_detector_is_multilingual": True,
+                "turn_detector_model_type": "turn_detector_model_type",
             },
             goodbye_config={
                 "enabled": True,
                 "message": "message",
             },
-            greeting_config={"foo": "bar"},
-            llm_config={"foo": "bar"},
+            greeting_config={
+                "agent_speaks_first": True,
+                "greeting": "greeting",
+                "pause_before_first_message": 0,
+                "voice_mail_message": "voice_mail_message",
+                "welcome_message_is_generated": True,
+            },
+            llm_config={
+                "model": "model",
+                "provider": "openai",
+                "frequency_penalty": -2,
+                "max_tokens": 1,
+                "parallel_tool_calls": True,
+                "presence_penalty": -2,
+                "system_prompt": "system_prompt",
+                "temperature": 0,
+                "top_k": 1,
+                "top_p": 0,
+            },
             name="name",
             plugins=[{}],
             precall_webhook={
@@ -198,12 +320,68 @@ class TestAgents:
                 "timeout_seconds": 1,
             },
             prompt_template="prompt_template",
-            transcriber_config={"foo": "bar"},
+            room_duration_config={
+                "close_room_message": "close_room_message",
+                "duration_warning_message": "duration_warning_message",
+                "max_duration_min": 1,
+                "max_silence_sec": 0,
+                "silence_message": "silence_message",
+                "wait_for_message_sec": 0,
+            },
+            transcriber_config={
+                "provider": "deepgram",
+                "commit_strategy": "manual",
+                "detect_language": True,
+                "eager_eot_threshold": 0,
+                "enable_logging": True,
+                "endpointing": 0,
+                "endpointing_ms": 0,
+                "energy_filter": True,
+                "eot_threshold": 0,
+                "eot_timeout_ms": 0,
+                "filler_words": True,
+                "include_language_detection": True,
+                "include_timestamps": True,
+                "interim_results": True,
+                "keyterms": ["string"],
+                "keywords": ["string"],
+                "language": "language",
+                "language_code": "language_code",
+                "min_speech_duration_ms": 0,
+                "model": "model",
+                "no_delay": True,
+                "num_channels": 1,
+                "preemptive_generation": True,
+                "preemptive_min_confidence": 0,
+                "profanity_filter": True,
+                "punctuate": True,
+                "sample_rate": 8000,
+                "smart_format": True,
+                "vad_events": True,
+            },
             type="voice",
-            vad_config={"foo": "bar"},
-            voice_config={"foo": "bar"},
+            vad_config={
+                "activation_threshold": 0,
+                "max_buffered_speech": 1,
+                "min_silence_duration": 0,
+                "min_speech_duration": 0,
+                "prefix_padding_duration": 0,
+                "sample_rate": 8000,
+            },
+            voice_config={
+                "model": "model",
+                "provider": "provider",
+                "language": "language",
+                "sample_rate": 8000,
+                "similarity_boost": 0,
+                "speed": 0.1,
+                "stability": 0,
+                "style": 0,
+                "use_speaker_boost": True,
+                "voice_id": "voice_id",
+            },
         )
-        assert_matches_type(Agent, agent, path=["response"])
+        assert_matches_type(AgentResponse, agent, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -216,7 +394,7 @@ class TestAgents:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         agent = response.parse()
-        assert_matches_type(Agent, agent, path=["response"])
+        assert_matches_type(AgentResponse, agent, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -229,7 +407,7 @@ class TestAgents:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             agent = response.parse()
-            assert_matches_type(Agent, agent, path=["response"])
+            assert_matches_type(AgentResponse, agent, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -354,172 +532,6 @@ class TestAgents:
                 org_id="org_id",
             )
 
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_method_list_eval_runs(self, client: Cozmoai) -> None:
-        agent = client.org.agents.list_eval_runs(
-            org_id="org_id",
-            agent_id="agentId",
-        )
-        assert_matches_type(AgentListEvalRunsResponse, agent, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_method_list_eval_runs_with_all_params(self, client: Cozmoai) -> None:
-        agent = client.org.agents.list_eval_runs(
-            org_id="org_id",
-            agent_id="agentId",
-            page=0,
-            size=0,
-        )
-        assert_matches_type(AgentListEvalRunsResponse, agent, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_raw_response_list_eval_runs(self, client: Cozmoai) -> None:
-        response = client.org.agents.with_raw_response.list_eval_runs(
-            org_id="org_id",
-            agent_id="agentId",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        agent = response.parse()
-        assert_matches_type(AgentListEvalRunsResponse, agent, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_streaming_response_list_eval_runs(self, client: Cozmoai) -> None:
-        with client.org.agents.with_streaming_response.list_eval_runs(
-            org_id="org_id",
-            agent_id="agentId",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            agent = response.parse()
-            assert_matches_type(AgentListEvalRunsResponse, agent, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_path_params_list_eval_runs(self, client: Cozmoai) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `org_id` but received ''"):
-            client.org.agents.with_raw_response.list_eval_runs(
-                org_id="",
-                agent_id="agentId",
-            )
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_method_run_specific_tests(self, client: Cozmoai) -> None:
-        agent = client.org.agents.run_specific_tests(
-            agent_id="agent_id",
-            org_id="org_id",
-            unit_test_ids=["string"],
-        )
-        assert_matches_type(RunTests, agent, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_raw_response_run_specific_tests(self, client: Cozmoai) -> None:
-        response = client.org.agents.with_raw_response.run_specific_tests(
-            agent_id="agent_id",
-            org_id="org_id",
-            unit_test_ids=["string"],
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        agent = response.parse()
-        assert_matches_type(RunTests, agent, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_streaming_response_run_specific_tests(self, client: Cozmoai) -> None:
-        with client.org.agents.with_streaming_response.run_specific_tests(
-            agent_id="agent_id",
-            org_id="org_id",
-            unit_test_ids=["string"],
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            agent = response.parse()
-            assert_matches_type(RunTests, agent, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_path_params_run_specific_tests(self, client: Cozmoai) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `org_id` but received ''"):
-            client.org.agents.with_raw_response.run_specific_tests(
-                agent_id="agent_id",
-                org_id="",
-                unit_test_ids=["string"],
-            )
-
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `agent_id` but received ''"):
-            client.org.agents.with_raw_response.run_specific_tests(
-                agent_id="",
-                org_id="org_id",
-                unit_test_ids=["string"],
-            )
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_method_run_tests(self, client: Cozmoai) -> None:
-        agent = client.org.agents.run_tests(
-            agent_id="agent_id",
-            org_id="org_id",
-        )
-        assert_matches_type(RunTests, agent, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_raw_response_run_tests(self, client: Cozmoai) -> None:
-        response = client.org.agents.with_raw_response.run_tests(
-            agent_id="agent_id",
-            org_id="org_id",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        agent = response.parse()
-        assert_matches_type(RunTests, agent, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_streaming_response_run_tests(self, client: Cozmoai) -> None:
-        with client.org.agents.with_streaming_response.run_tests(
-            agent_id="agent_id",
-            org_id="org_id",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            agent = response.parse()
-            assert_matches_type(RunTests, agent, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_path_params_run_tests(self, client: Cozmoai) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `org_id` but received ''"):
-            client.org.agents.with_raw_response.run_tests(
-                agent_id="agent_id",
-                org_id="",
-            )
-
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `agent_id` but received ''"):
-            client.org.agents.with_raw_response.run_tests(
-                agent_id="",
-                org_id="org_id",
-            )
-
 
 class TestAsyncAgents:
     parametrize = pytest.mark.parametrize(
@@ -535,7 +547,7 @@ class TestAsyncAgents:
             prompt_template="prompt_template",
             type="voice",
         )
-        assert_matches_type(Agent, agent, path=["response"])
+        assert_matches_type(AgentResponse, agent, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -548,14 +560,48 @@ class TestAsyncAgents:
             allowed_sip_trunks=["string"],
             background_sound={
                 "file": "file",
+                "enabled": True,
+                "initial_volume": 0,
+                "thinking_sound": [
+                    {
+                        "sound": "sound",
+                        "probability": 0,
+                        "volume": 0,
+                    }
+                ],
                 "volume": 0,
+            },
+            extra_config={
+                "allow_interruptions": True,
+                "interruption_sensitivity": 0,
+                "min_words": 0,
+                "turn_detector_enabled": True,
+                "turn_detector_is_multilingual": True,
+                "turn_detector_model_type": "turn_detector_model_type",
             },
             goodbye_config={
                 "enabled": True,
                 "message": "message",
             },
-            greeting_config={"foo": "bar"},
-            llm_config={"foo": "bar"},
+            greeting_config={
+                "agent_speaks_first": True,
+                "greeting": "greeting",
+                "pause_before_first_message": 0,
+                "voice_mail_message": "voice_mail_message",
+                "welcome_message_is_generated": True,
+            },
+            llm_config={
+                "model": "model",
+                "provider": "openai",
+                "frequency_penalty": -2,
+                "max_tokens": 1,
+                "parallel_tool_calls": True,
+                "presence_penalty": -2,
+                "system_prompt": "system_prompt",
+                "temperature": 0,
+                "top_k": 1,
+                "top_p": 0,
+            },
             plugins=[{}],
             precall_webhook={
                 "method": "GET",
@@ -564,11 +610,67 @@ class TestAsyncAgents:
                 "headers": {"foo": "string"},
                 "timeout_seconds": 1,
             },
-            transcriber_config={"foo": "bar"},
-            vad_config={"foo": "bar"},
-            voice_config={"foo": "bar"},
+            room_duration_config={
+                "close_room_message": "close_room_message",
+                "duration_warning_message": "duration_warning_message",
+                "max_duration_min": 1,
+                "max_silence_sec": 0,
+                "silence_message": "silence_message",
+                "wait_for_message_sec": 0,
+            },
+            transcriber_config={
+                "provider": "deepgram",
+                "commit_strategy": "manual",
+                "detect_language": True,
+                "eager_eot_threshold": 0,
+                "enable_logging": True,
+                "endpointing": 0,
+                "endpointing_ms": 0,
+                "energy_filter": True,
+                "eot_threshold": 0,
+                "eot_timeout_ms": 0,
+                "filler_words": True,
+                "include_language_detection": True,
+                "include_timestamps": True,
+                "interim_results": True,
+                "keyterms": ["string"],
+                "keywords": ["string"],
+                "language": "language",
+                "language_code": "language_code",
+                "min_speech_duration_ms": 0,
+                "model": "model",
+                "no_delay": True,
+                "num_channels": 1,
+                "preemptive_generation": True,
+                "preemptive_min_confidence": 0,
+                "profanity_filter": True,
+                "punctuate": True,
+                "sample_rate": 8000,
+                "smart_format": True,
+                "vad_events": True,
+            },
+            vad_config={
+                "activation_threshold": 0,
+                "max_buffered_speech": 1,
+                "min_silence_duration": 0,
+                "min_speech_duration": 0,
+                "prefix_padding_duration": 0,
+                "sample_rate": 8000,
+            },
+            voice_config={
+                "model": "model",
+                "provider": "provider",
+                "language": "language",
+                "sample_rate": 8000,
+                "similarity_boost": 0,
+                "speed": 0.1,
+                "stability": 0,
+                "style": 0,
+                "use_speaker_boost": True,
+                "voice_id": "voice_id",
+            },
         )
-        assert_matches_type(Agent, agent, path=["response"])
+        assert_matches_type(AgentResponse, agent, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -583,7 +685,7 @@ class TestAsyncAgents:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         agent = await response.parse()
-        assert_matches_type(Agent, agent, path=["response"])
+        assert_matches_type(AgentResponse, agent, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -598,7 +700,7 @@ class TestAsyncAgents:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             agent = await response.parse()
-            assert_matches_type(Agent, agent, path=["response"])
+            assert_matches_type(AgentResponse, agent, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -620,7 +722,7 @@ class TestAsyncAgents:
             agent_id="agent_id",
             org_id="org_id",
         )
-        assert_matches_type(Agent, agent, path=["response"])
+        assert_matches_type(AgentResponse, agent, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -633,7 +735,7 @@ class TestAsyncAgents:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         agent = await response.parse()
-        assert_matches_type(Agent, agent, path=["response"])
+        assert_matches_type(AgentResponse, agent, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -646,7 +748,7 @@ class TestAsyncAgents:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             agent = await response.parse()
-            assert_matches_type(Agent, agent, path=["response"])
+            assert_matches_type(AgentResponse, agent, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -672,7 +774,7 @@ class TestAsyncAgents:
             agent_id="agent_id",
             org_id="org_id",
         )
-        assert_matches_type(Agent, agent, path=["response"])
+        assert_matches_type(AgentResponse, agent, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -683,14 +785,48 @@ class TestAsyncAgents:
             allowed_sip_trunks=["string"],
             background_sound={
                 "file": "file",
+                "enabled": True,
+                "initial_volume": 0,
+                "thinking_sound": [
+                    {
+                        "sound": "sound",
+                        "probability": 0,
+                        "volume": 0,
+                    }
+                ],
                 "volume": 0,
+            },
+            extra_config={
+                "allow_interruptions": True,
+                "interruption_sensitivity": 0,
+                "min_words": 0,
+                "turn_detector_enabled": True,
+                "turn_detector_is_multilingual": True,
+                "turn_detector_model_type": "turn_detector_model_type",
             },
             goodbye_config={
                 "enabled": True,
                 "message": "message",
             },
-            greeting_config={"foo": "bar"},
-            llm_config={"foo": "bar"},
+            greeting_config={
+                "agent_speaks_first": True,
+                "greeting": "greeting",
+                "pause_before_first_message": 0,
+                "voice_mail_message": "voice_mail_message",
+                "welcome_message_is_generated": True,
+            },
+            llm_config={
+                "model": "model",
+                "provider": "openai",
+                "frequency_penalty": -2,
+                "max_tokens": 1,
+                "parallel_tool_calls": True,
+                "presence_penalty": -2,
+                "system_prompt": "system_prompt",
+                "temperature": 0,
+                "top_k": 1,
+                "top_p": 0,
+            },
             name="name",
             plugins=[{}],
             precall_webhook={
@@ -701,12 +837,68 @@ class TestAsyncAgents:
                 "timeout_seconds": 1,
             },
             prompt_template="prompt_template",
-            transcriber_config={"foo": "bar"},
+            room_duration_config={
+                "close_room_message": "close_room_message",
+                "duration_warning_message": "duration_warning_message",
+                "max_duration_min": 1,
+                "max_silence_sec": 0,
+                "silence_message": "silence_message",
+                "wait_for_message_sec": 0,
+            },
+            transcriber_config={
+                "provider": "deepgram",
+                "commit_strategy": "manual",
+                "detect_language": True,
+                "eager_eot_threshold": 0,
+                "enable_logging": True,
+                "endpointing": 0,
+                "endpointing_ms": 0,
+                "energy_filter": True,
+                "eot_threshold": 0,
+                "eot_timeout_ms": 0,
+                "filler_words": True,
+                "include_language_detection": True,
+                "include_timestamps": True,
+                "interim_results": True,
+                "keyterms": ["string"],
+                "keywords": ["string"],
+                "language": "language",
+                "language_code": "language_code",
+                "min_speech_duration_ms": 0,
+                "model": "model",
+                "no_delay": True,
+                "num_channels": 1,
+                "preemptive_generation": True,
+                "preemptive_min_confidence": 0,
+                "profanity_filter": True,
+                "punctuate": True,
+                "sample_rate": 8000,
+                "smart_format": True,
+                "vad_events": True,
+            },
             type="voice",
-            vad_config={"foo": "bar"},
-            voice_config={"foo": "bar"},
+            vad_config={
+                "activation_threshold": 0,
+                "max_buffered_speech": 1,
+                "min_silence_duration": 0,
+                "min_speech_duration": 0,
+                "prefix_padding_duration": 0,
+                "sample_rate": 8000,
+            },
+            voice_config={
+                "model": "model",
+                "provider": "provider",
+                "language": "language",
+                "sample_rate": 8000,
+                "similarity_boost": 0,
+                "speed": 0.1,
+                "stability": 0,
+                "style": 0,
+                "use_speaker_boost": True,
+                "voice_id": "voice_id",
+            },
         )
-        assert_matches_type(Agent, agent, path=["response"])
+        assert_matches_type(AgentResponse, agent, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -719,7 +911,7 @@ class TestAsyncAgents:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         agent = await response.parse()
-        assert_matches_type(Agent, agent, path=["response"])
+        assert_matches_type(AgentResponse, agent, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -732,7 +924,7 @@ class TestAsyncAgents:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             agent = await response.parse()
-            assert_matches_type(Agent, agent, path=["response"])
+            assert_matches_type(AgentResponse, agent, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -853,172 +1045,6 @@ class TestAsyncAgents:
 
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `agent_id` but received ''"):
             await async_client.org.agents.with_raw_response.delete(
-                agent_id="",
-                org_id="org_id",
-            )
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_method_list_eval_runs(self, async_client: AsyncCozmoai) -> None:
-        agent = await async_client.org.agents.list_eval_runs(
-            org_id="org_id",
-            agent_id="agentId",
-        )
-        assert_matches_type(AgentListEvalRunsResponse, agent, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_method_list_eval_runs_with_all_params(self, async_client: AsyncCozmoai) -> None:
-        agent = await async_client.org.agents.list_eval_runs(
-            org_id="org_id",
-            agent_id="agentId",
-            page=0,
-            size=0,
-        )
-        assert_matches_type(AgentListEvalRunsResponse, agent, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_raw_response_list_eval_runs(self, async_client: AsyncCozmoai) -> None:
-        response = await async_client.org.agents.with_raw_response.list_eval_runs(
-            org_id="org_id",
-            agent_id="agentId",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        agent = await response.parse()
-        assert_matches_type(AgentListEvalRunsResponse, agent, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_streaming_response_list_eval_runs(self, async_client: AsyncCozmoai) -> None:
-        async with async_client.org.agents.with_streaming_response.list_eval_runs(
-            org_id="org_id",
-            agent_id="agentId",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            agent = await response.parse()
-            assert_matches_type(AgentListEvalRunsResponse, agent, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_path_params_list_eval_runs(self, async_client: AsyncCozmoai) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `org_id` but received ''"):
-            await async_client.org.agents.with_raw_response.list_eval_runs(
-                org_id="",
-                agent_id="agentId",
-            )
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_method_run_specific_tests(self, async_client: AsyncCozmoai) -> None:
-        agent = await async_client.org.agents.run_specific_tests(
-            agent_id="agent_id",
-            org_id="org_id",
-            unit_test_ids=["string"],
-        )
-        assert_matches_type(RunTests, agent, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_raw_response_run_specific_tests(self, async_client: AsyncCozmoai) -> None:
-        response = await async_client.org.agents.with_raw_response.run_specific_tests(
-            agent_id="agent_id",
-            org_id="org_id",
-            unit_test_ids=["string"],
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        agent = await response.parse()
-        assert_matches_type(RunTests, agent, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_streaming_response_run_specific_tests(self, async_client: AsyncCozmoai) -> None:
-        async with async_client.org.agents.with_streaming_response.run_specific_tests(
-            agent_id="agent_id",
-            org_id="org_id",
-            unit_test_ids=["string"],
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            agent = await response.parse()
-            assert_matches_type(RunTests, agent, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_path_params_run_specific_tests(self, async_client: AsyncCozmoai) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `org_id` but received ''"):
-            await async_client.org.agents.with_raw_response.run_specific_tests(
-                agent_id="agent_id",
-                org_id="",
-                unit_test_ids=["string"],
-            )
-
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `agent_id` but received ''"):
-            await async_client.org.agents.with_raw_response.run_specific_tests(
-                agent_id="",
-                org_id="org_id",
-                unit_test_ids=["string"],
-            )
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_method_run_tests(self, async_client: AsyncCozmoai) -> None:
-        agent = await async_client.org.agents.run_tests(
-            agent_id="agent_id",
-            org_id="org_id",
-        )
-        assert_matches_type(RunTests, agent, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_raw_response_run_tests(self, async_client: AsyncCozmoai) -> None:
-        response = await async_client.org.agents.with_raw_response.run_tests(
-            agent_id="agent_id",
-            org_id="org_id",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        agent = await response.parse()
-        assert_matches_type(RunTests, agent, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_streaming_response_run_tests(self, async_client: AsyncCozmoai) -> None:
-        async with async_client.org.agents.with_streaming_response.run_tests(
-            agent_id="agent_id",
-            org_id="org_id",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            agent = await response.parse()
-            assert_matches_type(RunTests, agent, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_path_params_run_tests(self, async_client: AsyncCozmoai) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `org_id` but received ''"):
-            await async_client.org.agents.with_raw_response.run_tests(
-                agent_id="agent_id",
-                org_id="",
-            )
-
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `agent_id` but received ''"):
-            await async_client.org.agents.with_raw_response.run_tests(
                 agent_id="",
                 org_id="org_id",
             )
