@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.3.0 (2026-02-21)
+
+Full Changelog: [v0.2.1...v0.3.0](https://github.com/CozmoXAI/python-sdk/compare/v0.2.1...v0.3.0)
+
+### Features
+
+* **api:** manual updates ([9e2a24b](https://github.com/CozmoXAI/python-sdk/commit/9e2a24b10b69b96231f442a703f850be6028ba7a))
+* **api:** manual updates ([4850026](https://github.com/CozmoXAI/python-sdk/commit/485002609aabeed5d12dcdb131bf65f362baedd3))
+
+
+### Chores
+
+* update SDK settings ([d25f5c9](https://github.com/CozmoXAI/python-sdk/commit/d25f5c95aeb4331238b9cba544886fe3550e9e3b))
+
 ## 0.2.1 (2026-02-21)
 
 Full Changelog: [v0.2.0...v0.2.1](https://github.com/CozmoXAI/python-sdk/compare/v0.2.0...v0.2.1)
