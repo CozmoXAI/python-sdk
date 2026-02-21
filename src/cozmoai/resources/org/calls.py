@@ -18,8 +18,6 @@ from ...types.org import call_list_params
 from ..._base_client import make_request_options
 from ...types.org.call_list_response import CallListResponse
 from ...types.org.call_get_details_response import CallGetDetailsResponse
-from ...types.org.call_get_recording_response import CallGetRecordingResponse
-from ...types.org.call_get_transcript_response import CallGetTranscriptResponse
 
 __all__ = ["CallsResource", "AsyncCallsResource"]
 
@@ -56,6 +54,7 @@ class CallsResource(SyncAPIResource):
         phone: str | Omit = omit,
         prospect_external_id: str | Omit = omit,
         prospect_id: str | Omit = omit,
+        prospect_name: str | Omit = omit,
         size: int | Omit = omit,
         start_date: str | Omit = omit,
         status: str | Omit = omit,
@@ -86,6 +85,8 @@ class CallsResource(SyncAPIResource):
           prospect_external_id: Filter by prospect external ID
 
           prospect_id: Filter by prospect ID
+
+          prospect_name: Filter by prospect name (first or last)
 
           size: Page size
 
@@ -123,6 +124,7 @@ class CallsResource(SyncAPIResource):
                         "phone": phone,
                         "prospect_external_id": prospect_external_id,
                         "prospect_id": prospect_id,
+                        "prospect_name": prospect_name,
                         "size": size,
                         "start_date": start_date,
                         "status": status,
@@ -170,78 +172,6 @@ class CallsResource(SyncAPIResource):
             cast_to=CallGetDetailsResponse,
         )
 
-    def get_recording(
-        self,
-        call_id: str,
-        *,
-        org_id: str,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> CallGetRecordingResponse:
-        """
-        Returns the recording URL for a call
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
-        if not call_id:
-            raise ValueError(f"Expected a non-empty value for `call_id` but received {call_id!r}")
-        return self._get(
-            f"/org/{org_id}/calls/{call_id}/recording",
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=CallGetRecordingResponse,
-        )
-
-    def get_transcript(
-        self,
-        call_id: str,
-        *,
-        org_id: str,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> CallGetTranscriptResponse:
-        """
-        Returns the transcript and conversation messages for a call
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
-        if not call_id:
-            raise ValueError(f"Expected a non-empty value for `call_id` but received {call_id!r}")
-        return self._get(
-            f"/org/{org_id}/calls/{call_id}/transcript",
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=CallGetTranscriptResponse,
-        )
-
 
 class AsyncCallsResource(AsyncAPIResource):
     @cached_property
@@ -275,6 +205,7 @@ class AsyncCallsResource(AsyncAPIResource):
         phone: str | Omit = omit,
         prospect_external_id: str | Omit = omit,
         prospect_id: str | Omit = omit,
+        prospect_name: str | Omit = omit,
         size: int | Omit = omit,
         start_date: str | Omit = omit,
         status: str | Omit = omit,
@@ -305,6 +236,8 @@ class AsyncCallsResource(AsyncAPIResource):
           prospect_external_id: Filter by prospect external ID
 
           prospect_id: Filter by prospect ID
+
+          prospect_name: Filter by prospect name (first or last)
 
           size: Page size
 
@@ -342,6 +275,7 @@ class AsyncCallsResource(AsyncAPIResource):
                         "phone": phone,
                         "prospect_external_id": prospect_external_id,
                         "prospect_id": prospect_id,
+                        "prospect_name": prospect_name,
                         "size": size,
                         "start_date": start_date,
                         "status": status,
@@ -389,78 +323,6 @@ class AsyncCallsResource(AsyncAPIResource):
             cast_to=CallGetDetailsResponse,
         )
 
-    async def get_recording(
-        self,
-        call_id: str,
-        *,
-        org_id: str,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> CallGetRecordingResponse:
-        """
-        Returns the recording URL for a call
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
-        if not call_id:
-            raise ValueError(f"Expected a non-empty value for `call_id` but received {call_id!r}")
-        return await self._get(
-            f"/org/{org_id}/calls/{call_id}/recording",
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=CallGetRecordingResponse,
-        )
-
-    async def get_transcript(
-        self,
-        call_id: str,
-        *,
-        org_id: str,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> CallGetTranscriptResponse:
-        """
-        Returns the transcript and conversation messages for a call
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
-        if not call_id:
-            raise ValueError(f"Expected a non-empty value for `call_id` but received {call_id!r}")
-        return await self._get(
-            f"/org/{org_id}/calls/{call_id}/transcript",
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=CallGetTranscriptResponse,
-        )
-
 
 class CallsResourceWithRawResponse:
     def __init__(self, calls: CallsResource) -> None:
@@ -471,12 +333,6 @@ class CallsResourceWithRawResponse:
         )
         self.get_details = to_raw_response_wrapper(
             calls.get_details,
-        )
-        self.get_recording = to_raw_response_wrapper(
-            calls.get_recording,
-        )
-        self.get_transcript = to_raw_response_wrapper(
-            calls.get_transcript,
         )
 
 
@@ -490,12 +346,6 @@ class AsyncCallsResourceWithRawResponse:
         self.get_details = async_to_raw_response_wrapper(
             calls.get_details,
         )
-        self.get_recording = async_to_raw_response_wrapper(
-            calls.get_recording,
-        )
-        self.get_transcript = async_to_raw_response_wrapper(
-            calls.get_transcript,
-        )
 
 
 class CallsResourceWithStreamingResponse:
@@ -508,12 +358,6 @@ class CallsResourceWithStreamingResponse:
         self.get_details = to_streamed_response_wrapper(
             calls.get_details,
         )
-        self.get_recording = to_streamed_response_wrapper(
-            calls.get_recording,
-        )
-        self.get_transcript = to_streamed_response_wrapper(
-            calls.get_transcript,
-        )
 
 
 class AsyncCallsResourceWithStreamingResponse:
@@ -525,10 +369,4 @@ class AsyncCallsResourceWithStreamingResponse:
         )
         self.get_details = async_to_streamed_response_wrapper(
             calls.get_details,
-        )
-        self.get_recording = async_to_streamed_response_wrapper(
-            calls.get_recording,
-        )
-        self.get_transcript = async_to_streamed_response_wrapper(
-            calls.get_transcript,
         )

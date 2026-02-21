@@ -8,14 +8,6 @@ from .org import (
     OrgResourceWithStreamingResponse,
     AsyncOrgResourceWithStreamingResponse,
 )
-from .tags import (
-    TagsResource,
-    AsyncTagsResource,
-    TagsResourceWithRawResponse,
-    AsyncTagsResourceWithRawResponse,
-    TagsResourceWithStreamingResponse,
-    AsyncTagsResourceWithStreamingResponse,
-)
 from .calls import (
     CallsResource,
     AsyncCallsResource,
@@ -23,14 +15,6 @@ from .calls import (
     AsyncCallsResourceWithRawResponse,
     CallsResourceWithStreamingResponse,
     AsyncCallsResourceWithStreamingResponse,
-)
-from .lists import (
-    ListsResource,
-    AsyncListsResource,
-    ListsResourceWithRawResponse,
-    AsyncListsResourceWithRawResponse,
-    ListsResourceWithStreamingResponse,
-    AsyncListsResourceWithStreamingResponse,
 )
 from .agents import (
     AgentsResource,
@@ -40,14 +24,6 @@ from .agents import (
     AgentsResourceWithStreamingResponse,
     AsyncAgentsResourceWithStreamingResponse,
 )
-from .prospects import (
-    ProspectsResource,
-    AsyncProspectsResource,
-    ProspectsResourceWithRawResponse,
-    AsyncProspectsResourceWithRawResponse,
-    ProspectsResourceWithStreamingResponse,
-    AsyncProspectsResourceWithStreamingResponse,
-)
 from .workflows import (
     WorkflowsResource,
     AsyncWorkflowsResource,
@@ -55,14 +31,6 @@ from .workflows import (
     AsyncWorkflowsResourceWithRawResponse,
     WorkflowsResourceWithStreamingResponse,
     AsyncWorkflowsResourceWithStreamingResponse,
-)
-from .phone_numbers import (
-    PhoneNumbersResource,
-    AsyncPhoneNumbersResource,
-    PhoneNumbersResourceWithRawResponse,
-    AsyncPhoneNumbersResourceWithRawResponse,
-    PhoneNumbersResourceWithStreamingResponse,
-    AsyncPhoneNumbersResourceWithStreamingResponse,
 )
 
 __all__ = [
@@ -78,30 +46,6 @@ __all__ = [
     "AsyncCallsResourceWithRawResponse",
     "CallsResourceWithStreamingResponse",
     "AsyncCallsResourceWithStreamingResponse",
-    "ListsResource",
-    "AsyncListsResource",
-    "ListsResourceWithRawResponse",
-    "AsyncListsResourceWithRawResponse",
-    "ListsResourceWithStreamingResponse",
-    "AsyncListsResourceWithStreamingResponse",
-    "PhoneNumbersResource",
-    "AsyncPhoneNumbersResource",
-    "PhoneNumbersResourceWithRawResponse",
-    "AsyncPhoneNumbersResourceWithRawResponse",
-    "PhoneNumbersResourceWithStreamingResponse",
-    "AsyncPhoneNumbersResourceWithStreamingResponse",
-    "ProspectsResource",
-    "AsyncProspectsResource",
-    "ProspectsResourceWithRawResponse",
-    "AsyncProspectsResourceWithRawResponse",
-    "ProspectsResourceWithStreamingResponse",
-    "AsyncProspectsResourceWithStreamingResponse",
-    "TagsResource",
-    "AsyncTagsResource",
-    "TagsResourceWithRawResponse",
-    "AsyncTagsResourceWithRawResponse",
-    "TagsResourceWithStreamingResponse",
-    "AsyncTagsResourceWithStreamingResponse",
     "WorkflowsResource",
     "AsyncWorkflowsResource",
     "WorkflowsResourceWithRawResponse",

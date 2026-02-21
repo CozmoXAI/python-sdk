@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
+from typing import Iterable
 from typing_extensions import Literal
 
 import httpx
 
-from ..._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
+from ..._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
 from ..._utils import maybe_transform, async_maybe_transform
 from ..._compat import cached_property
 from ..._resource import SyncAPIResource, AsyncAPIResource
@@ -16,51 +17,70 @@ from ..._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ...types.org import phone_number_list_params, phone_number_create_params, phone_number_update_params
+from ...types.org import (
+    agent_list_params,
+    agent_create_params,
+    agent_update_params,
+)
 from ..._base_client import make_request_options
-from ...types.org.phone_number_response import PhoneNumberResponse
-from ...types.org.phone_number_list_response import PhoneNumberListResponse
-from ...types.org.phone_number_delete_response import PhoneNumberDeleteResponse
+from ...types.org.agent import Agent
+from ...types.org.agent_list_response import AgentListResponse
+from ...types.org.goodbye_config_param import GoodbyeConfigParam
+from ...types.org.recall_webhook_param import RecallWebhookParam
+from ...types.org.agent_delete_response import AgentDeleteResponse
+from ...types.org.background_sound_config_param import BackgroundSoundConfigParam
 
-__all__ = ["PhoneNumbersResource", "AsyncPhoneNumbersResource"]
+__all__ = ["AgentsResource", "AsyncAgentsResource"]
 
 
-class PhoneNumbersResource(SyncAPIResource):
+class AgentsResource(SyncAPIResource):
     @cached_property
-    def with_raw_response(self) -> PhoneNumbersResourceWithRawResponse:
+    def with_raw_response(self) -> AgentsResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/CozmoXAI/python-sdk#accessing-raw-response-data-eg-headers
         """
-        return PhoneNumbersResourceWithRawResponse(self)
+        return AgentsResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> PhoneNumbersResourceWithStreamingResponse:
+    def with_streaming_response(self) -> AgentsResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
         For more information, see https://www.github.com/CozmoXAI/python-sdk#with_streaming_response
         """
-        return PhoneNumbersResourceWithStreamingResponse(self)
+        return AgentsResourceWithStreamingResponse(self)
 
     def create(
         self,
         org_id: str,
         *,
-        number: str,
-        sip_trunk_id: str,
-        label: str | Omit = omit,
+        name: str,
+        prompt_template: str,
+        type: Literal["voice", "chat", "video"],
+        allowed_sip_trunks: SequenceNotStr[str] | Omit = omit,
+        background_sound: BackgroundSoundConfigParam | Omit = omit,
+        extra_config: agent_create_params.ExtraConfig | Omit = omit,
+        goodbye_config: GoodbyeConfigParam | Omit = omit,
+        greeting_config: agent_create_params.GreetingConfig | Omit = omit,
+        llm_config: agent_create_params.LlmConfig | Omit = omit,
+        plugins: Iterable[object] | Omit = omit,
+        precall_webhook: RecallWebhookParam | Omit = omit,
+        room_duration_config: agent_create_params.RoomDurationConfig | Omit = omit,
+        transcriber_config: agent_create_params.TranscriberConfig | Omit = omit,
+        vad_config: agent_create_params.VadConfig | Omit = omit,
+        voice_config: agent_create_params.VoiceConfig | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> PhoneNumberResponse:
+    ) -> Agent:
         """
-        Creates a new phone number and associates it with a SIP trunk
+        Create a new AI agent in the organization
 
         Args:
           extra_headers: Send extra headers
@@ -73,25 +93,38 @@ class PhoneNumbersResource(SyncAPIResource):
         """
         if not org_id:
             raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
+        extra_headers = {"Authorization": omit, **(extra_headers or {})}
         return self._post(
-            f"/org/{org_id}/phone-numbers",
+            f"/org/{org_id}/agents",
             body=maybe_transform(
                 {
-                    "number": number,
-                    "sip_trunk_id": sip_trunk_id,
-                    "label": label,
+                    "name": name,
+                    "prompt_template": prompt_template,
+                    "type": type,
+                    "allowed_sip_trunks": allowed_sip_trunks,
+                    "background_sound": background_sound,
+                    "extra_config": extra_config,
+                    "goodbye_config": goodbye_config,
+                    "greeting_config": greeting_config,
+                    "llm_config": llm_config,
+                    "plugins": plugins,
+                    "precall_webhook": precall_webhook,
+                    "room_duration_config": room_duration_config,
+                    "transcriber_config": transcriber_config,
+                    "vad_config": vad_config,
+                    "voice_config": voice_config,
                 },
-                phone_number_create_params.PhoneNumberCreateParams,
+                agent_create_params.AgentCreateParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=PhoneNumberResponse,
+            cast_to=Agent,
         )
 
     def retrieve(
         self,
-        number_id: str,
+        agent_id: str,
         *,
         org_id: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -100,9 +133,9 @@ class PhoneNumbersResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> PhoneNumberResponse:
+    ) -> Agent:
         """
-        Returns a phone number with its associated trunk information
+        Get agent details by ID
 
         Args:
           extra_headers: Send extra headers
@@ -115,33 +148,46 @@ class PhoneNumbersResource(SyncAPIResource):
         """
         if not org_id:
             raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
-        if not number_id:
-            raise ValueError(f"Expected a non-empty value for `number_id` but received {number_id!r}")
+        if not agent_id:
+            raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
+        extra_headers = {"Authorization": omit, **(extra_headers or {})}
         return self._get(
-            f"/org/{org_id}/phone-numbers/{number_id}",
+            f"/org/{org_id}/agents/{agent_id}",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=PhoneNumberResponse,
+            cast_to=Agent,
         )
 
     def update(
         self,
-        number_id: str,
+        agent_id: str,
         *,
         org_id: str,
-        is_verified: bool | Omit = omit,
-        label: str | Omit = omit,
-        sip_trunk_id: str | Omit = omit,
+        allowed_sip_trunks: SequenceNotStr[str] | Omit = omit,
+        background_sound: BackgroundSoundConfigParam | Omit = omit,
+        extra_config: agent_update_params.ExtraConfig | Omit = omit,
+        goodbye_config: GoodbyeConfigParam | Omit = omit,
+        greeting_config: agent_update_params.GreetingConfig | Omit = omit,
+        llm_config: agent_update_params.LlmConfig | Omit = omit,
+        name: str | Omit = omit,
+        plugins: Iterable[object] | Omit = omit,
+        precall_webhook: RecallWebhookParam | Omit = omit,
+        prompt_template: str | Omit = omit,
+        room_duration_config: agent_update_params.RoomDurationConfig | Omit = omit,
+        transcriber_config: agent_update_params.TranscriberConfig | Omit = omit,
+        type: Literal["voice", "chat", "video"] | Omit = omit,
+        vad_config: agent_update_params.VadConfig | Omit = omit,
+        voice_config: agent_update_params.VoiceConfig | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> PhoneNumberResponse:
+    ) -> Agent:
         """
-        Updates the specified phone number's configuration
+        Update agent details (partial update)
 
         Args:
           extra_headers: Send extra headers
@@ -154,56 +200,63 @@ class PhoneNumbersResource(SyncAPIResource):
         """
         if not org_id:
             raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
-        if not number_id:
-            raise ValueError(f"Expected a non-empty value for `number_id` but received {number_id!r}")
+        if not agent_id:
+            raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
+        extra_headers = {"Authorization": omit, **(extra_headers or {})}
         return self._patch(
-            f"/org/{org_id}/phone-numbers/{number_id}",
+            f"/org/{org_id}/agents/{agent_id}",
             body=maybe_transform(
                 {
-                    "is_verified": is_verified,
-                    "label": label,
-                    "sip_trunk_id": sip_trunk_id,
+                    "allowed_sip_trunks": allowed_sip_trunks,
+                    "background_sound": background_sound,
+                    "extra_config": extra_config,
+                    "goodbye_config": goodbye_config,
+                    "greeting_config": greeting_config,
+                    "llm_config": llm_config,
+                    "name": name,
+                    "plugins": plugins,
+                    "precall_webhook": precall_webhook,
+                    "prompt_template": prompt_template,
+                    "room_duration_config": room_duration_config,
+                    "transcriber_config": transcriber_config,
+                    "type": type,
+                    "vad_config": vad_config,
+                    "voice_config": voice_config,
                 },
-                phone_number_update_params.PhoneNumberUpdateParams,
+                agent_update_params.AgentUpdateParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=PhoneNumberResponse,
+            cast_to=Agent,
         )
 
     def list(
         self,
         org_id: str,
         *,
-        direction: Literal["inbound", "outbound"] | Omit = omit,
-        is_verified: bool | Omit = omit,
         page: int | Omit = omit,
         search: str | Omit = omit,
-        sip_trunk_id: str | Omit = omit,
         size: int | Omit = omit,
+        type: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> PhoneNumberListResponse:
+    ) -> AgentListResponse:
         """
-        Returns a paginated list of phone numbers for the organization
+        Get a paginated list of agents for the organization
 
         Args:
-          direction: Filter by SIP trunk type/direction
-
-          is_verified: Filter by verification status
-
           page: Page number
 
-          search: Search by number or label
-
-          sip_trunk_id: Filter by SIP trunk ID
+          search: Search by agent name
 
           size: Page size
+
+          type: Filter by agent type (voice or chat)
 
           extra_headers: Send extra headers
 
@@ -215,8 +268,9 @@ class PhoneNumbersResource(SyncAPIResource):
         """
         if not org_id:
             raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
+        extra_headers = {"Authorization": omit, **(extra_headers or {})}
         return self._get(
-            f"/org/{org_id}/phone-numbers",
+            f"/org/{org_id}/agents",
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -224,22 +278,20 @@ class PhoneNumbersResource(SyncAPIResource):
                 timeout=timeout,
                 query=maybe_transform(
                     {
-                        "direction": direction,
-                        "is_verified": is_verified,
                         "page": page,
                         "search": search,
-                        "sip_trunk_id": sip_trunk_id,
                         "size": size,
+                        "type": type,
                     },
-                    phone_number_list_params.PhoneNumberListParams,
+                    agent_list_params.AgentListParams,
                 ),
             ),
-            cast_to=PhoneNumberListResponse,
+            cast_to=AgentListResponse,
         )
 
     def delete(
         self,
-        number_id: str,
+        agent_id: str,
         *,
         org_id: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -248,9 +300,9 @@ class PhoneNumbersResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> PhoneNumberDeleteResponse:
+    ) -> AgentDeleteResponse:
         """
-        Deletes the specified phone number
+        Delete an agent by ID
 
         Args:
           extra_headers: Send extra headers
@@ -263,53 +315,66 @@ class PhoneNumbersResource(SyncAPIResource):
         """
         if not org_id:
             raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
-        if not number_id:
-            raise ValueError(f"Expected a non-empty value for `number_id` but received {number_id!r}")
+        if not agent_id:
+            raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
+        extra_headers = {"Authorization": omit, **(extra_headers or {})}
         return self._delete(
-            f"/org/{org_id}/phone-numbers/{number_id}",
+            f"/org/{org_id}/agents/{agent_id}",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=PhoneNumberDeleteResponse,
+            cast_to=AgentDeleteResponse,
         )
 
 
-class AsyncPhoneNumbersResource(AsyncAPIResource):
+class AsyncAgentsResource(AsyncAPIResource):
     @cached_property
-    def with_raw_response(self) -> AsyncPhoneNumbersResourceWithRawResponse:
+    def with_raw_response(self) -> AsyncAgentsResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/CozmoXAI/python-sdk#accessing-raw-response-data-eg-headers
         """
-        return AsyncPhoneNumbersResourceWithRawResponse(self)
+        return AsyncAgentsResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> AsyncPhoneNumbersResourceWithStreamingResponse:
+    def with_streaming_response(self) -> AsyncAgentsResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
         For more information, see https://www.github.com/CozmoXAI/python-sdk#with_streaming_response
         """
-        return AsyncPhoneNumbersResourceWithStreamingResponse(self)
+        return AsyncAgentsResourceWithStreamingResponse(self)
 
     async def create(
         self,
         org_id: str,
         *,
-        number: str,
-        sip_trunk_id: str,
-        label: str | Omit = omit,
+        name: str,
+        prompt_template: str,
+        type: Literal["voice", "chat", "video"],
+        allowed_sip_trunks: SequenceNotStr[str] | Omit = omit,
+        background_sound: BackgroundSoundConfigParam | Omit = omit,
+        extra_config: agent_create_params.ExtraConfig | Omit = omit,
+        goodbye_config: GoodbyeConfigParam | Omit = omit,
+        greeting_config: agent_create_params.GreetingConfig | Omit = omit,
+        llm_config: agent_create_params.LlmConfig | Omit = omit,
+        plugins: Iterable[object] | Omit = omit,
+        precall_webhook: RecallWebhookParam | Omit = omit,
+        room_duration_config: agent_create_params.RoomDurationConfig | Omit = omit,
+        transcriber_config: agent_create_params.TranscriberConfig | Omit = omit,
+        vad_config: agent_create_params.VadConfig | Omit = omit,
+        voice_config: agent_create_params.VoiceConfig | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> PhoneNumberResponse:
+    ) -> Agent:
         """
-        Creates a new phone number and associates it with a SIP trunk
+        Create a new AI agent in the organization
 
         Args:
           extra_headers: Send extra headers
@@ -322,25 +387,38 @@ class AsyncPhoneNumbersResource(AsyncAPIResource):
         """
         if not org_id:
             raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
+        extra_headers = {"Authorization": omit, **(extra_headers or {})}
         return await self._post(
-            f"/org/{org_id}/phone-numbers",
+            f"/org/{org_id}/agents",
             body=await async_maybe_transform(
                 {
-                    "number": number,
-                    "sip_trunk_id": sip_trunk_id,
-                    "label": label,
+                    "name": name,
+                    "prompt_template": prompt_template,
+                    "type": type,
+                    "allowed_sip_trunks": allowed_sip_trunks,
+                    "background_sound": background_sound,
+                    "extra_config": extra_config,
+                    "goodbye_config": goodbye_config,
+                    "greeting_config": greeting_config,
+                    "llm_config": llm_config,
+                    "plugins": plugins,
+                    "precall_webhook": precall_webhook,
+                    "room_duration_config": room_duration_config,
+                    "transcriber_config": transcriber_config,
+                    "vad_config": vad_config,
+                    "voice_config": voice_config,
                 },
-                phone_number_create_params.PhoneNumberCreateParams,
+                agent_create_params.AgentCreateParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=PhoneNumberResponse,
+            cast_to=Agent,
         )
 
     async def retrieve(
         self,
-        number_id: str,
+        agent_id: str,
         *,
         org_id: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -349,9 +427,9 @@ class AsyncPhoneNumbersResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> PhoneNumberResponse:
+    ) -> Agent:
         """
-        Returns a phone number with its associated trunk information
+        Get agent details by ID
 
         Args:
           extra_headers: Send extra headers
@@ -364,33 +442,46 @@ class AsyncPhoneNumbersResource(AsyncAPIResource):
         """
         if not org_id:
             raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
-        if not number_id:
-            raise ValueError(f"Expected a non-empty value for `number_id` but received {number_id!r}")
+        if not agent_id:
+            raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
+        extra_headers = {"Authorization": omit, **(extra_headers or {})}
         return await self._get(
-            f"/org/{org_id}/phone-numbers/{number_id}",
+            f"/org/{org_id}/agents/{agent_id}",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=PhoneNumberResponse,
+            cast_to=Agent,
         )
 
     async def update(
         self,
-        number_id: str,
+        agent_id: str,
         *,
         org_id: str,
-        is_verified: bool | Omit = omit,
-        label: str | Omit = omit,
-        sip_trunk_id: str | Omit = omit,
+        allowed_sip_trunks: SequenceNotStr[str] | Omit = omit,
+        background_sound: BackgroundSoundConfigParam | Omit = omit,
+        extra_config: agent_update_params.ExtraConfig | Omit = omit,
+        goodbye_config: GoodbyeConfigParam | Omit = omit,
+        greeting_config: agent_update_params.GreetingConfig | Omit = omit,
+        llm_config: agent_update_params.LlmConfig | Omit = omit,
+        name: str | Omit = omit,
+        plugins: Iterable[object] | Omit = omit,
+        precall_webhook: RecallWebhookParam | Omit = omit,
+        prompt_template: str | Omit = omit,
+        room_duration_config: agent_update_params.RoomDurationConfig | Omit = omit,
+        transcriber_config: agent_update_params.TranscriberConfig | Omit = omit,
+        type: Literal["voice", "chat", "video"] | Omit = omit,
+        vad_config: agent_update_params.VadConfig | Omit = omit,
+        voice_config: agent_update_params.VoiceConfig | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> PhoneNumberResponse:
+    ) -> Agent:
         """
-        Updates the specified phone number's configuration
+        Update agent details (partial update)
 
         Args:
           extra_headers: Send extra headers
@@ -403,56 +494,63 @@ class AsyncPhoneNumbersResource(AsyncAPIResource):
         """
         if not org_id:
             raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
-        if not number_id:
-            raise ValueError(f"Expected a non-empty value for `number_id` but received {number_id!r}")
+        if not agent_id:
+            raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
+        extra_headers = {"Authorization": omit, **(extra_headers or {})}
         return await self._patch(
-            f"/org/{org_id}/phone-numbers/{number_id}",
+            f"/org/{org_id}/agents/{agent_id}",
             body=await async_maybe_transform(
                 {
-                    "is_verified": is_verified,
-                    "label": label,
-                    "sip_trunk_id": sip_trunk_id,
+                    "allowed_sip_trunks": allowed_sip_trunks,
+                    "background_sound": background_sound,
+                    "extra_config": extra_config,
+                    "goodbye_config": goodbye_config,
+                    "greeting_config": greeting_config,
+                    "llm_config": llm_config,
+                    "name": name,
+                    "plugins": plugins,
+                    "precall_webhook": precall_webhook,
+                    "prompt_template": prompt_template,
+                    "room_duration_config": room_duration_config,
+                    "transcriber_config": transcriber_config,
+                    "type": type,
+                    "vad_config": vad_config,
+                    "voice_config": voice_config,
                 },
-                phone_number_update_params.PhoneNumberUpdateParams,
+                agent_update_params.AgentUpdateParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=PhoneNumberResponse,
+            cast_to=Agent,
         )
 
     async def list(
         self,
         org_id: str,
         *,
-        direction: Literal["inbound", "outbound"] | Omit = omit,
-        is_verified: bool | Omit = omit,
         page: int | Omit = omit,
         search: str | Omit = omit,
-        sip_trunk_id: str | Omit = omit,
         size: int | Omit = omit,
+        type: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> PhoneNumberListResponse:
+    ) -> AgentListResponse:
         """
-        Returns a paginated list of phone numbers for the organization
+        Get a paginated list of agents for the organization
 
         Args:
-          direction: Filter by SIP trunk type/direction
-
-          is_verified: Filter by verification status
-
           page: Page number
 
-          search: Search by number or label
-
-          sip_trunk_id: Filter by SIP trunk ID
+          search: Search by agent name
 
           size: Page size
+
+          type: Filter by agent type (voice or chat)
 
           extra_headers: Send extra headers
 
@@ -464,8 +562,9 @@ class AsyncPhoneNumbersResource(AsyncAPIResource):
         """
         if not org_id:
             raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
+        extra_headers = {"Authorization": omit, **(extra_headers or {})}
         return await self._get(
-            f"/org/{org_id}/phone-numbers",
+            f"/org/{org_id}/agents",
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -473,22 +572,20 @@ class AsyncPhoneNumbersResource(AsyncAPIResource):
                 timeout=timeout,
                 query=await async_maybe_transform(
                     {
-                        "direction": direction,
-                        "is_verified": is_verified,
                         "page": page,
                         "search": search,
-                        "sip_trunk_id": sip_trunk_id,
                         "size": size,
+                        "type": type,
                     },
-                    phone_number_list_params.PhoneNumberListParams,
+                    agent_list_params.AgentListParams,
                 ),
             ),
-            cast_to=PhoneNumberListResponse,
+            cast_to=AgentListResponse,
         )
 
     async def delete(
         self,
-        number_id: str,
+        agent_id: str,
         *,
         org_id: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -497,9 +594,9 @@ class AsyncPhoneNumbersResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> PhoneNumberDeleteResponse:
+    ) -> AgentDeleteResponse:
         """
-        Deletes the specified phone number
+        Delete an agent by ID
 
         Args:
           extra_headers: Send extra headers
@@ -512,96 +609,97 @@ class AsyncPhoneNumbersResource(AsyncAPIResource):
         """
         if not org_id:
             raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
-        if not number_id:
-            raise ValueError(f"Expected a non-empty value for `number_id` but received {number_id!r}")
+        if not agent_id:
+            raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
+        extra_headers = {"Authorization": omit, **(extra_headers or {})}
         return await self._delete(
-            f"/org/{org_id}/phone-numbers/{number_id}",
+            f"/org/{org_id}/agents/{agent_id}",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=PhoneNumberDeleteResponse,
+            cast_to=AgentDeleteResponse,
         )
 
 
-class PhoneNumbersResourceWithRawResponse:
-    def __init__(self, phone_numbers: PhoneNumbersResource) -> None:
-        self._phone_numbers = phone_numbers
+class AgentsResourceWithRawResponse:
+    def __init__(self, agents: AgentsResource) -> None:
+        self._agents = agents
 
         self.create = to_raw_response_wrapper(
-            phone_numbers.create,
+            agents.create,
         )
         self.retrieve = to_raw_response_wrapper(
-            phone_numbers.retrieve,
+            agents.retrieve,
         )
         self.update = to_raw_response_wrapper(
-            phone_numbers.update,
+            agents.update,
         )
         self.list = to_raw_response_wrapper(
-            phone_numbers.list,
+            agents.list,
         )
         self.delete = to_raw_response_wrapper(
-            phone_numbers.delete,
+            agents.delete,
         )
 
 
-class AsyncPhoneNumbersResourceWithRawResponse:
-    def __init__(self, phone_numbers: AsyncPhoneNumbersResource) -> None:
-        self._phone_numbers = phone_numbers
+class AsyncAgentsResourceWithRawResponse:
+    def __init__(self, agents: AsyncAgentsResource) -> None:
+        self._agents = agents
 
         self.create = async_to_raw_response_wrapper(
-            phone_numbers.create,
+            agents.create,
         )
         self.retrieve = async_to_raw_response_wrapper(
-            phone_numbers.retrieve,
+            agents.retrieve,
         )
         self.update = async_to_raw_response_wrapper(
-            phone_numbers.update,
+            agents.update,
         )
         self.list = async_to_raw_response_wrapper(
-            phone_numbers.list,
+            agents.list,
         )
         self.delete = async_to_raw_response_wrapper(
-            phone_numbers.delete,
+            agents.delete,
         )
 
 
-class PhoneNumbersResourceWithStreamingResponse:
-    def __init__(self, phone_numbers: PhoneNumbersResource) -> None:
-        self._phone_numbers = phone_numbers
+class AgentsResourceWithStreamingResponse:
+    def __init__(self, agents: AgentsResource) -> None:
+        self._agents = agents
 
         self.create = to_streamed_response_wrapper(
-            phone_numbers.create,
+            agents.create,
         )
         self.retrieve = to_streamed_response_wrapper(
-            phone_numbers.retrieve,
+            agents.retrieve,
         )
         self.update = to_streamed_response_wrapper(
-            phone_numbers.update,
+            agents.update,
         )
         self.list = to_streamed_response_wrapper(
-            phone_numbers.list,
+            agents.list,
         )
         self.delete = to_streamed_response_wrapper(
-            phone_numbers.delete,
+            agents.delete,
         )
 
 
-class AsyncPhoneNumbersResourceWithStreamingResponse:
-    def __init__(self, phone_numbers: AsyncPhoneNumbersResource) -> None:
-        self._phone_numbers = phone_numbers
+class AsyncAgentsResourceWithStreamingResponse:
+    def __init__(self, agents: AsyncAgentsResource) -> None:
+        self._agents = agents
 
         self.create = async_to_streamed_response_wrapper(
-            phone_numbers.create,
+            agents.create,
         )
         self.retrieve = async_to_streamed_response_wrapper(
-            phone_numbers.retrieve,
+            agents.retrieve,
         )
         self.update = async_to_streamed_response_wrapper(
-            phone_numbers.update,
+            agents.update,
         )
         self.list = async_to_streamed_response_wrapper(
-            phone_numbers.list,
+            agents.list,
         )
         self.delete = async_to_streamed_response_wrapper(
-            phone_numbers.delete,
+            agents.delete,
         )

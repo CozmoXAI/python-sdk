@@ -17,6 +17,8 @@ class Agent(BaseModel):
 
     created_at: Optional[str] = None
 
+    extra_config: Optional[List[int]] = None
+
     goodbye_config: Optional[List[int]] = None
 
     greeting_config: Optional[List[int]] = None
@@ -32,6 +34,10 @@ class Agent(BaseModel):
     precall_webhook: Optional[List[int]] = None
 
     prompt_template: Optional[str] = None
+
+    public_quota: Optional[int] = None
+
+    room_duration_config: Optional[List[int]] = None
 
     tools: Optional[List[AgentTool]] = None
 

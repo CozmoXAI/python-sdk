@@ -14,6 +14,10 @@ class CallGetDetailsResponse(BaseModel):
 
     agent_name: Optional[str] = None
 
+    call_type: Optional[str] = None
+
+    callback_for: Optional[str] = None
+
     cost_usd: Optional[str] = None
 
     detected_intents: Optional[List[str]] = None
@@ -64,6 +68,9 @@ class CallGetDetailsResponse(BaseModel):
     status: Optional[str] = None
 
     stt_duration_seconds: Optional[int] = None
+
+    summary: Optional[str] = None
+    """Call summary (AI-generated summary of the call)"""
 
     telephony_code: Optional[int] = None
 

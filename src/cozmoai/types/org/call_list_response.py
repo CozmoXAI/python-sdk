@@ -13,6 +13,10 @@ class Data(BaseModel):
 
     agent_name: Optional[str] = None
 
+    call_type: Optional[str] = None
+
+    callback_for: Optional[str] = None
+
     direction: Optional[str] = None
 
     duration_seconds: Optional[int] = None

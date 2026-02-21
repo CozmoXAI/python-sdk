@@ -4,62 +4,58 @@ from __future__ import annotations
 
 import httpx
 
-from ...._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
-from ...._utils import maybe_transform, async_maybe_transform
-from ...._compat import cached_property
-from ...._resource import SyncAPIResource, AsyncAPIResource
-from ...._response import (
+from ..._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
+from ..._utils import maybe_transform, async_maybe_transform
+from ..._compat import cached_property
+from ..._resource import SyncAPIResource, AsyncAPIResource
+from ..._response import (
     to_raw_response_wrapper,
     to_streamed_response_wrapper,
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ...._base_client import make_request_options
-from ....types.org.workflows import batch_list_params, batch_create_params
-from ....types.org.batch_response import BatchResponse
-from ....types.org.workflows.batch_list_response import BatchListResponse
+from ...types.org import workflow_list_params
+from ..._base_client import make_request_options
+from ...types.org.workflow_response import WorkflowResponse
+from ...types.org.workflow_list_response import WorkflowListResponse
 
-__all__ = ["BatchesResource", "AsyncBatchesResource"]
+__all__ = ["WorkflowsResource", "AsyncWorkflowsResource"]
 
 
-class BatchesResource(SyncAPIResource):
+class WorkflowsResource(SyncAPIResource):
     @cached_property
-    def with_raw_response(self) -> BatchesResourceWithRawResponse:
+    def with_raw_response(self) -> WorkflowsResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/CozmoXAI/python-sdk#accessing-raw-response-data-eg-headers
         """
-        return BatchesResourceWithRawResponse(self)
+        return WorkflowsResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> BatchesResourceWithStreamingResponse:
+    def with_streaming_response(self) -> WorkflowsResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
         For more information, see https://www.github.com/CozmoXAI/python-sdk#with_streaming_response
         """
-        return BatchesResourceWithStreamingResponse(self)
+        return WorkflowsResourceWithStreamingResponse(self)
 
-    def create(
+    def retrieve(
         self,
         workflow_id: str,
         *,
         org_id: str,
-        name: str,
-        prospect_ids: SequenceNotStr[str] | Omit = omit,
-        prospect_list_id: str | Omit = omit,
-        scheduled_at: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> BatchResponse:
+    ) -> WorkflowResponse:
         """
-        Create a new workflow batch with runs for each prospect
+        Get a single workflow by ID with its latest definition
 
         Args:
           extra_headers: Send extra headers
@@ -74,44 +70,44 @@ class BatchesResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
         if not workflow_id:
             raise ValueError(f"Expected a non-empty value for `workflow_id` but received {workflow_id!r}")
-        return self._post(
-            f"/org/{org_id}/workflows/{workflow_id}/batches",
-            body=maybe_transform(
-                {
-                    "name": name,
-                    "prospect_ids": prospect_ids,
-                    "prospect_list_id": prospect_list_id,
-                    "scheduled_at": scheduled_at,
-                },
-                batch_create_params.BatchCreateParams,
-            ),
+        extra_headers = {"Authorization": omit, **(extra_headers or {})}
+        return self._get(
+            f"/org/{org_id}/workflows/{workflow_id}",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=BatchResponse,
+            cast_to=WorkflowResponse,
         )
 
     def list(
         self,
-        workflow_id: str,
-        *,
         org_id: str,
-        limit: int | Omit = omit,
+        *,
+        is_active: bool | Omit = omit,
         page: int | Omit = omit,
+        search: str | Omit = omit,
+        size: int | Omit = omit,
+        trigger_type: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> BatchListResponse:
+    ) -> WorkflowListResponse:
         """
-        List all batches for a workflow with pagination
+        Get a paginated list of workflows with filtering
 
         Args:
-          limit: Items per page
+          is_active: Filter by active status
 
           page: Page number
+
+          search: Search in workflow name and description
+
+          size: Page size
+
+          trigger_type: Filter by trigger type
 
           extra_headers: Send extra headers
 
@@ -123,10 +119,9 @@ class BatchesResource(SyncAPIResource):
         """
         if not org_id:
             raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
-        if not workflow_id:
-            raise ValueError(f"Expected a non-empty value for `workflow_id` but received {workflow_id!r}")
+        extra_headers = {"Authorization": omit, **(extra_headers or {})}
         return self._get(
-            f"/org/{org_id}/workflows/{workflow_id}/batches",
+            f"/org/{org_id}/workflows",
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -134,54 +129,53 @@ class BatchesResource(SyncAPIResource):
                 timeout=timeout,
                 query=maybe_transform(
                     {
-                        "limit": limit,
+                        "is_active": is_active,
                         "page": page,
+                        "search": search,
+                        "size": size,
+                        "trigger_type": trigger_type,
                     },
-                    batch_list_params.BatchListParams,
+                    workflow_list_params.WorkflowListParams,
                 ),
             ),
-            cast_to=BatchListResponse,
+            cast_to=WorkflowListResponse,
         )
 
 
-class AsyncBatchesResource(AsyncAPIResource):
+class AsyncWorkflowsResource(AsyncAPIResource):
     @cached_property
-    def with_raw_response(self) -> AsyncBatchesResourceWithRawResponse:
+    def with_raw_response(self) -> AsyncWorkflowsResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/CozmoXAI/python-sdk#accessing-raw-response-data-eg-headers
         """
-        return AsyncBatchesResourceWithRawResponse(self)
+        return AsyncWorkflowsResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> AsyncBatchesResourceWithStreamingResponse:
+    def with_streaming_response(self) -> AsyncWorkflowsResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
         For more information, see https://www.github.com/CozmoXAI/python-sdk#with_streaming_response
         """
-        return AsyncBatchesResourceWithStreamingResponse(self)
+        return AsyncWorkflowsResourceWithStreamingResponse(self)
 
-    async def create(
+    async def retrieve(
         self,
         workflow_id: str,
         *,
         org_id: str,
-        name: str,
-        prospect_ids: SequenceNotStr[str] | Omit = omit,
-        prospect_list_id: str | Omit = omit,
-        scheduled_at: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> BatchResponse:
+    ) -> WorkflowResponse:
         """
-        Create a new workflow batch with runs for each prospect
+        Get a single workflow by ID with its latest definition
 
         Args:
           extra_headers: Send extra headers
@@ -196,44 +190,44 @@ class AsyncBatchesResource(AsyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
         if not workflow_id:
             raise ValueError(f"Expected a non-empty value for `workflow_id` but received {workflow_id!r}")
-        return await self._post(
-            f"/org/{org_id}/workflows/{workflow_id}/batches",
-            body=await async_maybe_transform(
-                {
-                    "name": name,
-                    "prospect_ids": prospect_ids,
-                    "prospect_list_id": prospect_list_id,
-                    "scheduled_at": scheduled_at,
-                },
-                batch_create_params.BatchCreateParams,
-            ),
+        extra_headers = {"Authorization": omit, **(extra_headers or {})}
+        return await self._get(
+            f"/org/{org_id}/workflows/{workflow_id}",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=BatchResponse,
+            cast_to=WorkflowResponse,
         )
 
     async def list(
         self,
-        workflow_id: str,
-        *,
         org_id: str,
-        limit: int | Omit = omit,
+        *,
+        is_active: bool | Omit = omit,
         page: int | Omit = omit,
+        search: str | Omit = omit,
+        size: int | Omit = omit,
+        trigger_type: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> BatchListResponse:
+    ) -> WorkflowListResponse:
         """
-        List all batches for a workflow with pagination
+        Get a paginated list of workflows with filtering
 
         Args:
-          limit: Items per page
+          is_active: Filter by active status
 
           page: Page number
+
+          search: Search in workflow name and description
+
+          size: Page size
+
+          trigger_type: Filter by trigger type
 
           extra_headers: Send extra headers
 
@@ -245,10 +239,9 @@ class AsyncBatchesResource(AsyncAPIResource):
         """
         if not org_id:
             raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
-        if not workflow_id:
-            raise ValueError(f"Expected a non-empty value for `workflow_id` but received {workflow_id!r}")
+        extra_headers = {"Authorization": omit, **(extra_headers or {})}
         return await self._get(
-            f"/org/{org_id}/workflows/{workflow_id}/batches",
+            f"/org/{org_id}/workflows",
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -256,59 +249,62 @@ class AsyncBatchesResource(AsyncAPIResource):
                 timeout=timeout,
                 query=await async_maybe_transform(
                     {
-                        "limit": limit,
+                        "is_active": is_active,
                         "page": page,
+                        "search": search,
+                        "size": size,
+                        "trigger_type": trigger_type,
                     },
-                    batch_list_params.BatchListParams,
+                    workflow_list_params.WorkflowListParams,
                 ),
             ),
-            cast_to=BatchListResponse,
+            cast_to=WorkflowListResponse,
         )
 
 
-class BatchesResourceWithRawResponse:
-    def __init__(self, batches: BatchesResource) -> None:
-        self._batches = batches
+class WorkflowsResourceWithRawResponse:
+    def __init__(self, workflows: WorkflowsResource) -> None:
+        self._workflows = workflows
 
-        self.create = to_raw_response_wrapper(
-            batches.create,
+        self.retrieve = to_raw_response_wrapper(
+            workflows.retrieve,
         )
         self.list = to_raw_response_wrapper(
-            batches.list,
+            workflows.list,
         )
 
 
-class AsyncBatchesResourceWithRawResponse:
-    def __init__(self, batches: AsyncBatchesResource) -> None:
-        self._batches = batches
+class AsyncWorkflowsResourceWithRawResponse:
+    def __init__(self, workflows: AsyncWorkflowsResource) -> None:
+        self._workflows = workflows
 
-        self.create = async_to_raw_response_wrapper(
-            batches.create,
+        self.retrieve = async_to_raw_response_wrapper(
+            workflows.retrieve,
         )
         self.list = async_to_raw_response_wrapper(
-            batches.list,
+            workflows.list,
         )
 
 
-class BatchesResourceWithStreamingResponse:
-    def __init__(self, batches: BatchesResource) -> None:
-        self._batches = batches
+class WorkflowsResourceWithStreamingResponse:
+    def __init__(self, workflows: WorkflowsResource) -> None:
+        self._workflows = workflows
 
-        self.create = to_streamed_response_wrapper(
-            batches.create,
+        self.retrieve = to_streamed_response_wrapper(
+            workflows.retrieve,
         )
         self.list = to_streamed_response_wrapper(
-            batches.list,
+            workflows.list,
         )
 
 
-class AsyncBatchesResourceWithStreamingResponse:
-    def __init__(self, batches: AsyncBatchesResource) -> None:
-        self._batches = batches
+class AsyncWorkflowsResourceWithStreamingResponse:
+    def __init__(self, workflows: AsyncWorkflowsResource) -> None:
+        self._workflows = workflows
 
-        self.create = async_to_streamed_response_wrapper(
-            batches.create,
+        self.retrieve = async_to_streamed_response_wrapper(
+            workflows.retrieve,
         )
         self.list = async_to_streamed_response_wrapper(
-            batches.list,
+            workflows.list,
         )
