@@ -1,4 +1,4 @@
 configured_endpoints: 10
-openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs/cozmo-ai%2Fcozmoai-c423d550c69623c617ecffba71b8557bcff6fc153ee2a1744ff20dc7ef8a0737.yml
-openapi_spec_hash: 47e54cac8b62c8cfd9d9f75fd2f3016a
-config_hash: e99f7edfbcbfd2d20dde4e51b0ad5d02
+openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs/cozmo-ai%2Fcozmoai-d7656687af24905372de13a51134e71132e2e7c6f7d531d69218ec56c06a3bb2.yml
+openapi_spec_hash: 6e8f2783abb71d67bfaaac0175edab67
+config_hash: 7e790d346b1eabccd470522a084996b0
