@@ -17,7 +17,6 @@ base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 class TestWorkflows:
     parametrize = pytest.mark.parametrize("client", [False, True], indirect=True, ids=["loose", "strict"])
 
-    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_retrieve(self, client: Cozmoai) -> None:
         workflow = client.org.workflows.retrieve(
@@ -26,7 +25,6 @@ class TestWorkflows:
         )
         assert_matches_type(WorkflowRetrieveResponse, workflow, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_retrieve(self, client: Cozmoai) -> None:
         response = client.org.workflows.with_raw_response.retrieve(
@@ -39,7 +37,6 @@ class TestWorkflows:
         workflow = response.parse()
         assert_matches_type(WorkflowRetrieveResponse, workflow, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_retrieve(self, client: Cozmoai) -> None:
         with client.org.workflows.with_streaming_response.retrieve(
@@ -54,7 +51,6 @@ class TestWorkflows:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_path_params_retrieve(self, client: Cozmoai) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `org_id` but received ''"):
@@ -69,7 +65,6 @@ class TestWorkflows:
                 org_id="org_id",
             )
 
-    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_list(self, client: Cozmoai) -> None:
         workflow = client.org.workflows.list(
@@ -77,7 +72,6 @@ class TestWorkflows:
         )
         assert_matches_type(WorkflowListResponse, workflow, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_list_with_all_params(self, client: Cozmoai) -> None:
         workflow = client.org.workflows.list(
@@ -90,7 +84,6 @@ class TestWorkflows:
         )
         assert_matches_type(WorkflowListResponse, workflow, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_list(self, client: Cozmoai) -> None:
         response = client.org.workflows.with_raw_response.list(
@@ -102,7 +95,6 @@ class TestWorkflows:
         workflow = response.parse()
         assert_matches_type(WorkflowListResponse, workflow, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_list(self, client: Cozmoai) -> None:
         with client.org.workflows.with_streaming_response.list(
@@ -116,7 +108,6 @@ class TestWorkflows:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_path_params_list(self, client: Cozmoai) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `org_id` but received ''"):
@@ -130,7 +121,6 @@ class TestAsyncWorkflows:
         "async_client", [False, True, {"http_client": "aiohttp"}], indirect=True, ids=["loose", "strict", "aiohttp"]
     )
 
-    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_retrieve(self, async_client: AsyncCozmoai) -> None:
         workflow = await async_client.org.workflows.retrieve(
@@ -139,7 +129,6 @@ class TestAsyncWorkflows:
         )
         assert_matches_type(WorkflowRetrieveResponse, workflow, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_retrieve(self, async_client: AsyncCozmoai) -> None:
         response = await async_client.org.workflows.with_raw_response.retrieve(
@@ -152,7 +141,6 @@ class TestAsyncWorkflows:
         workflow = await response.parse()
         assert_matches_type(WorkflowRetrieveResponse, workflow, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_retrieve(self, async_client: AsyncCozmoai) -> None:
         async with async_client.org.workflows.with_streaming_response.retrieve(
@@ -167,7 +155,6 @@ class TestAsyncWorkflows:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_path_params_retrieve(self, async_client: AsyncCozmoai) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `org_id` but received ''"):
@@ -182,7 +169,6 @@ class TestAsyncWorkflows:
                 org_id="org_id",
             )
 
-    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_list(self, async_client: AsyncCozmoai) -> None:
         workflow = await async_client.org.workflows.list(
@@ -190,7 +176,6 @@ class TestAsyncWorkflows:
         )
         assert_matches_type(WorkflowListResponse, workflow, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_list_with_all_params(self, async_client: AsyncCozmoai) -> None:
         workflow = await async_client.org.workflows.list(
@@ -203,7 +188,6 @@ class TestAsyncWorkflows:
         )
         assert_matches_type(WorkflowListResponse, workflow, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_list(self, async_client: AsyncCozmoai) -> None:
         response = await async_client.org.workflows.with_raw_response.list(
@@ -215,7 +199,6 @@ class TestAsyncWorkflows:
         workflow = await response.parse()
         assert_matches_type(WorkflowListResponse, workflow, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_list(self, async_client: AsyncCozmoai) -> None:
         async with async_client.org.workflows.with_streaming_response.list(
@@ -229,7 +212,6 @@ class TestAsyncWorkflows:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_path_params_list(self, async_client: AsyncCozmoai) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `org_id` but received ''"):
