@@ -17,6 +17,7 @@ Types:
 ```python
 from cozmoai.types.org import (
     Agent,
+    AgentsThinkingSound,
     BackgroundSoundConfig,
     GoodbyeConfig,
     PaginationMetaEvalsPostcall,

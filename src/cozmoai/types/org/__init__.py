@@ -20,4 +20,5 @@ from .pagination_meta_calls import PaginationMetaCalls as PaginationMetaCalls
 from .workflow_list_response import WorkflowListResponse as WorkflowListResponse
 from .call_get_details_response import CallGetDetailsResponse as CallGetDetailsResponse
 from .pagination_meta_workflows import PaginationMetaWorkflows as PaginationMetaWorkflows
+from .agents_thinking_sound_param import AgentsThinkingSoundParam as AgentsThinkingSoundParam
 from .background_sound_config_param import BackgroundSoundConfigParam as BackgroundSoundConfigParam
