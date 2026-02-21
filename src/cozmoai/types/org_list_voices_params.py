@@ -8,8 +8,11 @@ __all__ = ["OrgListVoicesParams"]
 
 
 class OrgListVoicesParams(TypedDict, total=False):
-    provider: Required[Literal["elevenlabs", "cartesia", "openai"]]
+    provider: Required[Literal["elevenlabs", "cartesia", "openai", "cambai", "sarvam", "inworld", "minimax"]]
     """Voice provider"""
+
+    model: str
+    """Filter by model (e.g., bulbul:v2, bulbul:v3-beta) - only for sarvam provider"""
 
     next_page: str
     """Cursor for next page - used for native pagination (cartesia, elevenlabs)"""

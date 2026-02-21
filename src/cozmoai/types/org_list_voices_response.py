@@ -39,12 +39,14 @@ class Voice(BaseModel):
 
     language: Optional[str] = None
 
+    model: Optional[str] = None
+
     name: Optional[str] = None
 
     preview_url: Optional[str] = None
 
     provider: Optional[str] = None
-    """\"elevenlabs", "cartesia", "openai" """
+    """\"elevenlabs", "cartesia", "openai", "cambai", "sarvam", "inworld", "minimax" """
 
     use_case: Optional[str] = None
 

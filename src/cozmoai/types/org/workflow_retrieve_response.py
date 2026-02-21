@@ -4,13 +4,15 @@ from typing import List, Optional
 
 from ..._models import BaseModel
 
-__all__ = ["WorkflowListResponse", "Data", "Meta"]
+__all__ = ["WorkflowRetrieveResponse"]
 
 
-class Data(BaseModel):
+class WorkflowRetrieveResponse(BaseModel):
     id: Optional[str] = None
 
     created_at: Optional[str] = None
+
+    definition: Optional[List[int]] = None
 
     description: Optional[str] = None
 
@@ -25,19 +27,3 @@ class Data(BaseModel):
     updated_at: Optional[str] = None
 
     version: Optional[int] = None
-
-
-class Meta(BaseModel):
-    page: Optional[int] = None
-
-    size: Optional[int] = None
-
-    total: Optional[int] = None
-
-    total_pages: Optional[int] = None
-
-
-class WorkflowListResponse(BaseModel):
-    data: Optional[List[Data]] = None
-
-    meta: Optional[Meta] = None
