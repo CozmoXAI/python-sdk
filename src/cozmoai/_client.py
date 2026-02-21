@@ -94,7 +94,7 @@ class Cozmoai(SyncAPIClient):
         if base_url is None:
             base_url = os.environ.get("COZMOAI_BASE_URL")
         if base_url is None:
-            base_url = f"https://nova.prod.czmx.in/api"
+            base_url = f"https://nova.prod.czmx.in"
 
         super().__init__(
             version=__version__,
@@ -300,7 +300,7 @@ class AsyncCozmoai(AsyncAPIClient):
         if base_url is None:
             base_url = os.environ.get("COZMOAI_BASE_URL")
         if base_url is None:
-            base_url = f"https://nova.prod.czmx.in/api"
+            base_url = f"https://nova.prod.czmx.in"
 
         super().__init__(
             version=__version__,
