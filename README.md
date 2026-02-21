@@ -16,12 +16,9 @@ The REST API documentation can be found on [docs.cozmox.ai](https://docs.cozmox.
 ## Installation
 
 ```sh
-# install from the production repo
-pip install git+ssh://git@github.com/CozmoXAI/python-sdk.git
+# install from PyPI
+pip install cozmoai
 ```
-
-> [!NOTE]
-> Once this package is [published to PyPI](https://www.stainless.com/docs/guides/publish), this will become: `pip install cozmoai`
 
 ## Usage
 
@@ -81,8 +78,8 @@ By default, the async client uses `httpx` for HTTP requests. However, for improv
 You can enable this by installing `aiohttp`:
 
 ```sh
-# install from the production repo
-pip install 'cozmoai[aiohttp] @ git+ssh://git@github.com/CozmoXAI/python-sdk.git'
+# install from PyPI
+pip install cozmoai[aiohttp]
 ```
 
 Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
