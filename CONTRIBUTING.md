@@ -62,7 +62,7 @@ If you’d like to use the repository from source, you can either install from g
 To install via git:
 
 ```sh
-$ pip install git+ssh://git@github.com/CozmoXAI/python-sdk.git
+$ pip install git+ssh://git@github.com/stainless-sdks/cozmoai-python.git
 ```
 
 Alternatively, you can build from source and install the wheel file:
@@ -84,6 +84,12 @@ $ pip install ./path-to-wheel-file.whl
 ```
 
 ## Running tests
+
+Most tests require you to [set up a mock server](https://github.com/stoplightio/prism) against the OpenAPI spec to run the tests.
+
+```sh
+$ ./scripts/mock
+```
 
 ```sh
 $ ./scripts/test
@@ -113,7 +119,7 @@ the changes aren't made through the automated pipeline, you may want to make rel
 
 ### Publish with a GitHub workflow
 
-You can release to package managers by using [the `Publish PyPI` GitHub action](https://www.github.com/CozmoXAI/python-sdk/actions/workflows/publish-pypi.yml). This requires a setup organization or repository secret to be set up.
+You can release to package managers by using [the `Publish PyPI` GitHub action](https://www.github.com/stainless-sdks/cozmoai-python/actions/workflows/publish-pypi.yml). This requires a setup organization or repository secret to be set up.
 
 ### Publish manually
 
