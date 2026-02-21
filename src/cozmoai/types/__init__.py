@@ -24,4 +24,5 @@ from .workflow_list_response import WorkflowListResponse as WorkflowListResponse
 from .transcriber_config_param import TranscriberConfigParam as TranscriberConfigParam
 from .room_duration_config_param import RoomDurationConfigParam as RoomDurationConfigParam
 from .workflow_retrieve_response import WorkflowRetrieveResponse as WorkflowRetrieveResponse
+from .agents_thinking_sound_param import AgentsThinkingSoundParam as AgentsThinkingSoundParam
 from .background_sound_config_param import BackgroundSoundConfigParam as BackgroundSoundConfigParam
