@@ -20,8 +20,6 @@ __all__ = ["AgentUpdateParams", "PrecallWebhook"]
 
 
 class AgentUpdateParams(TypedDict, total=False):
-    org_id: Required[str]
-
     allowed_sip_trunks: SequenceNotStr[str]
 
     background_sound: BackgroundSoundConfigParam

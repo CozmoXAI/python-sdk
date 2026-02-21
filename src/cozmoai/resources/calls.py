@@ -29,7 +29,7 @@ class CallsResource(SyncAPIResource):
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/CozmoXAI/python-sdk#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/stainless-sdks/cozmoai-python#accessing-raw-response-data-eg-headers
         """
         return CallsResourceWithRawResponse(self)
 
@@ -38,7 +38,7 @@ class CallsResource(SyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/CozmoXAI/python-sdk#with_streaming_response
+        For more information, see https://www.github.com/stainless-sdks/cozmoai-python#with_streaming_response
         """
         return CallsResourceWithStreamingResponse(self)
 
@@ -46,7 +46,6 @@ class CallsResource(SyncAPIResource):
         self,
         call_id: str,
         *,
-        org_id: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -66,12 +65,10 @@ class CallsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
         if not call_id:
             raise ValueError(f"Expected a non-empty value for `call_id` but received {call_id!r}")
         return self._get(
-            f"/org/{org_id}/calls/{call_id}",
+            f"/calls/{call_id}",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -80,7 +77,6 @@ class CallsResource(SyncAPIResource):
 
     def list(
         self,
-        org_id: str,
         *,
         agent_id: str | Omit = omit,
         direction: str | Omit = omit,
@@ -141,10 +137,8 @@ class CallsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
         return self._get(
-            f"/org/{org_id}/calls",
+            "/calls",
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -180,7 +174,7 @@ class AsyncCallsResource(AsyncAPIResource):
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/CozmoXAI/python-sdk#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/stainless-sdks/cozmoai-python#accessing-raw-response-data-eg-headers
         """
         return AsyncCallsResourceWithRawResponse(self)
 
@@ -189,7 +183,7 @@ class AsyncCallsResource(AsyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/CozmoXAI/python-sdk#with_streaming_response
+        For more information, see https://www.github.com/stainless-sdks/cozmoai-python#with_streaming_response
         """
         return AsyncCallsResourceWithStreamingResponse(self)
 
@@ -197,7 +191,6 @@ class AsyncCallsResource(AsyncAPIResource):
         self,
         call_id: str,
         *,
-        org_id: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -217,12 +210,10 @@ class AsyncCallsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
         if not call_id:
             raise ValueError(f"Expected a non-empty value for `call_id` but received {call_id!r}")
         return await self._get(
-            f"/org/{org_id}/calls/{call_id}",
+            f"/calls/{call_id}",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -231,7 +222,6 @@ class AsyncCallsResource(AsyncAPIResource):
 
     async def list(
         self,
-        org_id: str,
         *,
         agent_id: str | Omit = omit,
         direction: str | Omit = omit,
@@ -292,10 +282,8 @@ class AsyncCallsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
         return await self._get(
-            f"/org/{org_id}/calls",
+            "/calls",
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,

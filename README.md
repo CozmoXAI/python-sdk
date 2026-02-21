@@ -16,9 +16,12 @@ The REST API documentation can be found on [docs.cozmox.ai](https://docs.cozmox.
 ## Installation
 
 ```sh
-# install from PyPI
-pip install cozmoai
+# install from this staging repo
+pip install git+ssh://git@github.com/stainless-sdks/cozmoai-python.git
 ```
+
+> [!NOTE]
+> Once this package is [published to PyPI](https://www.stainless.com/docs/guides/publish), this will become: `pip install cozmoai`
 
 ## Usage
 
@@ -33,9 +36,7 @@ client = Cozmoai(
     api_key=os.environ.get("COZMOAI_API_KEY"),  # This is the default and can be omitted
 )
 
-agents = client.agents.list(
-    org_id="org_id",
-)
+agents = client.agents.list()
 print(agents.data)
 ```
 
@@ -60,9 +61,7 @@ client = AsyncCozmoai(
 
 
 async def main() -> None:
-    agents = await client.agents.list(
-        org_id="org_id",
-    )
+    agents = await client.agents.list()
     print(agents.data)
 
 
@@ -78,8 +77,8 @@ By default, the async client uses `httpx` for HTTP requests. However, for improv
 You can enable this by installing `aiohttp`:
 
 ```sh
-# install from PyPI
-pip install cozmoai[aiohttp]
+# install from this staging repo
+pip install 'cozmoai[aiohttp] @ git+ssh://git@github.com/stainless-sdks/cozmoai-python.git'
 ```
 
 Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
@@ -97,9 +96,7 @@ async def main() -> None:
         api_key=os.environ.get("COZMOAI_API_KEY"),  # This is the default and can be omitted
         http_client=DefaultAioHttpClient(),
     ) as client:
-        agents = await client.agents.list(
-            org_id="org_id",
-        )
+        agents = await client.agents.list()
         print(agents.data)
 
 
@@ -127,7 +124,6 @@ client = Cozmoai(
 )
 
 agent_response = client.agents.create(
-    org_id="org_id",
     name="name",
     prompt_template="prompt_template",
     type="voice",
@@ -154,9 +150,7 @@ client = Cozmoai(
 )
 
 try:
-    client.agents.list(
-        org_id="org_id",
-    )
+    client.agents.list()
 except cozmoai.APIConnectionError as e:
     print("The server could not be reached")
     print(e.__cause__)  # an underlying Exception, likely raised within httpx.
@@ -200,9 +194,7 @@ client = Cozmoai(
 )
 
 # Or, configure per-request:
-client.with_options(max_retries=5).agents.list(
-    org_id="org_id",
-)
+client.with_options(max_retries=5).agents.list()
 ```
 
 ### Timeouts
@@ -227,9 +219,7 @@ client = Cozmoai(
 )
 
 # Override per-request:
-client.with_options(timeout=5.0).agents.list(
-    org_id="org_id",
-)
+client.with_options(timeout=5.0).agents.list()
 ```
 
 On timeout, an `APITimeoutError` is thrown.
@@ -272,18 +262,16 @@ from cozmoai import Cozmoai
 client = Cozmoai(
     org_id="My Org ID",
 )
-response = client.agents.with_raw_response.list(
-    org_id="org_id",
-)
+response = client.agents.with_raw_response.list()
 print(response.headers.get('X-My-Header'))
 
 agent = response.parse()  # get the object that `agents.list()` would have returned
 print(agent.data)
 ```
 
-These methods return an [`APIResponse`](https://github.com/CozmoXAI/python-sdk/tree/main/src/cozmoai/_response.py) object.
+These methods return an [`APIResponse`](https://github.com/stainless-sdks/cozmoai-python/tree/main/src/cozmoai/_response.py) object.
 
-The async client returns an [`AsyncAPIResponse`](https://github.com/CozmoXAI/python-sdk/tree/main/src/cozmoai/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
+The async client returns an [`AsyncAPIResponse`](https://github.com/stainless-sdks/cozmoai-python/tree/main/src/cozmoai/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
 
 #### `.with_streaming_response`
 
@@ -292,9 +280,7 @@ The above interface eagerly reads the full response body when you make the reque
 To stream the response body, use `.with_streaming_response` instead, which requires a context manager and only reads the response body once you call `.read()`, `.text()`, `.json()`, `.iter_bytes()`, `.iter_text()`, `.iter_lines()` or `.parse()`. In the async client, these are async methods.
 
 ```python
-with client.agents.with_streaming_response.list(
-    org_id="org_id",
-) as response:
+with client.agents.with_streaming_response.list() as response:
     print(response.headers.get("X-My-Header"))
 
     for line in response.iter_lines():
@@ -392,7 +378,7 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/CozmoXAI/python-sdk/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/cozmoai-python/issues) with questions, bugs, or suggestions.
 
 ### Determining the installed version
 

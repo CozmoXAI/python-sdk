@@ -21,8 +21,7 @@ class TestCalls:
     @parametrize
     def test_method_retrieve(self, client: Cozmoai) -> None:
         call = client.calls.retrieve(
-            call_id="call_id",
-            org_id="org_id",
+            "call_id",
         )
         assert_matches_type(CallRetrieveResponse, call, path=["response"])
 
@@ -30,8 +29,7 @@ class TestCalls:
     @parametrize
     def test_raw_response_retrieve(self, client: Cozmoai) -> None:
         response = client.calls.with_raw_response.retrieve(
-            call_id="call_id",
-            org_id="org_id",
+            "call_id",
         )
 
         assert response.is_closed is True
@@ -43,8 +41,7 @@ class TestCalls:
     @parametrize
     def test_streaming_response_retrieve(self, client: Cozmoai) -> None:
         with client.calls.with_streaming_response.retrieve(
-            call_id="call_id",
-            org_id="org_id",
+            "call_id",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -57,31 +54,21 @@ class TestCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_path_params_retrieve(self, client: Cozmoai) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `org_id` but received ''"):
-            client.calls.with_raw_response.retrieve(
-                call_id="call_id",
-                org_id="",
-            )
-
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `call_id` but received ''"):
             client.calls.with_raw_response.retrieve(
-                call_id="",
-                org_id="org_id",
+                "",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_list(self, client: Cozmoai) -> None:
-        call = client.calls.list(
-            org_id="org_id",
-        )
+        call = client.calls.list()
         assert_matches_type(CallListResponse, call, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_list_with_all_params(self, client: Cozmoai) -> None:
         call = client.calls.list(
-            org_id="org_id",
             agent_id="agent_id",
             direction="direction",
             end_date="end_date",
@@ -101,9 +88,7 @@ class TestCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_list(self, client: Cozmoai) -> None:
-        response = client.calls.with_raw_response.list(
-            org_id="org_id",
-        )
+        response = client.calls.with_raw_response.list()
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -113,9 +98,7 @@ class TestCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_list(self, client: Cozmoai) -> None:
-        with client.calls.with_streaming_response.list(
-            org_id="org_id",
-        ) as response:
+        with client.calls.with_streaming_response.list() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -123,14 +106,6 @@ class TestCalls:
             assert_matches_type(CallListResponse, call, path=["response"])
 
         assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_path_params_list(self, client: Cozmoai) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `org_id` but received ''"):
-            client.calls.with_raw_response.list(
-                org_id="",
-            )
 
 
 class TestAsyncCalls:
@@ -142,8 +117,7 @@ class TestAsyncCalls:
     @parametrize
     async def test_method_retrieve(self, async_client: AsyncCozmoai) -> None:
         call = await async_client.calls.retrieve(
-            call_id="call_id",
-            org_id="org_id",
+            "call_id",
         )
         assert_matches_type(CallRetrieveResponse, call, path=["response"])
 
@@ -151,8 +125,7 @@ class TestAsyncCalls:
     @parametrize
     async def test_raw_response_retrieve(self, async_client: AsyncCozmoai) -> None:
         response = await async_client.calls.with_raw_response.retrieve(
-            call_id="call_id",
-            org_id="org_id",
+            "call_id",
         )
 
         assert response.is_closed is True
@@ -164,8 +137,7 @@ class TestAsyncCalls:
     @parametrize
     async def test_streaming_response_retrieve(self, async_client: AsyncCozmoai) -> None:
         async with async_client.calls.with_streaming_response.retrieve(
-            call_id="call_id",
-            org_id="org_id",
+            "call_id",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -178,31 +150,21 @@ class TestAsyncCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_path_params_retrieve(self, async_client: AsyncCozmoai) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `org_id` but received ''"):
-            await async_client.calls.with_raw_response.retrieve(
-                call_id="call_id",
-                org_id="",
-            )
-
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `call_id` but received ''"):
             await async_client.calls.with_raw_response.retrieve(
-                call_id="",
-                org_id="org_id",
+                "",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_list(self, async_client: AsyncCozmoai) -> None:
-        call = await async_client.calls.list(
-            org_id="org_id",
-        )
+        call = await async_client.calls.list()
         assert_matches_type(CallListResponse, call, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_list_with_all_params(self, async_client: AsyncCozmoai) -> None:
         call = await async_client.calls.list(
-            org_id="org_id",
             agent_id="agent_id",
             direction="direction",
             end_date="end_date",
@@ -222,9 +184,7 @@ class TestAsyncCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_list(self, async_client: AsyncCozmoai) -> None:
-        response = await async_client.calls.with_raw_response.list(
-            org_id="org_id",
-        )
+        response = await async_client.calls.with_raw_response.list()
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -234,9 +194,7 @@ class TestAsyncCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_list(self, async_client: AsyncCozmoai) -> None:
-        async with async_client.calls.with_streaming_response.list(
-            org_id="org_id",
-        ) as response:
+        async with async_client.calls.with_streaming_response.list() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -244,11 +202,3 @@ class TestAsyncCalls:
             assert_matches_type(CallListResponse, call, path=["response"])
 
         assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_path_params_list(self, async_client: AsyncCozmoai) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `org_id` but received ''"):
-            await async_client.calls.with_raw_response.list(
-                org_id="",
-            )
