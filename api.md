@@ -5,6 +5,7 @@ Types:
 ```python
 from cozmoai.types import (
     AgentResponse,
+    AgentsThinkingSound,
     BackgroundSoundConfig,
     ExtraConfig,
     GoodbyeConfig,

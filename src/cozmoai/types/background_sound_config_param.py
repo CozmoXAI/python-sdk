@@ -5,15 +5,9 @@ from __future__ import annotations
 from typing import Iterable
 from typing_extensions import Required, TypedDict
 
-__all__ = ["BackgroundSoundConfigParam", "ThinkingSound"]
+from .agents_thinking_sound_param import AgentsThinkingSoundParam
 
-
-class ThinkingSound(TypedDict, total=False):
-    sound: Required[str]
-
-    probability: float
-
-    volume: float
+__all__ = ["BackgroundSoundConfigParam"]
 
 
 class BackgroundSoundConfigParam(TypedDict, total=False):
@@ -23,6 +17,6 @@ class BackgroundSoundConfigParam(TypedDict, total=False):
 
     initial_volume: float
 
-    thinking_sound: Iterable[ThinkingSound]
+    thinking_sound: Iterable[AgentsThinkingSoundParam]
 
     volume: float
