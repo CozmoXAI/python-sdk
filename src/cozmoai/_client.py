@@ -31,8 +31,11 @@ from ._base_client import (
 )
 
 if TYPE_CHECKING:
-    from .resources import org
-    from .resources.org.org import OrgResource, AsyncOrgResource
+    from .resources import calls, agents, voices, workflows
+    from .resources.calls import CallsResource, AsyncCallsResource
+    from .resources.agents import AgentsResource, AsyncAgentsResource
+    from .resources.voices import VoicesResource, AsyncVoicesResource
+    from .resources.workflows import WorkflowsResource, AsyncWorkflowsResource
 
 __all__ = ["Timeout", "Transport", "ProxiesTypes", "RequestOptions", "Cozmoai", "AsyncCozmoai", "Client", "AsyncClient"]
 
@@ -40,11 +43,13 @@ __all__ = ["Timeout", "Transport", "ProxiesTypes", "RequestOptions", "Cozmoai", 
 class Cozmoai(SyncAPIClient):
     # client options
     api_key: str
+    org_id: str
 
     def __init__(
         self,
         *,
         api_key: str | None = None,
+        org_id: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: float | Timeout | None | NotGiven = not_given,
         max_retries: int = DEFAULT_MAX_RETRIES,
@@ -66,7 +71,9 @@ class Cozmoai(SyncAPIClient):
     ) -> None:
         """Construct a new synchronous Cozmoai client instance.
 
-        This automatically infers the `api_key` argument from the `COZMOAI_API_KEY` environment variable if it is not provided.
+        This automatically infers the following arguments from their corresponding environment variables if they are not provided:
+        - `api_key` from `COZMOAI_API_KEY`
+        - `org_id` from `COZMO_ORG_ID`
         """
         if api_key is None:
             api_key = os.environ.get("COZMOAI_API_KEY")
@@ -76,10 +83,18 @@ class Cozmoai(SyncAPIClient):
             )
         self.api_key = api_key
 
+        if org_id is None:
+            org_id = os.environ.get("COZMO_ORG_ID")
+        if org_id is None:
+            raise CozmoaiError(
+                "The org_id client option must be set either by passing org_id to the client or by setting the COZMO_ORG_ID environment variable"
+            )
+        self.org_id = org_id
+
         if base_url is None:
             base_url = os.environ.get("COZMOAI_BASE_URL")
         if base_url is None:
-            base_url = f"/api"
+            base_url = f"https://nova.prod.czmx.in/api"
 
         super().__init__(
             version=__version__,
@@ -93,10 +108,28 @@ class Cozmoai(SyncAPIClient):
         )
 
     @cached_property
-    def org(self) -> OrgResource:
-        from .resources.org import OrgResource
+    def agents(self) -> AgentsResource:
+        from .resources.agents import AgentsResource
 
-        return OrgResource(self)
+        return AgentsResource(self)
+
+    @cached_property
+    def calls(self) -> CallsResource:
+        from .resources.calls import CallsResource
+
+        return CallsResource(self)
+
+    @cached_property
+    def workflows(self) -> WorkflowsResource:
+        from .resources.workflows import WorkflowsResource
+
+        return WorkflowsResource(self)
+
+    @cached_property
+    def voices(self) -> VoicesResource:
+        from .resources.voices import VoicesResource
+
+        return VoicesResource(self)
 
     @cached_property
     def with_raw_response(self) -> CozmoaiWithRawResponse:
@@ -130,6 +163,7 @@ class Cozmoai(SyncAPIClient):
         self,
         *,
         api_key: str | None = None,
+        org_id: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: float | Timeout | None | NotGiven = not_given,
         http_client: httpx.Client | None = None,
@@ -164,6 +198,7 @@ class Cozmoai(SyncAPIClient):
         http_client = http_client or self._client
         return self.__class__(
             api_key=api_key or self.api_key,
+            org_id=org_id or self.org_id,
             base_url=base_url or self.base_url,
             timeout=self.timeout if isinstance(timeout, NotGiven) else timeout,
             http_client=http_client,
@@ -214,11 +249,13 @@ class Cozmoai(SyncAPIClient):
 class AsyncCozmoai(AsyncAPIClient):
     # client options
     api_key: str
+    org_id: str
 
     def __init__(
         self,
         *,
         api_key: str | None = None,
+        org_id: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: float | Timeout | None | NotGiven = not_given,
         max_retries: int = DEFAULT_MAX_RETRIES,
@@ -240,7 +277,9 @@ class AsyncCozmoai(AsyncAPIClient):
     ) -> None:
         """Construct a new async AsyncCozmoai client instance.
 
-        This automatically infers the `api_key` argument from the `COZMOAI_API_KEY` environment variable if it is not provided.
+        This automatically infers the following arguments from their corresponding environment variables if they are not provided:
+        - `api_key` from `COZMOAI_API_KEY`
+        - `org_id` from `COZMO_ORG_ID`
         """
         if api_key is None:
             api_key = os.environ.get("COZMOAI_API_KEY")
@@ -250,10 +289,18 @@ class AsyncCozmoai(AsyncAPIClient):
             )
         self.api_key = api_key
 
+        if org_id is None:
+            org_id = os.environ.get("COZMO_ORG_ID")
+        if org_id is None:
+            raise CozmoaiError(
+                "The org_id client option must be set either by passing org_id to the client or by setting the COZMO_ORG_ID environment variable"
+            )
+        self.org_id = org_id
+
         if base_url is None:
             base_url = os.environ.get("COZMOAI_BASE_URL")
         if base_url is None:
-            base_url = f"/api"
+            base_url = f"https://nova.prod.czmx.in/api"
 
         super().__init__(
             version=__version__,
@@ -267,10 +314,28 @@ class AsyncCozmoai(AsyncAPIClient):
         )
 
     @cached_property
-    def org(self) -> AsyncOrgResource:
-        from .resources.org import AsyncOrgResource
+    def agents(self) -> AsyncAgentsResource:
+        from .resources.agents import AsyncAgentsResource
 
-        return AsyncOrgResource(self)
+        return AsyncAgentsResource(self)
+
+    @cached_property
+    def calls(self) -> AsyncCallsResource:
+        from .resources.calls import AsyncCallsResource
+
+        return AsyncCallsResource(self)
+
+    @cached_property
+    def workflows(self) -> AsyncWorkflowsResource:
+        from .resources.workflows import AsyncWorkflowsResource
+
+        return AsyncWorkflowsResource(self)
+
+    @cached_property
+    def voices(self) -> AsyncVoicesResource:
+        from .resources.voices import AsyncVoicesResource
+
+        return AsyncVoicesResource(self)
 
     @cached_property
     def with_raw_response(self) -> AsyncCozmoaiWithRawResponse:
@@ -304,6 +369,7 @@ class AsyncCozmoai(AsyncAPIClient):
         self,
         *,
         api_key: str | None = None,
+        org_id: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: float | Timeout | None | NotGiven = not_given,
         http_client: httpx.AsyncClient | None = None,
@@ -338,6 +404,7 @@ class AsyncCozmoai(AsyncAPIClient):
         http_client = http_client or self._client
         return self.__class__(
             api_key=api_key or self.api_key,
+            org_id=org_id or self.org_id,
             base_url=base_url or self.base_url,
             timeout=self.timeout if isinstance(timeout, NotGiven) else timeout,
             http_client=http_client,
@@ -392,10 +459,28 @@ class CozmoaiWithRawResponse:
         self._client = client
 
     @cached_property
-    def org(self) -> org.OrgResourceWithRawResponse:
-        from .resources.org import OrgResourceWithRawResponse
+    def agents(self) -> agents.AgentsResourceWithRawResponse:
+        from .resources.agents import AgentsResourceWithRawResponse
 
-        return OrgResourceWithRawResponse(self._client.org)
+        return AgentsResourceWithRawResponse(self._client.agents)
+
+    @cached_property
+    def calls(self) -> calls.CallsResourceWithRawResponse:
+        from .resources.calls import CallsResourceWithRawResponse
+
+        return CallsResourceWithRawResponse(self._client.calls)
+
+    @cached_property
+    def workflows(self) -> workflows.WorkflowsResourceWithRawResponse:
+        from .resources.workflows import WorkflowsResourceWithRawResponse
+
+        return WorkflowsResourceWithRawResponse(self._client.workflows)
+
+    @cached_property
+    def voices(self) -> voices.VoicesResourceWithRawResponse:
+        from .resources.voices import VoicesResourceWithRawResponse
+
+        return VoicesResourceWithRawResponse(self._client.voices)
 
 
 class AsyncCozmoaiWithRawResponse:
@@ -405,10 +490,28 @@ class AsyncCozmoaiWithRawResponse:
         self._client = client
 
     @cached_property
-    def org(self) -> org.AsyncOrgResourceWithRawResponse:
-        from .resources.org import AsyncOrgResourceWithRawResponse
+    def agents(self) -> agents.AsyncAgentsResourceWithRawResponse:
+        from .resources.agents import AsyncAgentsResourceWithRawResponse
 
-        return AsyncOrgResourceWithRawResponse(self._client.org)
+        return AsyncAgentsResourceWithRawResponse(self._client.agents)
+
+    @cached_property
+    def calls(self) -> calls.AsyncCallsResourceWithRawResponse:
+        from .resources.calls import AsyncCallsResourceWithRawResponse
+
+        return AsyncCallsResourceWithRawResponse(self._client.calls)
+
+    @cached_property
+    def workflows(self) -> workflows.AsyncWorkflowsResourceWithRawResponse:
+        from .resources.workflows import AsyncWorkflowsResourceWithRawResponse
+
+        return AsyncWorkflowsResourceWithRawResponse(self._client.workflows)
+
+    @cached_property
+    def voices(self) -> voices.AsyncVoicesResourceWithRawResponse:
+        from .resources.voices import AsyncVoicesResourceWithRawResponse
+
+        return AsyncVoicesResourceWithRawResponse(self._client.voices)
 
 
 class CozmoaiWithStreamedResponse:
@@ -418,10 +521,28 @@ class CozmoaiWithStreamedResponse:
         self._client = client
 
     @cached_property
-    def org(self) -> org.OrgResourceWithStreamingResponse:
-        from .resources.org import OrgResourceWithStreamingResponse
+    def agents(self) -> agents.AgentsResourceWithStreamingResponse:
+        from .resources.agents import AgentsResourceWithStreamingResponse
 
-        return OrgResourceWithStreamingResponse(self._client.org)
+        return AgentsResourceWithStreamingResponse(self._client.agents)
+
+    @cached_property
+    def calls(self) -> calls.CallsResourceWithStreamingResponse:
+        from .resources.calls import CallsResourceWithStreamingResponse
+
+        return CallsResourceWithStreamingResponse(self._client.calls)
+
+    @cached_property
+    def workflows(self) -> workflows.WorkflowsResourceWithStreamingResponse:
+        from .resources.workflows import WorkflowsResourceWithStreamingResponse
+
+        return WorkflowsResourceWithStreamingResponse(self._client.workflows)
+
+    @cached_property
+    def voices(self) -> voices.VoicesResourceWithStreamingResponse:
+        from .resources.voices import VoicesResourceWithStreamingResponse
+
+        return VoicesResourceWithStreamingResponse(self._client.voices)
 
 
 class AsyncCozmoaiWithStreamedResponse:
@@ -431,10 +552,28 @@ class AsyncCozmoaiWithStreamedResponse:
         self._client = client
 
     @cached_property
-    def org(self) -> org.AsyncOrgResourceWithStreamingResponse:
-        from .resources.org import AsyncOrgResourceWithStreamingResponse
+    def agents(self) -> agents.AsyncAgentsResourceWithStreamingResponse:
+        from .resources.agents import AsyncAgentsResourceWithStreamingResponse
 
-        return AsyncOrgResourceWithStreamingResponse(self._client.org)
+        return AsyncAgentsResourceWithStreamingResponse(self._client.agents)
+
+    @cached_property
+    def calls(self) -> calls.AsyncCallsResourceWithStreamingResponse:
+        from .resources.calls import AsyncCallsResourceWithStreamingResponse
+
+        return AsyncCallsResourceWithStreamingResponse(self._client.calls)
+
+    @cached_property
+    def workflows(self) -> workflows.AsyncWorkflowsResourceWithStreamingResponse:
+        from .resources.workflows import AsyncWorkflowsResourceWithStreamingResponse
+
+        return AsyncWorkflowsResourceWithStreamingResponse(self._client.workflows)
+
+    @cached_property
+    def voices(self) -> voices.AsyncVoicesResourceWithStreamingResponse:
+        from .resources.voices import AsyncVoicesResourceWithStreamingResponse
+
+        return AsyncVoicesResourceWithStreamingResponse(self._client.voices)
 
 
 Client = Cozmoai

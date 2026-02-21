@@ -4,47 +4,47 @@ from __future__ import annotations
 
 import httpx
 
-from ..._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
-from ..._utils import maybe_transform, async_maybe_transform
-from ..._compat import cached_property
-from ..._resource import SyncAPIResource, AsyncAPIResource
-from ..._response import (
+from ..types import call_list_params
+from .._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
+from .._utils import maybe_transform, async_maybe_transform
+from .._compat import cached_property
+from .._resource import SyncAPIResource, AsyncAPIResource
+from .._response import (
     to_raw_response_wrapper,
     to_streamed_response_wrapper,
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ...types.org import workflow_list_params
-from ..._base_client import make_request_options
-from ...types.org.workflow_list_response import WorkflowListResponse
-from ...types.org.workflow_retrieve_response import WorkflowRetrieveResponse
+from .._base_client import make_request_options
+from ..types.call_list_response import CallListResponse
+from ..types.call_retrieve_response import CallRetrieveResponse
 
-__all__ = ["WorkflowsResource", "AsyncWorkflowsResource"]
+__all__ = ["CallsResource", "AsyncCallsResource"]
 
 
-class WorkflowsResource(SyncAPIResource):
+class CallsResource(SyncAPIResource):
     @cached_property
-    def with_raw_response(self) -> WorkflowsResourceWithRawResponse:
+    def with_raw_response(self) -> CallsResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/stainless-sdks/cozmoai-python#accessing-raw-response-data-eg-headers
         """
-        return WorkflowsResourceWithRawResponse(self)
+        return CallsResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> WorkflowsResourceWithStreamingResponse:
+    def with_streaming_response(self) -> CallsResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
         For more information, see https://www.github.com/stainless-sdks/cozmoai-python#with_streaming_response
         """
-        return WorkflowsResourceWithStreamingResponse(self)
+        return CallsResourceWithStreamingResponse(self)
 
     def retrieve(
         self,
-        workflow_id: str,
+        call_id: str,
         *,
         org_id: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -53,9 +53,9 @@ class WorkflowsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> WorkflowRetrieveResponse:
+    ) -> CallRetrieveResponse:
         """
-        Get a single workflow by ID with its latest definition
+        Returns full details for a specific call including prospect and agent info
 
         Args:
           extra_headers: Send extra headers
@@ -68,45 +68,70 @@ class WorkflowsResource(SyncAPIResource):
         """
         if not org_id:
             raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
-        if not workflow_id:
-            raise ValueError(f"Expected a non-empty value for `workflow_id` but received {workflow_id!r}")
+        if not call_id:
+            raise ValueError(f"Expected a non-empty value for `call_id` but received {call_id!r}")
         return self._get(
-            f"/org/{org_id}/workflows/{workflow_id}",
+            f"/org/{org_id}/calls/{call_id}",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=WorkflowRetrieveResponse,
+            cast_to=CallRetrieveResponse,
         )
 
     def list(
         self,
         org_id: str,
         *,
-        is_active: bool | Omit = omit,
+        agent_id: str | Omit = omit,
+        direction: str | Omit = omit,
+        end_date: str | Omit = omit,
+        min_duration: int | Omit = omit,
         page: int | Omit = omit,
-        search: str | Omit = omit,
+        phone: str | Omit = omit,
+        prospect_external_id: str | Omit = omit,
+        prospect_id: str | Omit = omit,
+        prospect_name: str | Omit = omit,
         size: int | Omit = omit,
-        trigger_type: str | Omit = omit,
+        start_date: str | Omit = omit,
+        status: str | Omit = omit,
+        workflow_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> WorkflowListResponse:
+    ) -> CallListResponse:
         """
-        Get a paginated list of workflows with filtering
+        Returns a paginated list of calls for the organization with optional filters
 
         Args:
-          is_active: Filter by active status
+          agent_id: Filter by agent ID
+
+          direction: Filter by direction (INBOUND, OUTBOUND)
+
+          end_date: Filter by end date (ISO 8601)
+
+          min_duration: Filter by minimum duration in seconds
 
           page: Page number
 
-          search: Search in workflow name and description
+          phone: Search by phone number
+
+          prospect_external_id: Filter by prospect external ID
+
+          prospect_id: Filter by prospect ID
+
+          prospect_name: Filter by prospect name (first or last)
 
           size: Page size
 
-          trigger_type: Filter by trigger type
+          start_date: Filter by start date (ISO 8601)
+
+          status: Filter by status (SCHEDULED, RINGING, IN_PROGRESS, completed, no-answer, failed,
+              busy)
+
+          workflow_id: Filter by workflow ID
 
           extra_headers: Send extra headers
 
@@ -119,7 +144,7 @@ class WorkflowsResource(SyncAPIResource):
         if not org_id:
             raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
         return self._get(
-            f"/org/{org_id}/workflows",
+            f"/org/{org_id}/calls",
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -127,42 +152,50 @@ class WorkflowsResource(SyncAPIResource):
                 timeout=timeout,
                 query=maybe_transform(
                     {
-                        "is_active": is_active,
+                        "agent_id": agent_id,
+                        "direction": direction,
+                        "end_date": end_date,
+                        "min_duration": min_duration,
                         "page": page,
-                        "search": search,
+                        "phone": phone,
+                        "prospect_external_id": prospect_external_id,
+                        "prospect_id": prospect_id,
+                        "prospect_name": prospect_name,
                         "size": size,
-                        "trigger_type": trigger_type,
+                        "start_date": start_date,
+                        "status": status,
+                        "workflow_id": workflow_id,
                     },
-                    workflow_list_params.WorkflowListParams,
+                    call_list_params.CallListParams,
                 ),
             ),
-            cast_to=WorkflowListResponse,
+            cast_to=CallListResponse,
         )
 
 
-class AsyncWorkflowsResource(AsyncAPIResource):
+class AsyncCallsResource(AsyncAPIResource):
     @cached_property
-    def with_raw_response(self) -> AsyncWorkflowsResourceWithRawResponse:
+    def with_raw_response(self) -> AsyncCallsResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/stainless-sdks/cozmoai-python#accessing-raw-response-data-eg-headers
         """
-        return AsyncWorkflowsResourceWithRawResponse(self)
+        return AsyncCallsResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> AsyncWorkflowsResourceWithStreamingResponse:
+    def with_streaming_response(self) -> AsyncCallsResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
         For more information, see https://www.github.com/stainless-sdks/cozmoai-python#with_streaming_response
         """
-        return AsyncWorkflowsResourceWithStreamingResponse(self)
+        return AsyncCallsResourceWithStreamingResponse(self)
 
     async def retrieve(
         self,
-        workflow_id: str,
+        call_id: str,
         *,
         org_id: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -171,9 +204,9 @@ class AsyncWorkflowsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> WorkflowRetrieveResponse:
+    ) -> CallRetrieveResponse:
         """
-        Get a single workflow by ID with its latest definition
+        Returns full details for a specific call including prospect and agent info
 
         Args:
           extra_headers: Send extra headers
@@ -186,45 +219,70 @@ class AsyncWorkflowsResource(AsyncAPIResource):
         """
         if not org_id:
             raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
-        if not workflow_id:
-            raise ValueError(f"Expected a non-empty value for `workflow_id` but received {workflow_id!r}")
+        if not call_id:
+            raise ValueError(f"Expected a non-empty value for `call_id` but received {call_id!r}")
         return await self._get(
-            f"/org/{org_id}/workflows/{workflow_id}",
+            f"/org/{org_id}/calls/{call_id}",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=WorkflowRetrieveResponse,
+            cast_to=CallRetrieveResponse,
         )
 
     async def list(
         self,
         org_id: str,
         *,
-        is_active: bool | Omit = omit,
+        agent_id: str | Omit = omit,
+        direction: str | Omit = omit,
+        end_date: str | Omit = omit,
+        min_duration: int | Omit = omit,
         page: int | Omit = omit,
-        search: str | Omit = omit,
+        phone: str | Omit = omit,
+        prospect_external_id: str | Omit = omit,
+        prospect_id: str | Omit = omit,
+        prospect_name: str | Omit = omit,
         size: int | Omit = omit,
-        trigger_type: str | Omit = omit,
+        start_date: str | Omit = omit,
+        status: str | Omit = omit,
+        workflow_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> WorkflowListResponse:
+    ) -> CallListResponse:
         """
-        Get a paginated list of workflows with filtering
+        Returns a paginated list of calls for the organization with optional filters
 
         Args:
-          is_active: Filter by active status
+          agent_id: Filter by agent ID
+
+          direction: Filter by direction (INBOUND, OUTBOUND)
+
+          end_date: Filter by end date (ISO 8601)
+
+          min_duration: Filter by minimum duration in seconds
 
           page: Page number
 
-          search: Search in workflow name and description
+          phone: Search by phone number
+
+          prospect_external_id: Filter by prospect external ID
+
+          prospect_id: Filter by prospect ID
+
+          prospect_name: Filter by prospect name (first or last)
 
           size: Page size
 
-          trigger_type: Filter by trigger type
+          start_date: Filter by start date (ISO 8601)
+
+          status: Filter by status (SCHEDULED, RINGING, IN_PROGRESS, completed, no-answer, failed,
+              busy)
+
+          workflow_id: Filter by workflow ID
 
           extra_headers: Send extra headers
 
@@ -237,7 +295,7 @@ class AsyncWorkflowsResource(AsyncAPIResource):
         if not org_id:
             raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
         return await self._get(
-            f"/org/{org_id}/workflows",
+            f"/org/{org_id}/calls",
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -245,62 +303,70 @@ class AsyncWorkflowsResource(AsyncAPIResource):
                 timeout=timeout,
                 query=await async_maybe_transform(
                     {
-                        "is_active": is_active,
+                        "agent_id": agent_id,
+                        "direction": direction,
+                        "end_date": end_date,
+                        "min_duration": min_duration,
                         "page": page,
-                        "search": search,
+                        "phone": phone,
+                        "prospect_external_id": prospect_external_id,
+                        "prospect_id": prospect_id,
+                        "prospect_name": prospect_name,
                         "size": size,
-                        "trigger_type": trigger_type,
+                        "start_date": start_date,
+                        "status": status,
+                        "workflow_id": workflow_id,
                     },
-                    workflow_list_params.WorkflowListParams,
+                    call_list_params.CallListParams,
                 ),
             ),
-            cast_to=WorkflowListResponse,
+            cast_to=CallListResponse,
         )
 
 
-class WorkflowsResourceWithRawResponse:
-    def __init__(self, workflows: WorkflowsResource) -> None:
-        self._workflows = workflows
+class CallsResourceWithRawResponse:
+    def __init__(self, calls: CallsResource) -> None:
+        self._calls = calls
 
         self.retrieve = to_raw_response_wrapper(
-            workflows.retrieve,
+            calls.retrieve,
         )
         self.list = to_raw_response_wrapper(
-            workflows.list,
+            calls.list,
         )
 
 
-class AsyncWorkflowsResourceWithRawResponse:
-    def __init__(self, workflows: AsyncWorkflowsResource) -> None:
-        self._workflows = workflows
+class AsyncCallsResourceWithRawResponse:
+    def __init__(self, calls: AsyncCallsResource) -> None:
+        self._calls = calls
 
         self.retrieve = async_to_raw_response_wrapper(
-            workflows.retrieve,
+            calls.retrieve,
         )
         self.list = async_to_raw_response_wrapper(
-            workflows.list,
+            calls.list,
         )
 
 
-class WorkflowsResourceWithStreamingResponse:
-    def __init__(self, workflows: WorkflowsResource) -> None:
-        self._workflows = workflows
+class CallsResourceWithStreamingResponse:
+    def __init__(self, calls: CallsResource) -> None:
+        self._calls = calls
 
         self.retrieve = to_streamed_response_wrapper(
-            workflows.retrieve,
+            calls.retrieve,
         )
         self.list = to_streamed_response_wrapper(
-            workflows.list,
+            calls.list,
         )
 
 
-class AsyncWorkflowsResourceWithStreamingResponse:
-    def __init__(self, workflows: AsyncWorkflowsResource) -> None:
-        self._workflows = workflows
+class AsyncCallsResourceWithStreamingResponse:
+    def __init__(self, calls: AsyncCallsResource) -> None:
+        self._calls = calls
 
         self.retrieve = async_to_streamed_response_wrapper(
-            workflows.retrieve,
+            calls.retrieve,
         )
         self.list = async_to_streamed_response_wrapper(
-            workflows.list,
+            calls.list,
         )

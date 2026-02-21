@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from .._models import BaseModel
 
-__all__ = ["OrgListVoicesResponse", "Meta", "Voice"]
+__all__ = ["VoiceListResponse", "Meta", "Voice"]
 
 
 class Meta(BaseModel):
@@ -51,7 +51,7 @@ class Voice(BaseModel):
     use_case: Optional[str] = None
 
 
-class OrgListVoicesResponse(BaseModel):
+class VoiceListResponse(BaseModel):
     meta: Optional[Meta] = None
 
     voices: Optional[List[Voice]] = None
