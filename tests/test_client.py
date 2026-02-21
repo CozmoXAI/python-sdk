@@ -40,6 +40,7 @@ from .utils import update_env
 T = TypeVar("T")
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 api_key = "My API Key"
+org_id = "My Org ID"
 
 
 def _get_params(client: BaseClient[Any, Any]) -> dict[str, str]:
@@ -140,6 +141,10 @@ class TestCozmoai:
         assert copied.api_key == "another My API Key"
         assert client.api_key == "My API Key"
 
+        copied = client.copy(org_id="another My Org ID")
+        assert copied.org_id == "another My Org ID"
+        assert client.org_id == "My Org ID"
+
     def test_copy_default_options(self, client: Cozmoai) -> None:
         # options that have a default are overridden correctly
         copied = client.copy(max_retries=7)
@@ -158,7 +163,11 @@ class TestCozmoai:
 
     def test_copy_default_headers(self) -> None:
         client = Cozmoai(
-            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
+            base_url=base_url,
+            api_key=api_key,
+            org_id=org_id,
+            _strict_response_validation=True,
+            default_headers={"X-Foo": "bar"},
         )
         assert client.default_headers["X-Foo"] == "bar"
 
@@ -193,7 +202,11 @@ class TestCozmoai:
 
     def test_copy_default_query(self) -> None:
         client = Cozmoai(
-            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"foo": "bar"}
+            base_url=base_url,
+            api_key=api_key,
+            org_id=org_id,
+            _strict_response_validation=True,
+            default_query={"foo": "bar"},
         )
         assert _get_params(client)["foo"] == "bar"
 
@@ -318,7 +331,13 @@ class TestCozmoai:
         assert timeout == httpx.Timeout(100.0)
 
     def test_client_timeout_option(self) -> None:
-        client = Cozmoai(base_url=base_url, api_key=api_key, _strict_response_validation=True, timeout=httpx.Timeout(0))
+        client = Cozmoai(
+            base_url=base_url,
+            api_key=api_key,
+            org_id=org_id,
+            _strict_response_validation=True,
+            timeout=httpx.Timeout(0),
+        )
 
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
@@ -330,7 +349,11 @@ class TestCozmoai:
         # custom timeout given to the httpx client should be used
         with httpx.Client(timeout=None) as http_client:
             client = Cozmoai(
-                base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
+                base_url=base_url,
+                api_key=api_key,
+                org_id=org_id,
+                _strict_response_validation=True,
+                http_client=http_client,
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -342,7 +365,11 @@ class TestCozmoai:
         # no timeout given to the httpx client should not use the httpx default
         with httpx.Client() as http_client:
             client = Cozmoai(
-                base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
+                base_url=base_url,
+                api_key=api_key,
+                org_id=org_id,
+                _strict_response_validation=True,
+                http_client=http_client,
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -354,7 +381,11 @@ class TestCozmoai:
         # explicitly passing the default timeout currently results in it being ignored
         with httpx.Client(timeout=HTTPX_DEFAULT_TIMEOUT) as http_client:
             client = Cozmoai(
-                base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
+                base_url=base_url,
+                api_key=api_key,
+                org_id=org_id,
+                _strict_response_validation=True,
+                http_client=http_client,
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -369,13 +400,18 @@ class TestCozmoai:
                 Cozmoai(
                     base_url=base_url,
                     api_key=api_key,
+                    org_id=org_id,
                     _strict_response_validation=True,
                     http_client=cast(Any, http_client),
                 )
 
     def test_default_headers_option(self) -> None:
         test_client = Cozmoai(
-            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
+            base_url=base_url,
+            api_key=api_key,
+            org_id=org_id,
+            _strict_response_validation=True,
+            default_headers={"X-Foo": "bar"},
         )
         request = test_client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("x-foo") == "bar"
@@ -384,6 +420,7 @@ class TestCozmoai:
         test_client2 = Cozmoai(
             base_url=base_url,
             api_key=api_key,
+            org_id=org_id,
             _strict_response_validation=True,
             default_headers={
                 "X-Foo": "stainless",
@@ -398,18 +435,22 @@ class TestCozmoai:
         test_client2.close()
 
     def test_validate_headers(self) -> None:
-        client = Cozmoai(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        client = Cozmoai(base_url=base_url, api_key=api_key, org_id=org_id, _strict_response_validation=True)
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("Authorization") == api_key
 
         with pytest.raises(CozmoaiError):
             with update_env(**{"COZMOAI_API_KEY": Omit()}):
-                client2 = Cozmoai(base_url=base_url, api_key=None, _strict_response_validation=True)
+                client2 = Cozmoai(base_url=base_url, api_key=None, org_id=org_id, _strict_response_validation=True)
             _ = client2
 
     def test_default_query_option(self) -> None:
         client = Cozmoai(
-            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"query_param": "bar"}
+            base_url=base_url,
+            api_key=api_key,
+            org_id=org_id,
+            _strict_response_validation=True,
+            default_query={"query_param": "bar"},
         )
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         url = httpx.URL(request.url)
@@ -582,6 +623,7 @@ class TestCozmoai:
         with Cozmoai(
             base_url=base_url,
             api_key=api_key,
+            org_id=org_id,
             _strict_response_validation=True,
             http_client=httpx.Client(transport=MockTransport(handler=mock_handler)),
         ) as client:
@@ -675,7 +717,9 @@ class TestCozmoai:
         assert response.foo == 2
 
     def test_base_url_setter(self) -> None:
-        client = Cozmoai(base_url="https://example.com/from_init", api_key=api_key, _strict_response_validation=True)
+        client = Cozmoai(
+            base_url="https://example.com/from_init", api_key=api_key, org_id=org_id, _strict_response_validation=True
+        )
         assert client.base_url == "https://example.com/from_init/"
 
         client.base_url = "https://example.com/from_setter"  # type: ignore[assignment]
@@ -686,16 +730,22 @@ class TestCozmoai:
 
     def test_base_url_env(self) -> None:
         with update_env(COZMOAI_BASE_URL="http://localhost:5000/from/env"):
-            client = Cozmoai(api_key=api_key, _strict_response_validation=True)
+            client = Cozmoai(api_key=api_key, org_id=org_id, _strict_response_validation=True)
             assert client.base_url == "http://localhost:5000/from/env/"
 
     @pytest.mark.parametrize(
         "client",
         [
-            Cozmoai(base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True),
             Cozmoai(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
+                org_id=org_id,
+                _strict_response_validation=True,
+            ),
+            Cozmoai(
+                base_url="http://localhost:5000/custom/path/",
+                api_key=api_key,
+                org_id=org_id,
                 _strict_response_validation=True,
                 http_client=httpx.Client(),
             ),
@@ -716,10 +766,16 @@ class TestCozmoai:
     @pytest.mark.parametrize(
         "client",
         [
-            Cozmoai(base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True),
             Cozmoai(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
+                org_id=org_id,
+                _strict_response_validation=True,
+            ),
+            Cozmoai(
+                base_url="http://localhost:5000/custom/path/",
+                api_key=api_key,
+                org_id=org_id,
                 _strict_response_validation=True,
                 http_client=httpx.Client(),
             ),
@@ -740,10 +796,16 @@ class TestCozmoai:
     @pytest.mark.parametrize(
         "client",
         [
-            Cozmoai(base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True),
             Cozmoai(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
+                org_id=org_id,
+                _strict_response_validation=True,
+            ),
+            Cozmoai(
+                base_url="http://localhost:5000/custom/path/",
+                api_key=api_key,
+                org_id=org_id,
                 _strict_response_validation=True,
                 http_client=httpx.Client(),
             ),
@@ -762,7 +824,7 @@ class TestCozmoai:
         client.close()
 
     def test_copied_client_does_not_close_http(self) -> None:
-        test_client = Cozmoai(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        test_client = Cozmoai(base_url=base_url, api_key=api_key, org_id=org_id, _strict_response_validation=True)
         assert not test_client.is_closed()
 
         copied = test_client.copy()
@@ -773,7 +835,7 @@ class TestCozmoai:
         assert not test_client.is_closed()
 
     def test_client_context_manager(self) -> None:
-        test_client = Cozmoai(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        test_client = Cozmoai(base_url=base_url, api_key=api_key, org_id=org_id, _strict_response_validation=True)
         with test_client as c2:
             assert c2 is test_client
             assert not c2.is_closed()
@@ -794,7 +856,13 @@ class TestCozmoai:
 
     def test_client_max_retries_validation(self) -> None:
         with pytest.raises(TypeError, match=r"max_retries cannot be None"):
-            Cozmoai(base_url=base_url, api_key=api_key, _strict_response_validation=True, max_retries=cast(Any, None))
+            Cozmoai(
+                base_url=base_url,
+                api_key=api_key,
+                org_id=org_id,
+                _strict_response_validation=True,
+                max_retries=cast(Any, None),
+            )
 
     @pytest.mark.respx(base_url=base_url)
     def test_received_text_for_expected_json(self, respx_mock: MockRouter) -> None:
@@ -803,12 +871,14 @@ class TestCozmoai:
 
         respx_mock.get("/foo").mock(return_value=httpx.Response(200, text="my-custom-format"))
 
-        strict_client = Cozmoai(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        strict_client = Cozmoai(base_url=base_url, api_key=api_key, org_id=org_id, _strict_response_validation=True)
 
         with pytest.raises(APIResponseValidationError):
             strict_client.get("/foo", cast_to=Model)
 
-        non_strict_client = Cozmoai(base_url=base_url, api_key=api_key, _strict_response_validation=False)
+        non_strict_client = Cozmoai(
+            base_url=base_url, api_key=api_key, org_id=org_id, _strict_response_validation=False
+        )
 
         response = non_strict_client.get("/foo", cast_to=Model)
         assert isinstance(response, str)  # type: ignore[unreachable]
@@ -852,7 +922,7 @@ class TestCozmoai:
         respx_mock.get("/org/org_id/agents").mock(side_effect=httpx.TimeoutException("Test timeout error"))
 
         with pytest.raises(APITimeoutError):
-            client.org.agents.with_streaming_response.list(org_id="org_id").__enter__()
+            client.agents.with_streaming_response.list(org_id="org_id").__enter__()
 
         assert _get_open_connections(client) == 0
 
@@ -862,7 +932,7 @@ class TestCozmoai:
         respx_mock.get("/org/org_id/agents").mock(return_value=httpx.Response(500))
 
         with pytest.raises(APIStatusError):
-            client.org.agents.with_streaming_response.list(org_id="org_id").__enter__()
+            client.agents.with_streaming_response.list(org_id="org_id").__enter__()
         assert _get_open_connections(client) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
@@ -891,7 +961,7 @@ class TestCozmoai:
 
         respx_mock.get("/org/org_id/agents").mock(side_effect=retry_handler)
 
-        response = client.org.agents.with_raw_response.list(org_id="org_id")
+        response = client.agents.with_raw_response.list(org_id="org_id")
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -915,7 +985,7 @@ class TestCozmoai:
 
         respx_mock.get("/org/org_id/agents").mock(side_effect=retry_handler)
 
-        response = client.org.agents.with_raw_response.list(
+        response = client.agents.with_raw_response.list(
             org_id="org_id", extra_headers={"x-stainless-retry-count": Omit()}
         )
 
@@ -940,7 +1010,7 @@ class TestCozmoai:
 
         respx_mock.get("/org/org_id/agents").mock(side_effect=retry_handler)
 
-        response = client.org.agents.with_raw_response.list(
+        response = client.agents.with_raw_response.list(
             org_id="org_id", extra_headers={"x-stainless-retry-count": "42"}
         )
 
@@ -1023,6 +1093,10 @@ class TestAsyncCozmoai:
         assert copied.api_key == "another My API Key"
         assert async_client.api_key == "My API Key"
 
+        copied = async_client.copy(org_id="another My Org ID")
+        assert copied.org_id == "another My Org ID"
+        assert async_client.org_id == "My Org ID"
+
     def test_copy_default_options(self, async_client: AsyncCozmoai) -> None:
         # options that have a default are overridden correctly
         copied = async_client.copy(max_retries=7)
@@ -1041,7 +1115,11 @@ class TestAsyncCozmoai:
 
     async def test_copy_default_headers(self) -> None:
         client = AsyncCozmoai(
-            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
+            base_url=base_url,
+            api_key=api_key,
+            org_id=org_id,
+            _strict_response_validation=True,
+            default_headers={"X-Foo": "bar"},
         )
         assert client.default_headers["X-Foo"] == "bar"
 
@@ -1076,7 +1154,11 @@ class TestAsyncCozmoai:
 
     async def test_copy_default_query(self) -> None:
         client = AsyncCozmoai(
-            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"foo": "bar"}
+            base_url=base_url,
+            api_key=api_key,
+            org_id=org_id,
+            _strict_response_validation=True,
+            default_query={"foo": "bar"},
         )
         assert _get_params(client)["foo"] == "bar"
 
@@ -1204,7 +1286,11 @@ class TestAsyncCozmoai:
 
     async def test_client_timeout_option(self) -> None:
         client = AsyncCozmoai(
-            base_url=base_url, api_key=api_key, _strict_response_validation=True, timeout=httpx.Timeout(0)
+            base_url=base_url,
+            api_key=api_key,
+            org_id=org_id,
+            _strict_response_validation=True,
+            timeout=httpx.Timeout(0),
         )
 
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -1217,7 +1303,11 @@ class TestAsyncCozmoai:
         # custom timeout given to the httpx client should be used
         async with httpx.AsyncClient(timeout=None) as http_client:
             client = AsyncCozmoai(
-                base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
+                base_url=base_url,
+                api_key=api_key,
+                org_id=org_id,
+                _strict_response_validation=True,
+                http_client=http_client,
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -1229,7 +1319,11 @@ class TestAsyncCozmoai:
         # no timeout given to the httpx client should not use the httpx default
         async with httpx.AsyncClient() as http_client:
             client = AsyncCozmoai(
-                base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
+                base_url=base_url,
+                api_key=api_key,
+                org_id=org_id,
+                _strict_response_validation=True,
+                http_client=http_client,
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -1241,7 +1335,11 @@ class TestAsyncCozmoai:
         # explicitly passing the default timeout currently results in it being ignored
         async with httpx.AsyncClient(timeout=HTTPX_DEFAULT_TIMEOUT) as http_client:
             client = AsyncCozmoai(
-                base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
+                base_url=base_url,
+                api_key=api_key,
+                org_id=org_id,
+                _strict_response_validation=True,
+                http_client=http_client,
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -1256,13 +1354,18 @@ class TestAsyncCozmoai:
                 AsyncCozmoai(
                     base_url=base_url,
                     api_key=api_key,
+                    org_id=org_id,
                     _strict_response_validation=True,
                     http_client=cast(Any, http_client),
                 )
 
     async def test_default_headers_option(self) -> None:
         test_client = AsyncCozmoai(
-            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
+            base_url=base_url,
+            api_key=api_key,
+            org_id=org_id,
+            _strict_response_validation=True,
+            default_headers={"X-Foo": "bar"},
         )
         request = test_client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("x-foo") == "bar"
@@ -1271,6 +1374,7 @@ class TestAsyncCozmoai:
         test_client2 = AsyncCozmoai(
             base_url=base_url,
             api_key=api_key,
+            org_id=org_id,
             _strict_response_validation=True,
             default_headers={
                 "X-Foo": "stainless",
@@ -1285,18 +1389,22 @@ class TestAsyncCozmoai:
         await test_client2.close()
 
     def test_validate_headers(self) -> None:
-        client = AsyncCozmoai(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        client = AsyncCozmoai(base_url=base_url, api_key=api_key, org_id=org_id, _strict_response_validation=True)
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("Authorization") == api_key
 
         with pytest.raises(CozmoaiError):
             with update_env(**{"COZMOAI_API_KEY": Omit()}):
-                client2 = AsyncCozmoai(base_url=base_url, api_key=None, _strict_response_validation=True)
+                client2 = AsyncCozmoai(base_url=base_url, api_key=None, org_id=org_id, _strict_response_validation=True)
             _ = client2
 
     async def test_default_query_option(self) -> None:
         client = AsyncCozmoai(
-            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"query_param": "bar"}
+            base_url=base_url,
+            api_key=api_key,
+            org_id=org_id,
+            _strict_response_validation=True,
+            default_query={"query_param": "bar"},
         )
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         url = httpx.URL(request.url)
@@ -1469,6 +1577,7 @@ class TestAsyncCozmoai:
         async with AsyncCozmoai(
             base_url=base_url,
             api_key=api_key,
+            org_id=org_id,
             _strict_response_validation=True,
             http_client=httpx.AsyncClient(transport=MockTransport(handler=mock_handler)),
         ) as client:
@@ -1567,7 +1676,7 @@ class TestAsyncCozmoai:
 
     async def test_base_url_setter(self) -> None:
         client = AsyncCozmoai(
-            base_url="https://example.com/from_init", api_key=api_key, _strict_response_validation=True
+            base_url="https://example.com/from_init", api_key=api_key, org_id=org_id, _strict_response_validation=True
         )
         assert client.base_url == "https://example.com/from_init/"
 
@@ -1579,18 +1688,22 @@ class TestAsyncCozmoai:
 
     async def test_base_url_env(self) -> None:
         with update_env(COZMOAI_BASE_URL="http://localhost:5000/from/env"):
-            client = AsyncCozmoai(api_key=api_key, _strict_response_validation=True)
+            client = AsyncCozmoai(api_key=api_key, org_id=org_id, _strict_response_validation=True)
             assert client.base_url == "http://localhost:5000/from/env/"
 
     @pytest.mark.parametrize(
         "client",
         [
             AsyncCozmoai(
-                base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
+                base_url="http://localhost:5000/custom/path/",
+                api_key=api_key,
+                org_id=org_id,
+                _strict_response_validation=True,
             ),
             AsyncCozmoai(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
+                org_id=org_id,
                 _strict_response_validation=True,
                 http_client=httpx.AsyncClient(),
             ),
@@ -1612,11 +1725,15 @@ class TestAsyncCozmoai:
         "client",
         [
             AsyncCozmoai(
-                base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
+                base_url="http://localhost:5000/custom/path/",
+                api_key=api_key,
+                org_id=org_id,
+                _strict_response_validation=True,
             ),
             AsyncCozmoai(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
+                org_id=org_id,
                 _strict_response_validation=True,
                 http_client=httpx.AsyncClient(),
             ),
@@ -1638,11 +1755,15 @@ class TestAsyncCozmoai:
         "client",
         [
             AsyncCozmoai(
-                base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
+                base_url="http://localhost:5000/custom/path/",
+                api_key=api_key,
+                org_id=org_id,
+                _strict_response_validation=True,
             ),
             AsyncCozmoai(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
+                org_id=org_id,
                 _strict_response_validation=True,
                 http_client=httpx.AsyncClient(),
             ),
@@ -1661,7 +1782,7 @@ class TestAsyncCozmoai:
         await client.close()
 
     async def test_copied_client_does_not_close_http(self) -> None:
-        test_client = AsyncCozmoai(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        test_client = AsyncCozmoai(base_url=base_url, api_key=api_key, org_id=org_id, _strict_response_validation=True)
         assert not test_client.is_closed()
 
         copied = test_client.copy()
@@ -1673,7 +1794,7 @@ class TestAsyncCozmoai:
         assert not test_client.is_closed()
 
     async def test_client_context_manager(self) -> None:
-        test_client = AsyncCozmoai(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        test_client = AsyncCozmoai(base_url=base_url, api_key=api_key, org_id=org_id, _strict_response_validation=True)
         async with test_client as c2:
             assert c2 is test_client
             assert not c2.is_closed()
@@ -1695,7 +1816,11 @@ class TestAsyncCozmoai:
     async def test_client_max_retries_validation(self) -> None:
         with pytest.raises(TypeError, match=r"max_retries cannot be None"):
             AsyncCozmoai(
-                base_url=base_url, api_key=api_key, _strict_response_validation=True, max_retries=cast(Any, None)
+                base_url=base_url,
+                api_key=api_key,
+                org_id=org_id,
+                _strict_response_validation=True,
+                max_retries=cast(Any, None),
             )
 
     @pytest.mark.respx(base_url=base_url)
@@ -1705,12 +1830,16 @@ class TestAsyncCozmoai:
 
         respx_mock.get("/foo").mock(return_value=httpx.Response(200, text="my-custom-format"))
 
-        strict_client = AsyncCozmoai(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        strict_client = AsyncCozmoai(
+            base_url=base_url, api_key=api_key, org_id=org_id, _strict_response_validation=True
+        )
 
         with pytest.raises(APIResponseValidationError):
             await strict_client.get("/foo", cast_to=Model)
 
-        non_strict_client = AsyncCozmoai(base_url=base_url, api_key=api_key, _strict_response_validation=False)
+        non_strict_client = AsyncCozmoai(
+            base_url=base_url, api_key=api_key, org_id=org_id, _strict_response_validation=False
+        )
 
         response = await non_strict_client.get("/foo", cast_to=Model)
         assert isinstance(response, str)  # type: ignore[unreachable]
@@ -1756,7 +1885,7 @@ class TestAsyncCozmoai:
         respx_mock.get("/org/org_id/agents").mock(side_effect=httpx.TimeoutException("Test timeout error"))
 
         with pytest.raises(APITimeoutError):
-            await async_client.org.agents.with_streaming_response.list(org_id="org_id").__aenter__()
+            await async_client.agents.with_streaming_response.list(org_id="org_id").__aenter__()
 
         assert _get_open_connections(async_client) == 0
 
@@ -1766,7 +1895,7 @@ class TestAsyncCozmoai:
         respx_mock.get("/org/org_id/agents").mock(return_value=httpx.Response(500))
 
         with pytest.raises(APIStatusError):
-            await async_client.org.agents.with_streaming_response.list(org_id="org_id").__aenter__()
+            await async_client.agents.with_streaming_response.list(org_id="org_id").__aenter__()
         assert _get_open_connections(async_client) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
@@ -1795,7 +1924,7 @@ class TestAsyncCozmoai:
 
         respx_mock.get("/org/org_id/agents").mock(side_effect=retry_handler)
 
-        response = await client.org.agents.with_raw_response.list(org_id="org_id")
+        response = await client.agents.with_raw_response.list(org_id="org_id")
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -1819,7 +1948,7 @@ class TestAsyncCozmoai:
 
         respx_mock.get("/org/org_id/agents").mock(side_effect=retry_handler)
 
-        response = await client.org.agents.with_raw_response.list(
+        response = await client.agents.with_raw_response.list(
             org_id="org_id", extra_headers={"x-stainless-retry-count": Omit()}
         )
 
@@ -1844,7 +1973,7 @@ class TestAsyncCozmoai:
 
         respx_mock.get("/org/org_id/agents").mock(side_effect=retry_handler)
 
-        response = await client.org.agents.with_raw_response.list(
+        response = await client.agents.with_raw_response.list(
             org_id="org_id", extra_headers={"x-stainless-retry-count": "42"}
         )
 

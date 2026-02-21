@@ -7,34 +7,34 @@ from typing_extensions import Literal
 
 import httpx
 
-from ..._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
-from ..._utils import maybe_transform, async_maybe_transform
-from ..._compat import cached_property
-from ..._resource import SyncAPIResource, AsyncAPIResource
-from ..._response import (
+from ..types import (
+    agent_list_params,
+    agent_create_params,
+    agent_update_params,
+)
+from .._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
+from .._utils import maybe_transform, async_maybe_transform
+from .._compat import cached_property
+from .._resource import SyncAPIResource, AsyncAPIResource
+from .._response import (
     to_raw_response_wrapper,
     to_streamed_response_wrapper,
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ...types.org import (
-    agent_list_params,
-    agent_create_params,
-    agent_update_params,
-)
-from ..._base_client import make_request_options
-from ...types.org.agent_response import AgentResponse
-from ...types.org.llm_config_param import LlmConfigParam
-from ...types.org.vad_config_param import VadConfigParam
-from ...types.org.extra_config_param import ExtraConfigParam
-from ...types.org.voice_config_param import VoiceConfigParam
-from ...types.org.agent_list_response import AgentListResponse
-from ...types.org.goodbye_config_param import GoodbyeConfigParam
-from ...types.org.agent_delete_response import AgentDeleteResponse
-from ...types.org.greeting_config_param import GreetingConfigParam
-from ...types.org.transcriber_config_param import TranscriberConfigParam
-from ...types.org.room_duration_config_param import RoomDurationConfigParam
-from ...types.org.background_sound_config_param import BackgroundSoundConfigParam
+from .._base_client import make_request_options
+from ..types.agent_response import AgentResponse
+from ..types.llm_config_param import LlmConfigParam
+from ..types.vad_config_param import VadConfigParam
+from ..types.extra_config_param import ExtraConfigParam
+from ..types.voice_config_param import VoiceConfigParam
+from ..types.agent_list_response import AgentListResponse
+from ..types.goodbye_config_param import GoodbyeConfigParam
+from ..types.agent_delete_response import AgentDeleteResponse
+from ..types.greeting_config_param import GreetingConfigParam
+from ..types.transcriber_config_param import TranscriberConfigParam
+from ..types.room_duration_config_param import RoomDurationConfigParam
+from ..types.background_sound_config_param import BackgroundSoundConfigParam
 
 __all__ = ["AgentsResource", "AsyncAgentsResource"]
 

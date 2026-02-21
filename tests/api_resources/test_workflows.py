@@ -9,48 +9,48 @@ import pytest
 
 from cozmoai import Cozmoai, AsyncCozmoai
 from tests.utils import assert_matches_type
-from cozmoai.types.org import CallListResponse, CallRetrieveResponse
+from cozmoai.types import WorkflowListResponse, WorkflowRetrieveResponse
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
 
-class TestCalls:
+class TestWorkflows:
     parametrize = pytest.mark.parametrize("client", [False, True], indirect=True, ids=["loose", "strict"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_retrieve(self, client: Cozmoai) -> None:
-        call = client.org.calls.retrieve(
-            call_id="call_id",
+        workflow = client.workflows.retrieve(
+            workflow_id="workflow_id",
             org_id="org_id",
         )
-        assert_matches_type(CallRetrieveResponse, call, path=["response"])
+        assert_matches_type(WorkflowRetrieveResponse, workflow, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_retrieve(self, client: Cozmoai) -> None:
-        response = client.org.calls.with_raw_response.retrieve(
-            call_id="call_id",
+        response = client.workflows.with_raw_response.retrieve(
+            workflow_id="workflow_id",
             org_id="org_id",
         )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        call = response.parse()
-        assert_matches_type(CallRetrieveResponse, call, path=["response"])
+        workflow = response.parse()
+        assert_matches_type(WorkflowRetrieveResponse, workflow, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_retrieve(self, client: Cozmoai) -> None:
-        with client.org.calls.with_streaming_response.retrieve(
-            call_id="call_id",
+        with client.workflows.with_streaming_response.retrieve(
+            workflow_id="workflow_id",
             org_id="org_id",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
-            call = response.parse()
-            assert_matches_type(CallRetrieveResponse, call, path=["response"])
+            workflow = response.parse()
+            assert_matches_type(WorkflowRetrieveResponse, workflow, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -58,69 +58,61 @@ class TestCalls:
     @parametrize
     def test_path_params_retrieve(self, client: Cozmoai) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `org_id` but received ''"):
-            client.org.calls.with_raw_response.retrieve(
-                call_id="call_id",
+            client.workflows.with_raw_response.retrieve(
+                workflow_id="workflow_id",
                 org_id="",
             )
 
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `call_id` but received ''"):
-            client.org.calls.with_raw_response.retrieve(
-                call_id="",
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `workflow_id` but received ''"):
+            client.workflows.with_raw_response.retrieve(
+                workflow_id="",
                 org_id="org_id",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_list(self, client: Cozmoai) -> None:
-        call = client.org.calls.list(
+        workflow = client.workflows.list(
             org_id="org_id",
         )
-        assert_matches_type(CallListResponse, call, path=["response"])
+        assert_matches_type(WorkflowListResponse, workflow, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_list_with_all_params(self, client: Cozmoai) -> None:
-        call = client.org.calls.list(
+        workflow = client.workflows.list(
             org_id="org_id",
-            agent_id="agent_id",
-            direction="direction",
-            end_date="end_date",
-            min_duration=0,
+            is_active=True,
             page=0,
-            phone="phone",
-            prospect_external_id="prospect_external_id",
-            prospect_id="prospect_id",
-            prospect_name="prospect_name",
-            size=100,
-            start_date="start_date",
-            status="status",
-            workflow_id="workflow_id",
+            search="search",
+            size=0,
+            trigger_type="trigger_type",
         )
-        assert_matches_type(CallListResponse, call, path=["response"])
+        assert_matches_type(WorkflowListResponse, workflow, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_list(self, client: Cozmoai) -> None:
-        response = client.org.calls.with_raw_response.list(
+        response = client.workflows.with_raw_response.list(
             org_id="org_id",
         )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        call = response.parse()
-        assert_matches_type(CallListResponse, call, path=["response"])
+        workflow = response.parse()
+        assert_matches_type(WorkflowListResponse, workflow, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_list(self, client: Cozmoai) -> None:
-        with client.org.calls.with_streaming_response.list(
+        with client.workflows.with_streaming_response.list(
             org_id="org_id",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
-            call = response.parse()
-            assert_matches_type(CallListResponse, call, path=["response"])
+            workflow = response.parse()
+            assert_matches_type(WorkflowListResponse, workflow, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -128,12 +120,12 @@ class TestCalls:
     @parametrize
     def test_path_params_list(self, client: Cozmoai) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `org_id` but received ''"):
-            client.org.calls.with_raw_response.list(
+            client.workflows.with_raw_response.list(
                 org_id="",
             )
 
 
-class TestAsyncCalls:
+class TestAsyncWorkflows:
     parametrize = pytest.mark.parametrize(
         "async_client", [False, True, {"http_client": "aiohttp"}], indirect=True, ids=["loose", "strict", "aiohttp"]
     )
@@ -141,37 +133,37 @@ class TestAsyncCalls:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_retrieve(self, async_client: AsyncCozmoai) -> None:
-        call = await async_client.org.calls.retrieve(
-            call_id="call_id",
+        workflow = await async_client.workflows.retrieve(
+            workflow_id="workflow_id",
             org_id="org_id",
         )
-        assert_matches_type(CallRetrieveResponse, call, path=["response"])
+        assert_matches_type(WorkflowRetrieveResponse, workflow, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_retrieve(self, async_client: AsyncCozmoai) -> None:
-        response = await async_client.org.calls.with_raw_response.retrieve(
-            call_id="call_id",
+        response = await async_client.workflows.with_raw_response.retrieve(
+            workflow_id="workflow_id",
             org_id="org_id",
         )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        call = await response.parse()
-        assert_matches_type(CallRetrieveResponse, call, path=["response"])
+        workflow = await response.parse()
+        assert_matches_type(WorkflowRetrieveResponse, workflow, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_retrieve(self, async_client: AsyncCozmoai) -> None:
-        async with async_client.org.calls.with_streaming_response.retrieve(
-            call_id="call_id",
+        async with async_client.workflows.with_streaming_response.retrieve(
+            workflow_id="workflow_id",
             org_id="org_id",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
-            call = await response.parse()
-            assert_matches_type(CallRetrieveResponse, call, path=["response"])
+            workflow = await response.parse()
+            assert_matches_type(WorkflowRetrieveResponse, workflow, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -179,69 +171,61 @@ class TestAsyncCalls:
     @parametrize
     async def test_path_params_retrieve(self, async_client: AsyncCozmoai) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `org_id` but received ''"):
-            await async_client.org.calls.with_raw_response.retrieve(
-                call_id="call_id",
+            await async_client.workflows.with_raw_response.retrieve(
+                workflow_id="workflow_id",
                 org_id="",
             )
 
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `call_id` but received ''"):
-            await async_client.org.calls.with_raw_response.retrieve(
-                call_id="",
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `workflow_id` but received ''"):
+            await async_client.workflows.with_raw_response.retrieve(
+                workflow_id="",
                 org_id="org_id",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_list(self, async_client: AsyncCozmoai) -> None:
-        call = await async_client.org.calls.list(
+        workflow = await async_client.workflows.list(
             org_id="org_id",
         )
-        assert_matches_type(CallListResponse, call, path=["response"])
+        assert_matches_type(WorkflowListResponse, workflow, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_list_with_all_params(self, async_client: AsyncCozmoai) -> None:
-        call = await async_client.org.calls.list(
+        workflow = await async_client.workflows.list(
             org_id="org_id",
-            agent_id="agent_id",
-            direction="direction",
-            end_date="end_date",
-            min_duration=0,
+            is_active=True,
             page=0,
-            phone="phone",
-            prospect_external_id="prospect_external_id",
-            prospect_id="prospect_id",
-            prospect_name="prospect_name",
-            size=100,
-            start_date="start_date",
-            status="status",
-            workflow_id="workflow_id",
+            search="search",
+            size=0,
+            trigger_type="trigger_type",
         )
-        assert_matches_type(CallListResponse, call, path=["response"])
+        assert_matches_type(WorkflowListResponse, workflow, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_list(self, async_client: AsyncCozmoai) -> None:
-        response = await async_client.org.calls.with_raw_response.list(
+        response = await async_client.workflows.with_raw_response.list(
             org_id="org_id",
         )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        call = await response.parse()
-        assert_matches_type(CallListResponse, call, path=["response"])
+        workflow = await response.parse()
+        assert_matches_type(WorkflowListResponse, workflow, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_list(self, async_client: AsyncCozmoai) -> None:
-        async with async_client.org.calls.with_streaming_response.list(
+        async with async_client.workflows.with_streaming_response.list(
             org_id="org_id",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
-            call = await response.parse()
-            assert_matches_type(CallListResponse, call, path=["response"])
+            workflow = await response.parse()
+            assert_matches_type(WorkflowListResponse, workflow, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -249,6 +233,6 @@ class TestAsyncCalls:
     @parametrize
     async def test_path_params_list(self, async_client: AsyncCozmoai) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `org_id` but received ''"):
-            await async_client.org.calls.with_raw_response.list(
+            await async_client.workflows.with_raw_response.list(
                 org_id="",
             )

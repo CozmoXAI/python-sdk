@@ -6,80 +6,44 @@ from typing_extensions import Literal
 
 import httpx
 
-from .calls import (
-    CallsResource,
-    AsyncCallsResource,
-    CallsResourceWithRawResponse,
-    AsyncCallsResourceWithRawResponse,
-    CallsResourceWithStreamingResponse,
-    AsyncCallsResourceWithStreamingResponse,
-)
-from .agents import (
-    AgentsResource,
-    AsyncAgentsResource,
-    AgentsResourceWithRawResponse,
-    AsyncAgentsResourceWithRawResponse,
-    AgentsResourceWithStreamingResponse,
-    AsyncAgentsResourceWithStreamingResponse,
-)
-from ...types import org_list_voices_params
-from ..._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
-from ..._utils import maybe_transform, async_maybe_transform
-from ..._compat import cached_property
-from .workflows import (
-    WorkflowsResource,
-    AsyncWorkflowsResource,
-    WorkflowsResourceWithRawResponse,
-    AsyncWorkflowsResourceWithRawResponse,
-    WorkflowsResourceWithStreamingResponse,
-    AsyncWorkflowsResourceWithStreamingResponse,
-)
-from ..._resource import SyncAPIResource, AsyncAPIResource
-from ..._response import (
+from ..types import voice_list_params
+from .._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
+from .._utils import maybe_transform, async_maybe_transform
+from .._compat import cached_property
+from .._resource import SyncAPIResource, AsyncAPIResource
+from .._response import (
     to_raw_response_wrapper,
     to_streamed_response_wrapper,
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ..._base_client import make_request_options
-from ...types.org_list_voices_response import OrgListVoicesResponse
+from .._base_client import make_request_options
+from ..types.voice_list_response import VoiceListResponse
 
-__all__ = ["OrgResource", "AsyncOrgResource"]
+__all__ = ["VoicesResource", "AsyncVoicesResource"]
 
 
-class OrgResource(SyncAPIResource):
+class VoicesResource(SyncAPIResource):
     @cached_property
-    def agents(self) -> AgentsResource:
-        return AgentsResource(self._client)
-
-    @cached_property
-    def calls(self) -> CallsResource:
-        return CallsResource(self._client)
-
-    @cached_property
-    def workflows(self) -> WorkflowsResource:
-        return WorkflowsResource(self._client)
-
-    @cached_property
-    def with_raw_response(self) -> OrgResourceWithRawResponse:
+    def with_raw_response(self) -> VoicesResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/stainless-sdks/cozmoai-python#accessing-raw-response-data-eg-headers
         """
-        return OrgResourceWithRawResponse(self)
+        return VoicesResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> OrgResourceWithStreamingResponse:
+    def with_streaming_response(self) -> VoicesResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
         For more information, see https://www.github.com/stainless-sdks/cozmoai-python#with_streaming_response
         """
-        return OrgResourceWithStreamingResponse(self)
+        return VoicesResourceWithStreamingResponse(self)
 
-    def list_voices(
+    def list(
         self,
         org_id: str,
         *,
@@ -94,7 +58,7 @@ class OrgResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> OrgListVoicesResponse:
+    ) -> VoiceListResponse:
         """
         Get a paginated list of available voices from the specified provider
 
@@ -134,46 +98,34 @@ class OrgResource(SyncAPIResource):
                         "page": page,
                         "size": size,
                     },
-                    org_list_voices_params.OrgListVoicesParams,
+                    voice_list_params.VoiceListParams,
                 ),
             ),
-            cast_to=OrgListVoicesResponse,
+            cast_to=VoiceListResponse,
         )
 
 
-class AsyncOrgResource(AsyncAPIResource):
+class AsyncVoicesResource(AsyncAPIResource):
     @cached_property
-    def agents(self) -> AsyncAgentsResource:
-        return AsyncAgentsResource(self._client)
-
-    @cached_property
-    def calls(self) -> AsyncCallsResource:
-        return AsyncCallsResource(self._client)
-
-    @cached_property
-    def workflows(self) -> AsyncWorkflowsResource:
-        return AsyncWorkflowsResource(self._client)
-
-    @cached_property
-    def with_raw_response(self) -> AsyncOrgResourceWithRawResponse:
+    def with_raw_response(self) -> AsyncVoicesResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/stainless-sdks/cozmoai-python#accessing-raw-response-data-eg-headers
         """
-        return AsyncOrgResourceWithRawResponse(self)
+        return AsyncVoicesResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> AsyncOrgResourceWithStreamingResponse:
+    def with_streaming_response(self) -> AsyncVoicesResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
         For more information, see https://www.github.com/stainless-sdks/cozmoai-python#with_streaming_response
         """
-        return AsyncOrgResourceWithStreamingResponse(self)
+        return AsyncVoicesResourceWithStreamingResponse(self)
 
-    async def list_voices(
+    async def list(
         self,
         org_id: str,
         *,
@@ -188,7 +140,7 @@ class AsyncOrgResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> OrgListVoicesResponse:
+    ) -> VoiceListResponse:
         """
         Get a paginated list of available voices from the specified provider
 
@@ -228,92 +180,44 @@ class AsyncOrgResource(AsyncAPIResource):
                         "page": page,
                         "size": size,
                     },
-                    org_list_voices_params.OrgListVoicesParams,
+                    voice_list_params.VoiceListParams,
                 ),
             ),
-            cast_to=OrgListVoicesResponse,
+            cast_to=VoiceListResponse,
         )
 
 
-class OrgResourceWithRawResponse:
-    def __init__(self, org: OrgResource) -> None:
-        self._org = org
+class VoicesResourceWithRawResponse:
+    def __init__(self, voices: VoicesResource) -> None:
+        self._voices = voices
 
-        self.list_voices = to_raw_response_wrapper(
-            org.list_voices,
+        self.list = to_raw_response_wrapper(
+            voices.list,
         )
 
-    @cached_property
-    def agents(self) -> AgentsResourceWithRawResponse:
-        return AgentsResourceWithRawResponse(self._org.agents)
 
-    @cached_property
-    def calls(self) -> CallsResourceWithRawResponse:
-        return CallsResourceWithRawResponse(self._org.calls)
+class AsyncVoicesResourceWithRawResponse:
+    def __init__(self, voices: AsyncVoicesResource) -> None:
+        self._voices = voices
 
-    @cached_property
-    def workflows(self) -> WorkflowsResourceWithRawResponse:
-        return WorkflowsResourceWithRawResponse(self._org.workflows)
-
-
-class AsyncOrgResourceWithRawResponse:
-    def __init__(self, org: AsyncOrgResource) -> None:
-        self._org = org
-
-        self.list_voices = async_to_raw_response_wrapper(
-            org.list_voices,
+        self.list = async_to_raw_response_wrapper(
+            voices.list,
         )
 
-    @cached_property
-    def agents(self) -> AsyncAgentsResourceWithRawResponse:
-        return AsyncAgentsResourceWithRawResponse(self._org.agents)
 
-    @cached_property
-    def calls(self) -> AsyncCallsResourceWithRawResponse:
-        return AsyncCallsResourceWithRawResponse(self._org.calls)
+class VoicesResourceWithStreamingResponse:
+    def __init__(self, voices: VoicesResource) -> None:
+        self._voices = voices
 
-    @cached_property
-    def workflows(self) -> AsyncWorkflowsResourceWithRawResponse:
-        return AsyncWorkflowsResourceWithRawResponse(self._org.workflows)
-
-
-class OrgResourceWithStreamingResponse:
-    def __init__(self, org: OrgResource) -> None:
-        self._org = org
-
-        self.list_voices = to_streamed_response_wrapper(
-            org.list_voices,
+        self.list = to_streamed_response_wrapper(
+            voices.list,
         )
 
-    @cached_property
-    def agents(self) -> AgentsResourceWithStreamingResponse:
-        return AgentsResourceWithStreamingResponse(self._org.agents)
 
-    @cached_property
-    def calls(self) -> CallsResourceWithStreamingResponse:
-        return CallsResourceWithStreamingResponse(self._org.calls)
+class AsyncVoicesResourceWithStreamingResponse:
+    def __init__(self, voices: AsyncVoicesResource) -> None:
+        self._voices = voices
 
-    @cached_property
-    def workflows(self) -> WorkflowsResourceWithStreamingResponse:
-        return WorkflowsResourceWithStreamingResponse(self._org.workflows)
-
-
-class AsyncOrgResourceWithStreamingResponse:
-    def __init__(self, org: AsyncOrgResource) -> None:
-        self._org = org
-
-        self.list_voices = async_to_streamed_response_wrapper(
-            org.list_voices,
+        self.list = async_to_streamed_response_wrapper(
+            voices.list,
         )
-
-    @cached_property
-    def agents(self) -> AsyncAgentsResourceWithStreamingResponse:
-        return AsyncAgentsResourceWithStreamingResponse(self._org.agents)
-
-    @cached_property
-    def calls(self) -> AsyncCallsResourceWithStreamingResponse:
-        return AsyncCallsResourceWithStreamingResponse(self._org.calls)
-
-    @cached_property
-    def workflows(self) -> AsyncWorkflowsResourceWithStreamingResponse:
-        return AsyncWorkflowsResourceWithStreamingResponse(self._org.workflows)
