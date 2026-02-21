@@ -29,7 +29,7 @@ class WorkflowsResource(SyncAPIResource):
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/CozmoXAI/python-sdk#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/stainless-sdks/cozmoai-python#accessing-raw-response-data-eg-headers
         """
         return WorkflowsResourceWithRawResponse(self)
 
@@ -38,7 +38,7 @@ class WorkflowsResource(SyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/CozmoXAI/python-sdk#with_streaming_response
+        For more information, see https://www.github.com/stainless-sdks/cozmoai-python#with_streaming_response
         """
         return WorkflowsResourceWithStreamingResponse(self)
 
@@ -46,7 +46,6 @@ class WorkflowsResource(SyncAPIResource):
         self,
         workflow_id: str,
         *,
-        org_id: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -66,12 +65,10 @@ class WorkflowsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
         if not workflow_id:
             raise ValueError(f"Expected a non-empty value for `workflow_id` but received {workflow_id!r}")
         return self._get(
-            f"/org/{org_id}/workflows/{workflow_id}",
+            f"/workflows/{workflow_id}",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -80,7 +77,6 @@ class WorkflowsResource(SyncAPIResource):
 
     def list(
         self,
-        org_id: str,
         *,
         is_active: bool | Omit = omit,
         page: int | Omit = omit,
@@ -116,10 +112,8 @@ class WorkflowsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
         return self._get(
-            f"/org/{org_id}/workflows",
+            "/workflows",
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -147,7 +141,7 @@ class AsyncWorkflowsResource(AsyncAPIResource):
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/CozmoXAI/python-sdk#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/stainless-sdks/cozmoai-python#accessing-raw-response-data-eg-headers
         """
         return AsyncWorkflowsResourceWithRawResponse(self)
 
@@ -156,7 +150,7 @@ class AsyncWorkflowsResource(AsyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/CozmoXAI/python-sdk#with_streaming_response
+        For more information, see https://www.github.com/stainless-sdks/cozmoai-python#with_streaming_response
         """
         return AsyncWorkflowsResourceWithStreamingResponse(self)
 
@@ -164,7 +158,6 @@ class AsyncWorkflowsResource(AsyncAPIResource):
         self,
         workflow_id: str,
         *,
-        org_id: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -184,12 +177,10 @@ class AsyncWorkflowsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
         if not workflow_id:
             raise ValueError(f"Expected a non-empty value for `workflow_id` but received {workflow_id!r}")
         return await self._get(
-            f"/org/{org_id}/workflows/{workflow_id}",
+            f"/workflows/{workflow_id}",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -198,7 +189,6 @@ class AsyncWorkflowsResource(AsyncAPIResource):
 
     async def list(
         self,
-        org_id: str,
         *,
         is_active: bool | Omit = omit,
         page: int | Omit = omit,
@@ -234,10 +224,8 @@ class AsyncWorkflowsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
         return await self._get(
-            f"/org/{org_id}/workflows",
+            "/workflows",
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
