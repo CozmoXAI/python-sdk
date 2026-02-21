@@ -9,7 +9,7 @@ import pytest
 
 from cozmoai import Cozmoai, AsyncCozmoai
 from tests.utils import assert_matches_type
-from cozmoai.types.org import (
+from cozmoai.types import (
     AgentResponse,
     AgentListResponse,
     AgentDeleteResponse,
@@ -24,8 +24,7 @@ class TestAgents:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_create(self, client: Cozmoai) -> None:
-        agent = client.org.agents.create(
-            org_id="org_id",
+        agent = client.agents.create(
             name="name",
             prompt_template="prompt_template",
             type="voice",
@@ -35,8 +34,7 @@ class TestAgents:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_create_with_all_params(self, client: Cozmoai) -> None:
-        agent = client.org.agents.create(
-            org_id="org_id",
+        agent = client.agents.create(
             name="name",
             prompt_template="prompt_template",
             type="voice",
@@ -158,8 +156,7 @@ class TestAgents:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_create(self, client: Cozmoai) -> None:
-        response = client.org.agents.with_raw_response.create(
-            org_id="org_id",
+        response = client.agents.with_raw_response.create(
             name="name",
             prompt_template="prompt_template",
             type="voice",
@@ -173,8 +170,7 @@ class TestAgents:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_create(self, client: Cozmoai) -> None:
-        with client.org.agents.with_streaming_response.create(
-            org_id="org_id",
+        with client.agents.with_streaming_response.create(
             name="name",
             prompt_template="prompt_template",
             type="voice",
@@ -189,30 +185,17 @@ class TestAgents:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_path_params_create(self, client: Cozmoai) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `org_id` but received ''"):
-            client.org.agents.with_raw_response.create(
-                org_id="",
-                name="name",
-                prompt_template="prompt_template",
-                type="voice",
-            )
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
     def test_method_retrieve(self, client: Cozmoai) -> None:
-        agent = client.org.agents.retrieve(
-            agent_id="agent_id",
-            org_id="org_id",
+        agent = client.agents.retrieve(
+            "agent_id",
         )
         assert_matches_type(AgentResponse, agent, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_retrieve(self, client: Cozmoai) -> None:
-        response = client.org.agents.with_raw_response.retrieve(
-            agent_id="agent_id",
-            org_id="org_id",
+        response = client.agents.with_raw_response.retrieve(
+            "agent_id",
         )
 
         assert response.is_closed is True
@@ -223,9 +206,8 @@ class TestAgents:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_retrieve(self, client: Cozmoai) -> None:
-        with client.org.agents.with_streaming_response.retrieve(
-            agent_id="agent_id",
-            org_id="org_id",
+        with client.agents.with_streaming_response.retrieve(
+            "agent_id",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -238,33 +220,24 @@ class TestAgents:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_path_params_retrieve(self, client: Cozmoai) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `org_id` but received ''"):
-            client.org.agents.with_raw_response.retrieve(
-                agent_id="agent_id",
-                org_id="",
-            )
-
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `agent_id` but received ''"):
-            client.org.agents.with_raw_response.retrieve(
-                agent_id="",
-                org_id="org_id",
+            client.agents.with_raw_response.retrieve(
+                "",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_update(self, client: Cozmoai) -> None:
-        agent = client.org.agents.update(
+        agent = client.agents.update(
             agent_id="agent_id",
-            org_id="org_id",
         )
         assert_matches_type(AgentResponse, agent, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_update_with_all_params(self, client: Cozmoai) -> None:
-        agent = client.org.agents.update(
+        agent = client.agents.update(
             agent_id="agent_id",
-            org_id="org_id",
             allowed_sip_trunks=["string"],
             background_sound={
                 "file": "file",
@@ -386,9 +359,8 @@ class TestAgents:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_update(self, client: Cozmoai) -> None:
-        response = client.org.agents.with_raw_response.update(
+        response = client.agents.with_raw_response.update(
             agent_id="agent_id",
-            org_id="org_id",
         )
 
         assert response.is_closed is True
@@ -399,9 +371,8 @@ class TestAgents:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_update(self, client: Cozmoai) -> None:
-        with client.org.agents.with_streaming_response.update(
+        with client.agents.with_streaming_response.update(
             agent_id="agent_id",
-            org_id="org_id",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -414,31 +385,21 @@ class TestAgents:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_path_params_update(self, client: Cozmoai) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `org_id` but received ''"):
-            client.org.agents.with_raw_response.update(
-                agent_id="agent_id",
-                org_id="",
-            )
-
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `agent_id` but received ''"):
-            client.org.agents.with_raw_response.update(
+            client.agents.with_raw_response.update(
                 agent_id="",
-                org_id="org_id",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_list(self, client: Cozmoai) -> None:
-        agent = client.org.agents.list(
-            org_id="org_id",
-        )
+        agent = client.agents.list()
         assert_matches_type(AgentListResponse, agent, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_list_with_all_params(self, client: Cozmoai) -> None:
-        agent = client.org.agents.list(
-            org_id="org_id",
+        agent = client.agents.list(
             page=0,
             search="search",
             size=0,
@@ -449,9 +410,7 @@ class TestAgents:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_list(self, client: Cozmoai) -> None:
-        response = client.org.agents.with_raw_response.list(
-            org_id="org_id",
-        )
+        response = client.agents.with_raw_response.list()
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -461,9 +420,7 @@ class TestAgents:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_list(self, client: Cozmoai) -> None:
-        with client.org.agents.with_streaming_response.list(
-            org_id="org_id",
-        ) as response:
+        with client.agents.with_streaming_response.list() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -474,27 +431,17 @@ class TestAgents:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_path_params_list(self, client: Cozmoai) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `org_id` but received ''"):
-            client.org.agents.with_raw_response.list(
-                org_id="",
-            )
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
     def test_method_delete(self, client: Cozmoai) -> None:
-        agent = client.org.agents.delete(
-            agent_id="agent_id",
-            org_id="org_id",
+        agent = client.agents.delete(
+            "agent_id",
         )
         assert_matches_type(AgentDeleteResponse, agent, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_delete(self, client: Cozmoai) -> None:
-        response = client.org.agents.with_raw_response.delete(
-            agent_id="agent_id",
-            org_id="org_id",
+        response = client.agents.with_raw_response.delete(
+            "agent_id",
         )
 
         assert response.is_closed is True
@@ -505,9 +452,8 @@ class TestAgents:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_delete(self, client: Cozmoai) -> None:
-        with client.org.agents.with_streaming_response.delete(
-            agent_id="agent_id",
-            org_id="org_id",
+        with client.agents.with_streaming_response.delete(
+            "agent_id",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -520,16 +466,9 @@ class TestAgents:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_path_params_delete(self, client: Cozmoai) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `org_id` but received ''"):
-            client.org.agents.with_raw_response.delete(
-                agent_id="agent_id",
-                org_id="",
-            )
-
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `agent_id` but received ''"):
-            client.org.agents.with_raw_response.delete(
-                agent_id="",
-                org_id="org_id",
+            client.agents.with_raw_response.delete(
+                "",
             )
 
 
@@ -541,8 +480,7 @@ class TestAsyncAgents:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_create(self, async_client: AsyncCozmoai) -> None:
-        agent = await async_client.org.agents.create(
-            org_id="org_id",
+        agent = await async_client.agents.create(
             name="name",
             prompt_template="prompt_template",
             type="voice",
@@ -552,8 +490,7 @@ class TestAsyncAgents:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_create_with_all_params(self, async_client: AsyncCozmoai) -> None:
-        agent = await async_client.org.agents.create(
-            org_id="org_id",
+        agent = await async_client.agents.create(
             name="name",
             prompt_template="prompt_template",
             type="voice",
@@ -675,8 +612,7 @@ class TestAsyncAgents:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_create(self, async_client: AsyncCozmoai) -> None:
-        response = await async_client.org.agents.with_raw_response.create(
-            org_id="org_id",
+        response = await async_client.agents.with_raw_response.create(
             name="name",
             prompt_template="prompt_template",
             type="voice",
@@ -690,8 +626,7 @@ class TestAsyncAgents:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_create(self, async_client: AsyncCozmoai) -> None:
-        async with async_client.org.agents.with_streaming_response.create(
-            org_id="org_id",
+        async with async_client.agents.with_streaming_response.create(
             name="name",
             prompt_template="prompt_template",
             type="voice",
@@ -706,30 +641,17 @@ class TestAsyncAgents:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_path_params_create(self, async_client: AsyncCozmoai) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `org_id` but received ''"):
-            await async_client.org.agents.with_raw_response.create(
-                org_id="",
-                name="name",
-                prompt_template="prompt_template",
-                type="voice",
-            )
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
     async def test_method_retrieve(self, async_client: AsyncCozmoai) -> None:
-        agent = await async_client.org.agents.retrieve(
-            agent_id="agent_id",
-            org_id="org_id",
+        agent = await async_client.agents.retrieve(
+            "agent_id",
         )
         assert_matches_type(AgentResponse, agent, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_retrieve(self, async_client: AsyncCozmoai) -> None:
-        response = await async_client.org.agents.with_raw_response.retrieve(
-            agent_id="agent_id",
-            org_id="org_id",
+        response = await async_client.agents.with_raw_response.retrieve(
+            "agent_id",
         )
 
         assert response.is_closed is True
@@ -740,9 +662,8 @@ class TestAsyncAgents:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_retrieve(self, async_client: AsyncCozmoai) -> None:
-        async with async_client.org.agents.with_streaming_response.retrieve(
-            agent_id="agent_id",
-            org_id="org_id",
+        async with async_client.agents.with_streaming_response.retrieve(
+            "agent_id",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -755,33 +676,24 @@ class TestAsyncAgents:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_path_params_retrieve(self, async_client: AsyncCozmoai) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `org_id` but received ''"):
-            await async_client.org.agents.with_raw_response.retrieve(
-                agent_id="agent_id",
-                org_id="",
-            )
-
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `agent_id` but received ''"):
-            await async_client.org.agents.with_raw_response.retrieve(
-                agent_id="",
-                org_id="org_id",
+            await async_client.agents.with_raw_response.retrieve(
+                "",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_update(self, async_client: AsyncCozmoai) -> None:
-        agent = await async_client.org.agents.update(
+        agent = await async_client.agents.update(
             agent_id="agent_id",
-            org_id="org_id",
         )
         assert_matches_type(AgentResponse, agent, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_update_with_all_params(self, async_client: AsyncCozmoai) -> None:
-        agent = await async_client.org.agents.update(
+        agent = await async_client.agents.update(
             agent_id="agent_id",
-            org_id="org_id",
             allowed_sip_trunks=["string"],
             background_sound={
                 "file": "file",
@@ -903,9 +815,8 @@ class TestAsyncAgents:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_update(self, async_client: AsyncCozmoai) -> None:
-        response = await async_client.org.agents.with_raw_response.update(
+        response = await async_client.agents.with_raw_response.update(
             agent_id="agent_id",
-            org_id="org_id",
         )
 
         assert response.is_closed is True
@@ -916,9 +827,8 @@ class TestAsyncAgents:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_update(self, async_client: AsyncCozmoai) -> None:
-        async with async_client.org.agents.with_streaming_response.update(
+        async with async_client.agents.with_streaming_response.update(
             agent_id="agent_id",
-            org_id="org_id",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -931,31 +841,21 @@ class TestAsyncAgents:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_path_params_update(self, async_client: AsyncCozmoai) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `org_id` but received ''"):
-            await async_client.org.agents.with_raw_response.update(
-                agent_id="agent_id",
-                org_id="",
-            )
-
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `agent_id` but received ''"):
-            await async_client.org.agents.with_raw_response.update(
+            await async_client.agents.with_raw_response.update(
                 agent_id="",
-                org_id="org_id",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_list(self, async_client: AsyncCozmoai) -> None:
-        agent = await async_client.org.agents.list(
-            org_id="org_id",
-        )
+        agent = await async_client.agents.list()
         assert_matches_type(AgentListResponse, agent, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_list_with_all_params(self, async_client: AsyncCozmoai) -> None:
-        agent = await async_client.org.agents.list(
-            org_id="org_id",
+        agent = await async_client.agents.list(
             page=0,
             search="search",
             size=0,
@@ -966,9 +866,7 @@ class TestAsyncAgents:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_list(self, async_client: AsyncCozmoai) -> None:
-        response = await async_client.org.agents.with_raw_response.list(
-            org_id="org_id",
-        )
+        response = await async_client.agents.with_raw_response.list()
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -978,9 +876,7 @@ class TestAsyncAgents:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_list(self, async_client: AsyncCozmoai) -> None:
-        async with async_client.org.agents.with_streaming_response.list(
-            org_id="org_id",
-        ) as response:
+        async with async_client.agents.with_streaming_response.list() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -991,27 +887,17 @@ class TestAsyncAgents:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_path_params_list(self, async_client: AsyncCozmoai) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `org_id` but received ''"):
-            await async_client.org.agents.with_raw_response.list(
-                org_id="",
-            )
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
     async def test_method_delete(self, async_client: AsyncCozmoai) -> None:
-        agent = await async_client.org.agents.delete(
-            agent_id="agent_id",
-            org_id="org_id",
+        agent = await async_client.agents.delete(
+            "agent_id",
         )
         assert_matches_type(AgentDeleteResponse, agent, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_delete(self, async_client: AsyncCozmoai) -> None:
-        response = await async_client.org.agents.with_raw_response.delete(
-            agent_id="agent_id",
-            org_id="org_id",
+        response = await async_client.agents.with_raw_response.delete(
+            "agent_id",
         )
 
         assert response.is_closed is True
@@ -1022,9 +908,8 @@ class TestAsyncAgents:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_delete(self, async_client: AsyncCozmoai) -> None:
-        async with async_client.org.agents.with_streaming_response.delete(
-            agent_id="agent_id",
-            org_id="org_id",
+        async with async_client.agents.with_streaming_response.delete(
+            "agent_id",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -1037,14 +922,7 @@ class TestAsyncAgents:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_path_params_delete(self, async_client: AsyncCozmoai) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `org_id` but received ''"):
-            await async_client.org.agents.with_raw_response.delete(
-                agent_id="agent_id",
-                org_id="",
-            )
-
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `agent_id` but received ''"):
-            await async_client.org.agents.with_raw_response.delete(
-                agent_id="",
-                org_id="org_id",
+            await async_client.agents.with_raw_response.delete(
+                "",
             )

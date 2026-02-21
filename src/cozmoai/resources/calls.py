@@ -4,20 +4,20 @@ from __future__ import annotations
 
 import httpx
 
-from ..._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
-from ..._utils import maybe_transform, async_maybe_transform
-from ..._compat import cached_property
-from ..._resource import SyncAPIResource, AsyncAPIResource
-from ..._response import (
+from ..types import call_list_params
+from .._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
+from .._utils import maybe_transform, async_maybe_transform
+from .._compat import cached_property
+from .._resource import SyncAPIResource, AsyncAPIResource
+from .._response import (
     to_raw_response_wrapper,
     to_streamed_response_wrapper,
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ...types.org import call_list_params
-from ..._base_client import make_request_options
-from ...types.org.call_list_response import CallListResponse
-from ...types.org.call_retrieve_response import CallRetrieveResponse
+from .._base_client import make_request_options
+from ..types.call_list_response import CallListResponse
+from ..types.call_retrieve_response import CallRetrieveResponse
 
 __all__ = ["CallsResource", "AsyncCallsResource"]
 
@@ -46,7 +46,6 @@ class CallsResource(SyncAPIResource):
         self,
         call_id: str,
         *,
-        org_id: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -66,12 +65,10 @@ class CallsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
         if not call_id:
             raise ValueError(f"Expected a non-empty value for `call_id` but received {call_id!r}")
         return self._get(
-            f"/org/{org_id}/calls/{call_id}",
+            f"/calls/{call_id}",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -80,7 +77,6 @@ class CallsResource(SyncAPIResource):
 
     def list(
         self,
-        org_id: str,
         *,
         agent_id: str | Omit = omit,
         direction: str | Omit = omit,
@@ -141,10 +137,8 @@ class CallsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
         return self._get(
-            f"/org/{org_id}/calls",
+            "/calls",
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -197,7 +191,6 @@ class AsyncCallsResource(AsyncAPIResource):
         self,
         call_id: str,
         *,
-        org_id: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -217,12 +210,10 @@ class AsyncCallsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
         if not call_id:
             raise ValueError(f"Expected a non-empty value for `call_id` but received {call_id!r}")
         return await self._get(
-            f"/org/{org_id}/calls/{call_id}",
+            f"/calls/{call_id}",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -231,7 +222,6 @@ class AsyncCallsResource(AsyncAPIResource):
 
     async def list(
         self,
-        org_id: str,
         *,
         agent_id: str | Omit = omit,
         direction: str | Omit = omit,
@@ -292,10 +282,8 @@ class AsyncCallsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
         return await self._get(
-            f"/org/{org_id}/calls",
+            "/calls",
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,

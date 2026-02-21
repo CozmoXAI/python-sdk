@@ -4,20 +4,20 @@ from __future__ import annotations
 
 import httpx
 
-from ..._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
-from ..._utils import maybe_transform, async_maybe_transform
-from ..._compat import cached_property
-from ..._resource import SyncAPIResource, AsyncAPIResource
-from ..._response import (
+from ..types import workflow_list_params
+from .._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
+from .._utils import maybe_transform, async_maybe_transform
+from .._compat import cached_property
+from .._resource import SyncAPIResource, AsyncAPIResource
+from .._response import (
     to_raw_response_wrapper,
     to_streamed_response_wrapper,
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ...types.org import workflow_list_params
-from ..._base_client import make_request_options
-from ...types.org.workflow_list_response import WorkflowListResponse
-from ...types.org.workflow_retrieve_response import WorkflowRetrieveResponse
+from .._base_client import make_request_options
+from ..types.workflow_list_response import WorkflowListResponse
+from ..types.workflow_retrieve_response import WorkflowRetrieveResponse
 
 __all__ = ["WorkflowsResource", "AsyncWorkflowsResource"]
 
@@ -46,7 +46,6 @@ class WorkflowsResource(SyncAPIResource):
         self,
         workflow_id: str,
         *,
-        org_id: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -66,12 +65,10 @@ class WorkflowsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
         if not workflow_id:
             raise ValueError(f"Expected a non-empty value for `workflow_id` but received {workflow_id!r}")
         return self._get(
-            f"/org/{org_id}/workflows/{workflow_id}",
+            f"/workflows/{workflow_id}",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -80,7 +77,6 @@ class WorkflowsResource(SyncAPIResource):
 
     def list(
         self,
-        org_id: str,
         *,
         is_active: bool | Omit = omit,
         page: int | Omit = omit,
@@ -116,10 +112,8 @@ class WorkflowsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
         return self._get(
-            f"/org/{org_id}/workflows",
+            "/workflows",
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -164,7 +158,6 @@ class AsyncWorkflowsResource(AsyncAPIResource):
         self,
         workflow_id: str,
         *,
-        org_id: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -184,12 +177,10 @@ class AsyncWorkflowsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
         if not workflow_id:
             raise ValueError(f"Expected a non-empty value for `workflow_id` but received {workflow_id!r}")
         return await self._get(
-            f"/org/{org_id}/workflows/{workflow_id}",
+            f"/workflows/{workflow_id}",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -198,7 +189,6 @@ class AsyncWorkflowsResource(AsyncAPIResource):
 
     async def list(
         self,
-        org_id: str,
         *,
         is_active: bool | Omit = omit,
         page: int | Omit = omit,
@@ -234,10 +224,8 @@ class AsyncWorkflowsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
         return await self._get(
-            f"/org/{org_id}/workflows",
+            "/workflows",
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,

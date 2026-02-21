@@ -11,14 +11,17 @@ It is generated with [Stainless](https://www.stainless.com/).
 
 ## Documentation
 
-The full API of this library can be found in [api.md](api.md).
+The REST API documentation can be found on [docs.cozmox.ai](https://docs.cozmox.ai/). The full API of this library can be found in [api.md](api.md).
 
 ## Installation
 
 ```sh
-# install from PyPI
-pip install cozmoai
+# install from the production repo
+pip install git+ssh://git@github.com/CozmoXAI/python-sdk.git
 ```
+
+> [!NOTE]
+> Once this package is [published to PyPI](https://www.stainless.com/docs/guides/publish), this will become: `pip install cozmoai`
 
 ## Usage
 
@@ -29,12 +32,11 @@ import os
 from cozmoai import Cozmoai
 
 client = Cozmoai(
+    org_id="My Org ID",
     api_key=os.environ.get("COZMOAI_API_KEY"),  # This is the default and can be omitted
 )
 
-agents = client.org.agents.list(
-    org_id="REPLACE_ME",
-)
+agents = client.agents.list()
 print(agents.data)
 ```
 
@@ -53,14 +55,13 @@ import asyncio
 from cozmoai import AsyncCozmoai
 
 client = AsyncCozmoai(
+    org_id="My Org ID",
     api_key=os.environ.get("COZMOAI_API_KEY"),  # This is the default and can be omitted
 )
 
 
 async def main() -> None:
-    agents = await client.org.agents.list(
-        org_id="REPLACE_ME",
-    )
+    agents = await client.agents.list()
     print(agents.data)
 
 
@@ -76,8 +77,8 @@ By default, the async client uses `httpx` for HTTP requests. However, for improv
 You can enable this by installing `aiohttp`:
 
 ```sh
-# install from PyPI
-pip install cozmoai[aiohttp]
+# install from the production repo
+pip install 'cozmoai[aiohttp] @ git+ssh://git@github.com/CozmoXAI/python-sdk.git'
 ```
 
 Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
@@ -91,12 +92,11 @@ from cozmoai import AsyncCozmoai
 
 async def main() -> None:
     async with AsyncCozmoai(
+        org_id="My Org ID",
         api_key=os.environ.get("COZMOAI_API_KEY"),  # This is the default and can be omitted
         http_client=DefaultAioHttpClient(),
     ) as client:
-        agents = await client.org.agents.list(
-            org_id="REPLACE_ME",
-        )
+        agents = await client.agents.list()
         print(agents.data)
 
 
@@ -119,10 +119,11 @@ Nested parameters are dictionaries, typed using `TypedDict`, for example:
 ```python
 from cozmoai import Cozmoai
 
-client = Cozmoai()
+client = Cozmoai(
+    org_id="My Org ID",
+)
 
-agent_response = client.org.agents.create(
-    org_id="org_id",
+agent_response = client.agents.create(
     name="name",
     prompt_template="prompt_template",
     type="voice",
@@ -144,12 +145,12 @@ All errors inherit from `cozmoai.APIError`.
 import cozmoai
 from cozmoai import Cozmoai
 
-client = Cozmoai()
+client = Cozmoai(
+    org_id="My Org ID",
+)
 
 try:
-    client.org.agents.list(
-        org_id="REPLACE_ME",
-    )
+    client.agents.list()
 except cozmoai.APIConnectionError as e:
     print("The server could not be reached")
     print(e.__cause__)  # an underlying Exception, likely raised within httpx.
@@ -187,14 +188,13 @@ from cozmoai import Cozmoai
 
 # Configure the default for all requests:
 client = Cozmoai(
+    org_id="My Org ID",
     # default is 2
     max_retries=0,
 )
 
 # Or, configure per-request:
-client.with_options(max_retries=5).org.agents.list(
-    org_id="REPLACE_ME",
-)
+client.with_options(max_retries=5).agents.list()
 ```
 
 ### Timeouts
@@ -207,19 +207,19 @@ from cozmoai import Cozmoai
 
 # Configure the default for all requests:
 client = Cozmoai(
+    org_id="My Org ID",
     # 20 seconds (default is 1 minute)
     timeout=20.0,
 )
 
 # More granular control:
 client = Cozmoai(
+    org_id="My Org ID",
     timeout=httpx.Timeout(60.0, read=5.0, write=10.0, connect=2.0),
 )
 
 # Override per-request:
-client.with_options(timeout=5.0).org.agents.list(
-    org_id="REPLACE_ME",
-)
+client.with_options(timeout=5.0).agents.list()
 ```
 
 On timeout, an `APITimeoutError` is thrown.
@@ -259,13 +259,13 @@ The "raw" Response object can be accessed by prefixing `.with_raw_response.` to 
 ```py
 from cozmoai import Cozmoai
 
-client = Cozmoai()
-response = client.org.agents.with_raw_response.list(
-    org_id="REPLACE_ME",
+client = Cozmoai(
+    org_id="My Org ID",
 )
+response = client.agents.with_raw_response.list()
 print(response.headers.get('X-My-Header'))
 
-agent = response.parse()  # get the object that `org.agents.list()` would have returned
+agent = response.parse()  # get the object that `agents.list()` would have returned
 print(agent.data)
 ```
 
@@ -280,9 +280,7 @@ The above interface eagerly reads the full response body when you make the reque
 To stream the response body, use `.with_streaming_response` instead, which requires a context manager and only reads the response body once you call `.read()`, `.text()`, `.json()`, `.iter_bytes()`, `.iter_text()`, `.iter_lines()` or `.parse()`. In the async client, these are async methods.
 
 ```python
-with client.org.agents.with_streaming_response.list(
-    org_id="REPLACE_ME",
-) as response:
+with client.agents.with_streaming_response.list() as response:
     print(response.headers.get("X-My-Header"))
 
     for line in response.iter_lines():
@@ -338,6 +336,7 @@ import httpx
 from cozmoai import Cozmoai, DefaultHttpxClient
 
 client = Cozmoai(
+    org_id="My Org ID",
     # Or use the `COZMOAI_BASE_URL` env var
     base_url="http://my.test.server.example.com:8083",
     http_client=DefaultHttpxClient(
@@ -360,7 +359,9 @@ By default the library closes underlying HTTP connections whenever the client is
 ```py
 from cozmoai import Cozmoai
 
-with Cozmoai() as client:
+with Cozmoai(
+    org_id="My Org ID",
+) as client:
   # make requests here
   ...
 

@@ -7,34 +7,34 @@ from typing_extensions import Literal
 
 import httpx
 
-from ..._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
-from ..._utils import maybe_transform, async_maybe_transform
-from ..._compat import cached_property
-from ..._resource import SyncAPIResource, AsyncAPIResource
-from ..._response import (
+from ..types import (
+    agent_list_params,
+    agent_create_params,
+    agent_update_params,
+)
+from .._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
+from .._utils import maybe_transform, async_maybe_transform
+from .._compat import cached_property
+from .._resource import SyncAPIResource, AsyncAPIResource
+from .._response import (
     to_raw_response_wrapper,
     to_streamed_response_wrapper,
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ...types.org import (
-    agent_list_params,
-    agent_create_params,
-    agent_update_params,
-)
-from ..._base_client import make_request_options
-from ...types.org.agent_response import AgentResponse
-from ...types.org.llm_config_param import LlmConfigParam
-from ...types.org.vad_config_param import VadConfigParam
-from ...types.org.extra_config_param import ExtraConfigParam
-from ...types.org.voice_config_param import VoiceConfigParam
-from ...types.org.agent_list_response import AgentListResponse
-from ...types.org.goodbye_config_param import GoodbyeConfigParam
-from ...types.org.agent_delete_response import AgentDeleteResponse
-from ...types.org.greeting_config_param import GreetingConfigParam
-from ...types.org.transcriber_config_param import TranscriberConfigParam
-from ...types.org.room_duration_config_param import RoomDurationConfigParam
-from ...types.org.background_sound_config_param import BackgroundSoundConfigParam
+from .._base_client import make_request_options
+from ..types.agent_response import AgentResponse
+from ..types.llm_config_param import LlmConfigParam
+from ..types.vad_config_param import VadConfigParam
+from ..types.extra_config_param import ExtraConfigParam
+from ..types.voice_config_param import VoiceConfigParam
+from ..types.agent_list_response import AgentListResponse
+from ..types.goodbye_config_param import GoodbyeConfigParam
+from ..types.agent_delete_response import AgentDeleteResponse
+from ..types.greeting_config_param import GreetingConfigParam
+from ..types.transcriber_config_param import TranscriberConfigParam
+from ..types.room_duration_config_param import RoomDurationConfigParam
+from ..types.background_sound_config_param import BackgroundSoundConfigParam
 
 __all__ = ["AgentsResource", "AsyncAgentsResource"]
 
@@ -61,7 +61,6 @@ class AgentsResource(SyncAPIResource):
 
     def create(
         self,
-        org_id: str,
         *,
         name: str,
         prompt_template: str,
@@ -97,10 +96,8 @@ class AgentsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
         return self._post(
-            f"/org/{org_id}/agents",
+            "/agents",
             body=maybe_transform(
                 {
                     "name": name,
@@ -131,7 +128,6 @@ class AgentsResource(SyncAPIResource):
         self,
         agent_id: str,
         *,
-        org_id: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -151,12 +147,10 @@ class AgentsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
         if not agent_id:
             raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
         return self._get(
-            f"/org/{org_id}/agents/{agent_id}",
+            f"/agents/{agent_id}",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -167,7 +161,6 @@ class AgentsResource(SyncAPIResource):
         self,
         agent_id: str,
         *,
-        org_id: str,
         allowed_sip_trunks: SequenceNotStr[str] | Omit = omit,
         background_sound: BackgroundSoundConfigParam | Omit = omit,
         extra_config: ExtraConfigParam | Omit = omit,
@@ -202,12 +195,10 @@ class AgentsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
         if not agent_id:
             raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
         return self._patch(
-            f"/org/{org_id}/agents/{agent_id}",
+            f"/agents/{agent_id}",
             body=maybe_transform(
                 {
                     "allowed_sip_trunks": allowed_sip_trunks,
@@ -236,7 +227,6 @@ class AgentsResource(SyncAPIResource):
 
     def list(
         self,
-        org_id: str,
         *,
         page: int | Omit = omit,
         search: str | Omit = omit,
@@ -269,10 +259,8 @@ class AgentsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
         return self._get(
-            f"/org/{org_id}/agents",
+            "/agents",
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -295,7 +283,6 @@ class AgentsResource(SyncAPIResource):
         self,
         agent_id: str,
         *,
-        org_id: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -315,12 +302,10 @@ class AgentsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
         if not agent_id:
             raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
         return self._delete(
-            f"/org/{org_id}/agents/{agent_id}",
+            f"/agents/{agent_id}",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -350,7 +335,6 @@ class AsyncAgentsResource(AsyncAPIResource):
 
     async def create(
         self,
-        org_id: str,
         *,
         name: str,
         prompt_template: str,
@@ -386,10 +370,8 @@ class AsyncAgentsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
         return await self._post(
-            f"/org/{org_id}/agents",
+            "/agents",
             body=await async_maybe_transform(
                 {
                     "name": name,
@@ -420,7 +402,6 @@ class AsyncAgentsResource(AsyncAPIResource):
         self,
         agent_id: str,
         *,
-        org_id: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -440,12 +421,10 @@ class AsyncAgentsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
         if not agent_id:
             raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
         return await self._get(
-            f"/org/{org_id}/agents/{agent_id}",
+            f"/agents/{agent_id}",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -456,7 +435,6 @@ class AsyncAgentsResource(AsyncAPIResource):
         self,
         agent_id: str,
         *,
-        org_id: str,
         allowed_sip_trunks: SequenceNotStr[str] | Omit = omit,
         background_sound: BackgroundSoundConfigParam | Omit = omit,
         extra_config: ExtraConfigParam | Omit = omit,
@@ -491,12 +469,10 @@ class AsyncAgentsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
         if not agent_id:
             raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
         return await self._patch(
-            f"/org/{org_id}/agents/{agent_id}",
+            f"/agents/{agent_id}",
             body=await async_maybe_transform(
                 {
                     "allowed_sip_trunks": allowed_sip_trunks,
@@ -525,7 +501,6 @@ class AsyncAgentsResource(AsyncAPIResource):
 
     async def list(
         self,
-        org_id: str,
         *,
         page: int | Omit = omit,
         search: str | Omit = omit,
@@ -558,10 +533,8 @@ class AsyncAgentsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
         return await self._get(
-            f"/org/{org_id}/agents",
+            "/agents",
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -584,7 +557,6 @@ class AsyncAgentsResource(AsyncAPIResource):
         self,
         agent_id: str,
         *,
-        org_id: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -604,12 +576,10 @@ class AsyncAgentsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not org_id:
-            raise ValueError(f"Expected a non-empty value for `org_id` but received {org_id!r}")
         if not agent_id:
             raise ValueError(f"Expected a non-empty value for `agent_id` but received {agent_id!r}")
         return await self._delete(
-            f"/org/{org_id}/agents/{agent_id}",
+            f"/agents/{agent_id}",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),

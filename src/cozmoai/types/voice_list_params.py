@@ -4,10 +4,10 @@ from __future__ import annotations
 
 from typing_extensions import Literal, Required, TypedDict
 
-__all__ = ["OrgListVoicesParams"]
+__all__ = ["VoiceListParams"]
 
 
-class OrgListVoicesParams(TypedDict, total=False):
+class VoiceListParams(TypedDict, total=False):
     provider: Required[Literal["elevenlabs", "cartesia", "openai", "cambai", "sarvam", "inworld", "minimax"]]
     """Voice provider"""
 

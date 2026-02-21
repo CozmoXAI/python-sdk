@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Dict, Iterable
 from typing_extensions import Literal, Required, TypedDict
 
-from ..._types import SequenceNotStr
+from .._types import SequenceNotStr
 from .llm_config_param import LlmConfigParam
 from .vad_config_param import VadConfigParam
 from .extra_config_param import ExtraConfigParam
@@ -20,8 +20,6 @@ __all__ = ["AgentUpdateParams", "PrecallWebhook"]
 
 
 class AgentUpdateParams(TypedDict, total=False):
-    org_id: Required[str]
-
     allowed_sip_trunks: SequenceNotStr[str]
 
     background_sound: BackgroundSoundConfigParam
