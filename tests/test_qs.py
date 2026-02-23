@@ -4,7 +4,7 @@ from urllib.parse import unquote
 
 import pytest
 
-from cozmoai._qs import Querystring, stringify
+from cozmoxai._qs import Querystring, stringify
 
 
 def test_empty() -> None:

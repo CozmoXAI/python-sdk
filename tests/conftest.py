@@ -10,15 +10,15 @@ import httpx
 import pytest
 from pytest_asyncio import is_async_test
 
-from cozmoai import Cozmoai, AsyncCozmoai, DefaultAioHttpClient
-from cozmoai._utils import is_dict
+from cozmoxai import Cozmoai, AsyncCozmoai, DefaultAioHttpClient
+from cozmoxai._utils import is_dict
 
 if TYPE_CHECKING:
     from _pytest.fixtures import FixtureRequest  # pyright: ignore[reportPrivateImportUsage]
 
 pytest.register_assert_rewrite("tests.utils")
 
-logging.getLogger("cozmoai").setLevel(logging.DEBUG)
+logging.getLogger("cozmoxai").setLevel(logging.DEBUG)
 
 
 # automatically add `pytest.mark.asyncio()` to all of our async tests

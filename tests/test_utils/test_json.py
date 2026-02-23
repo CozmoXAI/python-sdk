@@ -5,8 +5,8 @@ from typing import Union
 
 import pydantic
 
-from cozmoai import _compat
-from cozmoai._utils._json import openapi_dumps
+from cozmoxai import _compat
+from cozmoxai._utils._json import openapi_dumps
 
 
 class TestOpenapiDumps:
