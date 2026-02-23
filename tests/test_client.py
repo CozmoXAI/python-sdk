@@ -437,7 +437,7 @@ class TestCozmoai:
     def test_validate_headers(self) -> None:
         client = Cozmoai(base_url=base_url, api_key=api_key, org_id=org_id, _strict_response_validation=True)
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
-        assert request.headers.get("Authorization") == api_key
+        assert request.headers.get("Authorization") == f"Bearer {api_key}"
 
         with pytest.raises(CozmoaiError):
             with update_env(**{"COZMOAI_API_KEY": Omit()}):
@@ -1387,7 +1387,7 @@ class TestAsyncCozmoai:
     def test_validate_headers(self) -> None:
         client = AsyncCozmoai(base_url=base_url, api_key=api_key, org_id=org_id, _strict_response_validation=True)
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
-        assert request.headers.get("Authorization") == api_key
+        assert request.headers.get("Authorization") == f"Bearer {api_key}"
 
         with pytest.raises(CozmoaiError):
             with update_env(**{"COZMOAI_API_KEY": Omit()}):

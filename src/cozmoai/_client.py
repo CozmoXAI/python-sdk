@@ -94,7 +94,7 @@ class Cozmoai(SyncAPIClient):
         if base_url is None:
             base_url = os.environ.get("COZMOAI_BASE_URL")
         if base_url is None:
-            base_url = f"https://nova.prod.czmx.in/api"
+            base_url = f"https://v2-nova-api.prod.czmx.in/api/org/{org_id}"
 
         super().__init__(
             version=__version__,
@@ -148,7 +148,7 @@ class Cozmoai(SyncAPIClient):
     @override
     def auth_headers(self) -> dict[str, str]:
         api_key = self.api_key
-        return {"Authorization": api_key}
+        return {"Authorization": f"Bearer {api_key}"}
 
     @property
     @override
@@ -300,7 +300,7 @@ class AsyncCozmoai(AsyncAPIClient):
         if base_url is None:
             base_url = os.environ.get("COZMOAI_BASE_URL")
         if base_url is None:
-            base_url = f"https://nova.prod.czmx.in/api"
+            base_url = f"https://v2-nova-api.prod.czmx.in/api/org/{org_id}"
 
         super().__init__(
             version=__version__,
@@ -354,7 +354,7 @@ class AsyncCozmoai(AsyncAPIClient):
     @override
     def auth_headers(self) -> dict[str, str]:
         api_key = self.api_key
-        return {"Authorization": api_key}
+        return {"Authorization": f"Bearer {api_key}"}
 
     @property
     @override
