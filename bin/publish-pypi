@@ -7,5 +7,5 @@ uv build
 if [ -n "${PYPI_TOKEN:-}" ]; then
   uv publish --token=$PYPI_TOKEN
 else
-  uv publish
+  uv publish --trusted-publishing automatic
 fi
