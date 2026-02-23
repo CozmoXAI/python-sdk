@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.7.1 (2026-02-23)
+
+Full Changelog: [v0.7.0...v0.7.1](https://github.com/CozmoXAI/python-sdk/compare/v0.7.0...v0.7.1)
+
+### Bug Fixes
+
+* **publish:** enable trusted publishing for PyPI OIDC auth ([d4f2752](https://github.com/CozmoXAI/python-sdk/commit/d4f2752dfd415d7d1e521a97e1b5da9a8a598da9))
+
 ## 0.7.0 (2026-02-23)
 
 Full Changelog: [v0.6.0...v0.7.0](https://github.com/CozmoXAI/python-sdk/compare/v0.6.0...v0.7.0)
