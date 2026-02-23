@@ -7,9 +7,9 @@ import pytest
 import pydantic
 from pydantic import Field
 
-from cozmoai._utils import PropertyInfo
-from cozmoai._compat import PYDANTIC_V1, parse_obj, model_dump, model_json
-from cozmoai._models import DISCRIMINATOR_CACHE, BaseModel, construct_type
+from cozmoxai._utils import PropertyInfo
+from cozmoxai._compat import PYDANTIC_V1, parse_obj, model_dump, model_json
+from cozmoxai._models import DISCRIMINATOR_CACHE, BaseModel, construct_type
 
 
 class BasicModel(BaseModel):

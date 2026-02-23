@@ -8,15 +8,15 @@ from typing_extensions import Required, Annotated, TypedDict
 
 import pytest
 
-from cozmoai._types import Base64FileInput, omit, not_given
-from cozmoai._utils import (
+from cozmoxai._types import Base64FileInput, omit, not_given
+from cozmoxai._utils import (
     PropertyInfo,
     transform as _transform,
     parse_datetime,
     async_transform as _async_transform,
 )
-from cozmoai._compat import PYDANTIC_V1
-from cozmoai._models import BaseModel
+from cozmoxai._compat import PYDANTIC_V1
+from cozmoxai._models import BaseModel
 
 _T = TypeVar("_T")
 

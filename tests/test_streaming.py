@@ -5,8 +5,8 @@ from typing import Iterator, AsyncIterator
 import httpx
 import pytest
 
-from cozmoai import Cozmoai, AsyncCozmoai
-from cozmoai._streaming import Stream, AsyncStream, ServerSentEvent
+from cozmoxai import Cozmoai, AsyncCozmoai
+from cozmoxai._streaming import Stream, AsyncStream, ServerSentEvent
 
 
 @pytest.mark.asyncio

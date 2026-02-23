@@ -7,9 +7,9 @@ from typing import Any, cast
 
 import pytest
 
-from cozmoai import Cozmoai, AsyncCozmoai
+from cozmoxai import Cozmoai, AsyncCozmoai
 from tests.utils import assert_matches_type
-from cozmoai.types import (
+from cozmoxai.types import (
     AgentResponse,
     AgentListResponse,
     AgentDeleteResponse,

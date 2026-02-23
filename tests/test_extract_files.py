@@ -4,8 +4,8 @@ from typing import Sequence
 
 import pytest
 
-from cozmoai._types import FileTypes
-from cozmoai._utils import extract_files
+from cozmoxai._types import FileTypes
+from cozmoxai._utils import extract_files
 
 
 def test_removes_files_from_input() -> None:

@@ -8,8 +8,8 @@ from typing import Any, TypeVar, Iterator, Sequence, cast
 from datetime import date, datetime
 from typing_extensions import Literal, get_args, get_origin, assert_type
 
-from cozmoai._types import Omit, NoneType
-from cozmoai._utils import (
+from cozmoxai._types import Omit, NoneType
+from cozmoxai._utils import (
     is_dict,
     is_list,
     is_list_type,
@@ -19,8 +19,8 @@ from cozmoai._utils import (
     is_annotated_type,
     is_type_alias_type,
 )
-from cozmoai._compat import PYDANTIC_V1, field_outer_type, get_model_fields
-from cozmoai._models import BaseModel
+from cozmoxai._compat import PYDANTIC_V1, field_outer_type, get_model_fields
+from cozmoxai._models import BaseModel
 
 BaseModelT = TypeVar("BaseModelT", bound=BaseModel)
 

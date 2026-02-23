@@ -7,9 +7,9 @@ from typing import Any, cast
 
 import pytest
 
-from cozmoai import Cozmoai, AsyncCozmoai
+from cozmoxai import Cozmoai, AsyncCozmoai
 from tests.utils import assert_matches_type
-from cozmoai.types import VoiceListResponse
+from cozmoxai.types import VoiceListResponse
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
