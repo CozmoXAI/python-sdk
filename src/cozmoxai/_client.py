@@ -73,7 +73,7 @@ class Cozmoai(SyncAPIClient):
 
         This automatically infers the following arguments from their corresponding environment variables if they are not provided:
         - `api_key` from `COZMOAI_API_KEY`
-        - `org_id` from `COZMO_ORG_ID`
+        - `org_id` from `COZMOAI_ORG_ID`
         """
         if api_key is None:
             api_key = os.environ.get("COZMOAI_API_KEY")
@@ -84,10 +84,10 @@ class Cozmoai(SyncAPIClient):
         self.api_key = api_key
 
         if org_id is None:
-            org_id = os.environ.get("COZMO_ORG_ID")
+            org_id = os.environ.get("COZMOAI_ORG_ID")
         if org_id is None:
             raise CozmoaiError(
-                "The org_id client option must be set either by passing org_id to the client or by setting the COZMO_ORG_ID environment variable"
+                "The org_id client option must be set either by passing org_id to the client or by setting the COZMOAI_ORG_ID environment variable"
             )
         self.org_id = org_id
 
@@ -279,7 +279,7 @@ class AsyncCozmoai(AsyncAPIClient):
 
         This automatically infers the following arguments from their corresponding environment variables if they are not provided:
         - `api_key` from `COZMOAI_API_KEY`
-        - `org_id` from `COZMO_ORG_ID`
+        - `org_id` from `COZMOAI_ORG_ID`
         """
         if api_key is None:
             api_key = os.environ.get("COZMOAI_API_KEY")
@@ -290,10 +290,10 @@ class AsyncCozmoai(AsyncAPIClient):
         self.api_key = api_key
 
         if org_id is None:
-            org_id = os.environ.get("COZMO_ORG_ID")
+            org_id = os.environ.get("COZMOAI_ORG_ID")
         if org_id is None:
             raise CozmoaiError(
-                "The org_id client option must be set either by passing org_id to the client or by setting the COZMO_ORG_ID environment variable"
+                "The org_id client option must be set either by passing org_id to the client or by setting the COZMOAI_ORG_ID environment variable"
             )
         self.org_id = org_id
 
