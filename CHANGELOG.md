@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.7.0 (2026-02-23)
+
+Full Changelog: [v0.6.0...v0.7.0](https://github.com/CozmoXAI/python-sdk/compare/v0.6.0...v0.7.0)
+
+### Features
+
+* **api:** manual updates ([2af9d7f](https://github.com/CozmoXAI/python-sdk/commit/2af9d7f6d99d3e45ea8e4bf242aa24b10e7e1d55))
+* **api:** manual updates ([b8241ab](https://github.com/CozmoXAI/python-sdk/commit/b8241abab453816c4232654c1247f5922f6c1f72))
+
 ## 0.6.0 (2026-02-23)
 
 Full Changelog: [v0.5.0...v0.6.0](https://github.com/CozmoXAI/python-sdk/compare/v0.5.0...v0.6.0)
