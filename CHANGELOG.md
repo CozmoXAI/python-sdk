@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.8.1 (2026-02-27)
+
+Full Changelog: [v0.8.0...v0.8.1](https://github.com/CozmoXAI/python-sdk/compare/v0.8.0...v0.8.1)
+
+### Chores
+
+* **ci:** bump uv version ([77e8bda](https://github.com/CozmoXAI/python-sdk/commit/77e8bda07a900fbb39d6dc1cabdf18dd787a5c15))
+* **internal:** add request options to SSE classes ([a7669eb](https://github.com/CozmoXAI/python-sdk/commit/a7669ebcd56393b9a3ef41db7c217c286aa9d30a))
+* **internal:** make `test_proxy_environment_variables` more resilient ([194fcd1](https://github.com/CozmoXAI/python-sdk/commit/194fcd1190b39252602aae949ae8d8edd038590e))
+* **internal:** make `test_proxy_environment_variables` more resilient to env ([7b40f6f](https://github.com/CozmoXAI/python-sdk/commit/7b40f6fdf0e98e73f6f39b8c3bbd7a7c981297d5))
+
 ## 0.8.0 (2026-02-23)
 
 Full Changelog: [v0.7.1...v0.8.0](https://github.com/CozmoXAI/python-sdk/compare/v0.7.1...v0.8.0)
