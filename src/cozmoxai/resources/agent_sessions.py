@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import httpx
 
-from ..types import agent_session_create_params
+from ..types import agent_session_start_params
 from .._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
 from .._utils import maybe_transform, async_maybe_transform
 from .._compat import cached_property
@@ -15,7 +15,7 @@ from .._response import (
 )
 from .._base_client import make_request_options
 from ..types.agent_session_response import AgentSessionResponse
-from ..types.agent_session_create_params import NewProspect
+from ..types.agent_session_start_response import AgentSessionStartResponse
 
 __all__ = ["AgentSessionsResource", "AsyncAgentSessionsResource"]
 
@@ -40,46 +40,38 @@ class AgentSessionsResource(SyncAPIResource):
         """
         return AgentSessionsResourceWithStreamingResponse(self)
 
-    def create(
+    def start(
         self,
+        session_id: str,
         *,
-        prospect_id: str | Omit = omit,
-        new_prospect: NewProspect | Omit = omit,
-        root_agent_id: str | Omit = omit,
+        agent_id: str,
+        instruction: str,
         title: str | Omit = omit,
-        channel: str | Omit = omit,
-        entrypoint: str | Omit = omit,
-        workflow_run_id: str | Omit = omit,
-        call_id: str | Omit = omit,
+        source: str | Omit = omit,
+        prospect_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> AgentSessionResponse:
+    ) -> AgentSessionStartResponse:
         """
-        Start a new agent session, optionally associating it with an existing prospect
-        or creating one inline.
+        Creates the session record, appends the initial user message event, and
+        signals the agent workflow — all in one call.
 
         Args:
-          prospect_id: UUID of an existing prospect to associate with the session.
-              Mutually exclusive with new_prospect.
+          session_id: A UUID v4 to assign to the new session.
 
-          new_prospect: Inline prospect to create and associate with the session.
-              Mutually exclusive with prospect_id.
+          agent_id: UUID of the agent to run. Required.
 
-          root_agent_id: UUID of the agent to run in this session.
+          instruction: The initial message / instruction to send to the agent. Required.
 
-          title: Title for the session.
+          title: Title for the session. Defaults to the first 100 chars of instruction.
 
-          channel: Communication channel.
+          source: Source identifier. Defaults to 'command-center'.
 
-          entrypoint: Entry point description.
-
-          workflow_run_id: UUID of an associated workflow run.
-
-          call_id: UUID of an associated call.
+          prospect_id: UUID of a prospect to associate with this session.
 
           extra_headers: Send extra headers
 
@@ -89,25 +81,24 @@ class AgentSessionsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
+        if not session_id:
+            raise ValueError(f"Expected a non-empty value for `session_id` but received {session_id!r}")
         return self._post(
-            "/agent-sessions",
+            f"/agent-sessions/{session_id}/start",
             body=maybe_transform(
                 {
-                    "prospect_id": prospect_id,
-                    "new_prospect": new_prospect,
-                    "root_agent_id": root_agent_id,
+                    "agent_id": agent_id,
+                    "instruction": instruction,
                     "title": title,
-                    "channel": channel,
-                    "entrypoint": entrypoint,
-                    "workflow_run_id": workflow_run_id,
-                    "call_id": call_id,
+                    "source": source,
+                    "prospect_id": prospect_id,
                 },
-                agent_session_create_params.AgentSessionCreateParams,
+                agent_session_start_params.AgentSessionStartParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=AgentSessionResponse,
+            cast_to=AgentSessionStartResponse,
         )
 
     def retrieve(
@@ -164,46 +155,38 @@ class AsyncAgentSessionsResource(AsyncAPIResource):
         """
         return AsyncAgentSessionsResourceWithStreamingResponse(self)
 
-    async def create(
+    async def start(
         self,
+        session_id: str,
         *,
-        prospect_id: str | Omit = omit,
-        new_prospect: NewProspect | Omit = omit,
-        root_agent_id: str | Omit = omit,
+        agent_id: str,
+        instruction: str,
         title: str | Omit = omit,
-        channel: str | Omit = omit,
-        entrypoint: str | Omit = omit,
-        workflow_run_id: str | Omit = omit,
-        call_id: str | Omit = omit,
+        source: str | Omit = omit,
+        prospect_id: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> AgentSessionResponse:
+    ) -> AgentSessionStartResponse:
         """
-        Start a new agent session, optionally associating it with an existing prospect
-        or creating one inline.
+        Creates the session record, appends the initial user message event, and
+        signals the agent workflow — all in one call.
 
         Args:
-          prospect_id: UUID of an existing prospect to associate with the session.
-              Mutually exclusive with new_prospect.
+          session_id: A UUID v4 to assign to the new session.
 
-          new_prospect: Inline prospect to create and associate with the session.
-              Mutually exclusive with prospect_id.
+          agent_id: UUID of the agent to run. Required.
 
-          root_agent_id: UUID of the agent to run in this session.
+          instruction: The initial message / instruction to send to the agent. Required.
 
-          title: Title for the session.
+          title: Title for the session. Defaults to the first 100 chars of instruction.
 
-          channel: Communication channel.
+          source: Source identifier. Defaults to 'command-center'.
 
-          entrypoint: Entry point description.
-
-          workflow_run_id: UUID of an associated workflow run.
-
-          call_id: UUID of an associated call.
+          prospect_id: UUID of a prospect to associate with this session.
 
           extra_headers: Send extra headers
 
@@ -213,25 +196,24 @@ class AsyncAgentSessionsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
+        if not session_id:
+            raise ValueError(f"Expected a non-empty value for `session_id` but received {session_id!r}")
         return await self._post(
-            "/agent-sessions",
+            f"/agent-sessions/{session_id}/start",
             body=await async_maybe_transform(
                 {
-                    "prospect_id": prospect_id,
-                    "new_prospect": new_prospect,
-                    "root_agent_id": root_agent_id,
+                    "agent_id": agent_id,
+                    "instruction": instruction,
                     "title": title,
-                    "channel": channel,
-                    "entrypoint": entrypoint,
-                    "workflow_run_id": workflow_run_id,
-                    "call_id": call_id,
+                    "source": source,
+                    "prospect_id": prospect_id,
                 },
-                agent_session_create_params.AgentSessionCreateParams,
+                agent_session_start_params.AgentSessionStartParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=AgentSessionResponse,
+            cast_to=AgentSessionStartResponse,
         )
 
     async def retrieve(
@@ -272,8 +254,8 @@ class AgentSessionsResourceWithRawResponse:
     def __init__(self, agent_sessions: AgentSessionsResource) -> None:
         self._agent_sessions = agent_sessions
 
-        self.create = to_raw_response_wrapper(
-            agent_sessions.create,
+        self.start = to_raw_response_wrapper(
+            agent_sessions.start,
         )
         self.retrieve = to_raw_response_wrapper(
             agent_sessions.retrieve,
@@ -284,8 +266,8 @@ class AsyncAgentSessionsResourceWithRawResponse:
     def __init__(self, agent_sessions: AsyncAgentSessionsResource) -> None:
         self._agent_sessions = agent_sessions
 
-        self.create = async_to_raw_response_wrapper(
-            agent_sessions.create,
+        self.start = async_to_raw_response_wrapper(
+            agent_sessions.start,
         )
         self.retrieve = async_to_raw_response_wrapper(
             agent_sessions.retrieve,
@@ -296,8 +278,8 @@ class AgentSessionsResourceWithStreamingResponse:
     def __init__(self, agent_sessions: AgentSessionsResource) -> None:
         self._agent_sessions = agent_sessions
 
-        self.create = to_streamed_response_wrapper(
-            agent_sessions.create,
+        self.start = to_streamed_response_wrapper(
+            agent_sessions.start,
         )
         self.retrieve = to_streamed_response_wrapper(
             agent_sessions.retrieve,
@@ -308,8 +290,8 @@ class AsyncAgentSessionsResourceWithStreamingResponse:
     def __init__(self, agent_sessions: AsyncAgentSessionsResource) -> None:
         self._agent_sessions = agent_sessions
 
-        self.create = async_to_streamed_response_wrapper(
-            agent_sessions.create,
+        self.start = async_to_streamed_response_wrapper(
+            agent_sessions.start,
         )
         self.retrieve = async_to_streamed_response_wrapper(
             agent_sessions.retrieve,

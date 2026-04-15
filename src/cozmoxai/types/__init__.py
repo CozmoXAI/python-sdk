@@ -3,9 +3,6 @@
 from __future__ import annotations
 
 from .agent_response import AgentResponse as AgentResponse
-from .agent_session_response import AgentSessionResponse as AgentSessionResponse
-from .agent_session_create_params import AgentSessionCreateParams as AgentSessionCreateParams
-from .agent_session_create_params import NewProspect as NewProspect
 from .call_list_params import CallListParams as CallListParams
 from .llm_config_param import LlmConfigParam as LlmConfigParam
 from .vad_config_param import VadConfigParam as VadConfigParam
@@ -22,9 +19,12 @@ from .goodbye_config_param import GoodbyeConfigParam as GoodbyeConfigParam
 from .workflow_list_params import WorkflowListParams as WorkflowListParams
 from .agent_delete_response import AgentDeleteResponse as AgentDeleteResponse
 from .greeting_config_param import GreetingConfigParam as GreetingConfigParam
+from .agent_session_response import AgentSessionResponse as AgentSessionResponse
 from .call_retrieve_response import CallRetrieveResponse as CallRetrieveResponse
 from .workflow_list_response import WorkflowListResponse as WorkflowListResponse
 from .transcriber_config_param import TranscriberConfigParam as TranscriberConfigParam
+from .agent_session_start_params import AgentSessionStartParams as AgentSessionStartParams
 from .room_duration_config_param import RoomDurationConfigParam as RoomDurationConfigParam
 from .workflow_retrieve_response import WorkflowRetrieveResponse as WorkflowRetrieveResponse
+from .agent_session_start_response import AgentSessionStartResponse as AgentSessionStartResponse
 from .background_sound_config_param import BackgroundSoundConfigParam as BackgroundSoundConfigParam
