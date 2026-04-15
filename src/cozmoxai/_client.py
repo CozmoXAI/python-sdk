@@ -32,11 +32,12 @@ from ._base_client import (
 )
 
 if TYPE_CHECKING:
-    from .resources import calls, agents, voices, workflows
+    from .resources import calls, agents, voices, workflows, agent_sessions
     from .resources.calls import CallsResource, AsyncCallsResource
     from .resources.agents import AgentsResource, AsyncAgentsResource
     from .resources.voices import VoicesResource, AsyncVoicesResource
     from .resources.workflows import WorkflowsResource, AsyncWorkflowsResource
+    from .resources.agent_sessions import AgentSessionsResource, AsyncAgentSessionsResource
 
 __all__ = ["Timeout", "Transport", "ProxiesTypes", "RequestOptions", "Cozmoai", "AsyncCozmoai", "Client", "AsyncClient"]
 
@@ -131,6 +132,12 @@ class Cozmoai(SyncAPIClient):
         from .resources.voices import VoicesResource
 
         return VoicesResource(self)
+
+    @cached_property
+    def agent_sessions(self) -> AgentSessionsResource:
+        from .resources.agent_sessions import AgentSessionsResource
+
+        return AgentSessionsResource(self)
 
     @cached_property
     def with_raw_response(self) -> CozmoaiWithRawResponse:
@@ -344,6 +351,12 @@ class AsyncCozmoai(AsyncAPIClient):
         return AsyncVoicesResource(self)
 
     @cached_property
+    def agent_sessions(self) -> AsyncAgentSessionsResource:
+        from .resources.agent_sessions import AsyncAgentSessionsResource
+
+        return AsyncAgentSessionsResource(self)
+
+    @cached_property
     def with_raw_response(self) -> AsyncCozmoaiWithRawResponse:
         return AsyncCozmoaiWithRawResponse(self)
 
@@ -493,6 +506,12 @@ class CozmoaiWithRawResponse:
 
         return VoicesResourceWithRawResponse(self._client.voices)
 
+    @cached_property
+    def agent_sessions(self) -> agent_sessions.AgentSessionsResourceWithRawResponse:
+        from .resources.agent_sessions import AgentSessionsResourceWithRawResponse
+
+        return AgentSessionsResourceWithRawResponse(self._client.agent_sessions)
+
 
 class AsyncCozmoaiWithRawResponse:
     _client: AsyncCozmoai
@@ -523,6 +542,12 @@ class AsyncCozmoaiWithRawResponse:
         from .resources.voices import AsyncVoicesResourceWithRawResponse
 
         return AsyncVoicesResourceWithRawResponse(self._client.voices)
+
+    @cached_property
+    def agent_sessions(self) -> agent_sessions.AsyncAgentSessionsResourceWithRawResponse:
+        from .resources.agent_sessions import AsyncAgentSessionsResourceWithRawResponse
+
+        return AsyncAgentSessionsResourceWithRawResponse(self._client.agent_sessions)
 
 
 class CozmoaiWithStreamedResponse:
@@ -555,6 +580,12 @@ class CozmoaiWithStreamedResponse:
 
         return VoicesResourceWithStreamingResponse(self._client.voices)
 
+    @cached_property
+    def agent_sessions(self) -> agent_sessions.AgentSessionsResourceWithStreamingResponse:
+        from .resources.agent_sessions import AgentSessionsResourceWithStreamingResponse
+
+        return AgentSessionsResourceWithStreamingResponse(self._client.agent_sessions)
+
 
 class AsyncCozmoaiWithStreamedResponse:
     _client: AsyncCozmoai
@@ -585,6 +616,12 @@ class AsyncCozmoaiWithStreamedResponse:
         from .resources.voices import AsyncVoicesResourceWithStreamingResponse
 
         return AsyncVoicesResourceWithStreamingResponse(self._client.voices)
+
+    @cached_property
+    def agent_sessions(self) -> agent_sessions.AsyncAgentSessionsResourceWithStreamingResponse:
+        from .resources.agent_sessions import AsyncAgentSessionsResourceWithStreamingResponse
+
+        return AsyncAgentSessionsResourceWithStreamingResponse(self._client.agent_sessions)
 
 
 Client = Cozmoai

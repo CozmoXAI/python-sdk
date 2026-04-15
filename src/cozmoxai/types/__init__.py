@@ -3,6 +3,9 @@
 from __future__ import annotations
 
 from .agent_response import AgentResponse as AgentResponse
+from .agent_session_response import AgentSessionResponse as AgentSessionResponse
+from .agent_session_create_params import AgentSessionCreateParams as AgentSessionCreateParams
+from .agent_session_create_params import NewProspect as NewProspect
 from .call_list_params import CallListParams as CallListParams
 from .llm_config_param import LlmConfigParam as LlmConfigParam
 from .vad_config_param import VadConfigParam as VadConfigParam
