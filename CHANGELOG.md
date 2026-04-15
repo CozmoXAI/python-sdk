@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.9.0 (2026-04-15)
+
+Full Changelog: [v0.8.1...v0.9.0](https://github.com/CozmoXAI/python-sdk/compare/v0.8.1...v0.9.0)
+
+### Features
+
+* add agent_sessions resource with create and retrieve endpoints ([44035aa](https://github.com/CozmoXAI/python-sdk/commit/44035aa282e7f38f3ac6c90cc48323a7e88041ae))
+* **internal:** implement indices array format for query and form serialization ([d6c5663](https://github.com/CozmoXAI/python-sdk/commit/d6c5663611d4b18394338f44c0f928071a3fde62))
+
+
+### Bug Fixes
+
+* **client:** preserve hardcoded query params when merging with user params ([09ca7e5](https://github.com/CozmoXAI/python-sdk/commit/09ca7e59aa288f45cacd0c52c1e6d9a2ab852afb))
+* **deps:** bump minimum typing-extensions version ([b0d183a](https://github.com/CozmoXAI/python-sdk/commit/b0d183a5558dd939da6dc8b9d39ad9212bdcea21))
+* ensure file data are only sent as 1 parameter ([4892d92](https://github.com/CozmoXAI/python-sdk/commit/4892d92a5067fa55776c6b80f30634060e4c3b40))
+* **pydantic:** do not pass `by_alias` unless set ([aaa3a83](https://github.com/CozmoXAI/python-sdk/commit/aaa3a836e813d59880b55cdb84ef5b12e735ed31))
+* sanitize endpoint path params ([07aaa9f](https://github.com/CozmoXAI/python-sdk/commit/07aaa9f54371aff8f7bec332e85912e00f88a2eb))
+
+
+### Chores
+
+* **ci:** skip lint on metadata-only changes ([8ad3459](https://github.com/CozmoXAI/python-sdk/commit/8ad34598b163bc4f38538f2fffcad02c69b968ca))
+* **internal:** tweak CI branches ([16bbec4](https://github.com/CozmoXAI/python-sdk/commit/16bbec4d5df90382456a16919fa0c97d12ba34f5))
+* **internal:** update gitignore ([4de7555](https://github.com/CozmoXAI/python-sdk/commit/4de755553c7d20e3f088827d74ed0103e276c58b))
+
 ## 0.8.1 (2026-03-07)
 
 Full Changelog: [v0.8.0...v0.8.1](https://github.com/CozmoXAI/python-sdk/compare/v0.8.0...v0.8.1)
