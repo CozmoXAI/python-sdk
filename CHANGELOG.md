@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.10.0 (2026-06-18)
+
+Full Changelog: [v0.9.1...v0.10.0](https://github.com/CozmoXAI/python-sdk/compare/v0.9.1...v0.10.0)
+
+### Features
+
+* **internal/types:** support eagerly validating pydantic iterators ([6e7cbd8](https://github.com/CozmoXAI/python-sdk/commit/6e7cbd806a122b2d147c3e91a001dc9e2b6e8e83))
+* support setting headers via env ([d64ace5](https://github.com/CozmoXAI/python-sdk/commit/d64ace5610b77e31f70db208f57bb1a080ee7605))
+
+
+### Bug Fixes
+
+* **client:** add missing f-string prefix in file type error message ([b321054](https://github.com/CozmoXAI/python-sdk/commit/b3210540fe308ec0c8f32193987a306c2b8db76d))
+* use correct field name format for multipart file arrays ([1d9b15b](https://github.com/CozmoXAI/python-sdk/commit/1d9b15b6984e6947748b6ebde7124cc177bbcda5))
+
+
+### Performance Improvements
+
+* **client:** optimize file structure copying in multipart requests ([3ed79f1](https://github.com/CozmoXAI/python-sdk/commit/3ed79f1fb8f4802c999b2df08fb6737801c12654))
+
+
+### Chores
+
+* **internal:** codegen related update ([956d930](https://github.com/CozmoXAI/python-sdk/commit/956d9304414b8e4a974d4f35206e18741a96573a))
+* **internal:** more robust bootstrap script ([80a65ed](https://github.com/CozmoXAI/python-sdk/commit/80a65ed9bbf86afc0aab26da0570332d361481bb))
+* **internal:** reformat pyproject.toml ([1ab8f52](https://github.com/CozmoXAI/python-sdk/commit/1ab8f522e7e43cbd5d10f7d95253bc006f746a2a))
+
 ## 0.9.1 (2026-04-15)
 
 Full Changelog: [v0.9.0...v0.9.1](https://github.com/CozmoXAI/python-sdk/compare/v0.9.0...v0.9.1)
